@@ -1,16 +1,32 @@
 #pragma once
 #include "defalut.h"
+#include "SpriteRenderer.h"
 
 #include <d3d9.h>
 #include <utility>
 
 class RenderManager;
 
+enum class IdSet
+{
+	DEFALUE = 0,
+	PLAYERID,
+	MONSTERID,
+	ITEMID,
+	END
+};
+
+// const
+const int PLAYER_ID_START = 10000;
+const int MONSTER_ID_START = 20000;
+const int ITEM_ID_START = 30000;
+const int TILE_ID_START = 40000;
+
 class MapToolGui
 {
 public:
 	const float WIDTH = 500.f;
-	const float HEIGHT = 300.f;
+	const float HEIGHT = 500.f;
 
 	static MapToolGui* mpInstance;
 
@@ -19,8 +35,29 @@ public:
 	~MapToolGui();
 
 public:
+	void GuiRender();
+
+	void GridCreate();
+
+	void ObjectTileSetting();
+
+	void ObjectSetting();
+	void ColliderSetting();
+	void SpriteSetting();
+
+	void ObjectImfomation();
+
+public:
+	bool GetIsCreateTileObject() {return mbIsCreateTileObjectButtonIstrue;}
+	bool GetIsDeleteTileObject() {return mbIsDeleteTileObjectButtonIstrue;}
+	bool GetIsCreateObject() {return mbIsCreateObjectButtonIstrue;}
+	bool GetIsDeleteObject() {return mbIsDeleteObjectButtonIstrue;}
+	bool GetIsCreateCollider() { return mbIsColliderCreate; }
+	bool GetIsCreateSprite() { return mbIsSpriteCreate; }
+
+public:
 	// handle window creation & destruction
-	void CreateHWindow(const char* windowName, const char* className) ;
+	void CreateHWindow(const char* windowName, const char* className);
 	void DestroyHWindow();
 
 	// handle device creation & destruction
@@ -37,23 +74,6 @@ public:
 	void Render();
 
 public:
-	void GuiRender();
-
-	void GridCreate();
-	void ObjectButton();
-
-public:
-	unsigned int GetGridWidth() { return mWidth; }
-	unsigned int GetGridHeight() { return mHeight; }
-	unsigned int GetGridDistance() { return mGridDistance; }
-	bool GetIsCreateObject() {return CreateObjectButtonIstrue;}
-	bool GetIsDeleteObject() {return DeleteObjectButtonIstrue;}
-
-	std::vector<std::vector<bool>> GetIsChecked() { return mbIsChecked; }
-	std::vector<std::vector<bool>> GetIsObject() { return mbIsObject; }
-	std::map<std::pair<int, int>, int> GetObjectId() { return mObjectIdMap; }
-
-public:
 	HWND GetHwnd() { return mHWnd; }
 	WNDCLASSEXA GetWindowClass() { return mWindowClass; }
 	POINTS GetGuiPosition() { return mPosition; }
@@ -67,9 +87,6 @@ public:
 		mPresentParameters.BackBufferWidth = lower; 
 		mPresentParameters.BackBufferWidth = high;
 	}
-	void SetIsChecked(int y, int x, bool b) { mbIsChecked[y][x] = b; }
-	void SetIsObject(int y, int x, bool b) { mbIsObject[y][x] = b; }
-	void SetObjectMapInsert(int x, int y, int id) { mObjectIdMap.insert(std::make_pair(std::make_pair(x, y), id)); }
 
 private:
 	// constant window size
@@ -91,15 +108,49 @@ private:
 
 public:
 	// create 할 시 격자판과 격자판을 다룰 2d 배열 생성
-	unsigned int mWidth;
-	unsigned int mHeight;
-	unsigned int mGridDistance;
+	static unsigned int mWidth;
+	static unsigned int mHeight;
+	static unsigned int mGridDistance;
 
-	std::vector<std::vector<bool>>		mbIsChecked; // 이거 루프 돌면서 클릭 처리
-	std::vector<std::vector<bool>>		mbIsObject; // 여기는 해당 격자칸에 오브젝트가 존재하는지
-	std::map<std::pair<int, int>, int>	mObjectIdMap;
+	static std::vector<std::vector<bool>>		mbIsChecked;		// 이거 루프 돌면서 클릭 처리
+	static std::vector<std::vector<bool>>		mbIsObject;			// 여기는 해당 격자칸에 오브젝트가 존재하는지
+	static std::map<std::pair<int, int>, int>	mObjectIdMap;		// 해당 칸에 오브젝트가 있는지
+	static std::queue<int>						mObjectSequence;	// 선택된 오브젝트 순서
+
+	// Tile 오브젝트
+	static std::vector<std::vector<bool>>		mbIsTileObject;		// 여기는 해당 격자칸에 타일 오브젝트가 존재하는지
+	static std::map<std::pair<int, int>, int>	mTileObjectIdMap;	// 해당 칸에 타일 오브젝트가 있는지
+	static std::wstring		TileBitmap;
+	static int				TileSpriteWidth;
+	static int				TileSpriteHeight;
+	static int				TileColliderWidth;
+	static int				TileColliderHeight;
+
+	// 오브젝트별 Id값
+	static IdSet mIdSetting;
+	static int mPlayerId;
+	static int mMonsterId;
+	static int mItemId;
+	static int mTileId;
+
+	// 오브젝트 컴포넌트 세팅 값들
+	static int ColliderWidth;
+	static int ColliderHeight;
+
+	// 스프라이트 컴포넌트 세팅 값들
+	static d2dFramework::eSpriteType SpriteType;
+	static int SpriteWidth;
+	static int SpriteHeight;
+
+	// 정보
+	static int ItemImfoCurrentIndex;
 
 private:
-	bool CreateObjectButtonIstrue;
-	bool DeleteObjectButtonIstrue;
+	bool mbIsCreateTileObjectButtonIstrue;
+	bool mbIsDeleteTileObjectButtonIstrue;
+	bool mbIsCreateObjectButtonIstrue;
+	bool mbIsDeleteObjectButtonIstrue;
+
+	bool mbIsColliderCreate;
+	bool mbIsSpriteCreate;
 };

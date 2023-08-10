@@ -29,8 +29,14 @@ namespace mapTool
 	private:
 		void MouseClickCheck();
 		void CheckedRender();
+		void ColliderRender();
+
+		void TileObjectCreate();
+		void TileObjectDelete();
 		void ObjectCreate();
 		void ObjectDelete();
+		void ColliderSetting();
+		void SpriteSetting();
 
 		void Render();
 
@@ -42,14 +48,12 @@ namespace mapTool
 		unsigned int mHeight;
 		unsigned int mGridDistance;
 
-		std::vector<std::vector<bool>> mbIsChecked; // 이거 루프 돌면서 클릭 처리
-		std::vector<std::vector<bool>> mbIsObject; // 여기는 해당 격자칸에 오브젝트가 존재하는지
+		std::vector<std::vector<bool>> mbIsChecked;		// 이거 루프 돌면서 클릭 처리
+		std::vector<std::vector<bool>> mbIsObject;		// 여기는 해당 격자칸에 오브젝트가 존재하는지
 		std::map<std::pair<int, int>, int> mObjectIdMap;
 
 		// 클릭한 곳 표시 ( 임시 ) 
 		D2D1_RECT_F mRect;
-
-		unsigned int tempId = 10000;
 
 		MapToolGui* mImGui = new MapToolGui;
 	};

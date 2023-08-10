@@ -6,10 +6,11 @@
 
 #pragma comment(lib, "D3d9.lib")
 
-
 #include "MapToolWinApp.h"
 #include "ObjectManager.h"
 #include "GameObject.h"
+#include "AABBCollider.h"
+#include "SpriteRenderer.h"
 #include "SoulBeaterProcessor.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
@@ -25,8 +26,46 @@ LRESULT __stdcall WindowProcess(
 	WPARAM wideParameter,
 	LPARAM longParameter);
 
-// 변수 초기화
+
+// static 변수 초기화
 MapToolGui* MapToolGui::mpInstance = nullptr;
+
+unsigned int MapToolGui::mWidth = 0;
+unsigned int MapToolGui::mHeight = 0;
+unsigned int MapToolGui::mGridDistance = 0;
+
+// 오브젝트 체크, 오브젝트 ID, 오브젝트 시퀀스 ( 미완성 )
+std::vector<std::vector<bool>>		MapToolGui::mbIsChecked = {};
+std::vector<std::vector<bool>>		MapToolGui::mbIsObject = {};
+std::map<std::pair<int, int>, int>	MapToolGui::mObjectIdMap = {};
+std::queue<int>						MapToolGui::mObjectSequence = {};
+
+// 타일 오브젝트
+std::vector<std::vector<bool>>		MapToolGui::mbIsTileObject = {};
+std::map<std::pair<int, int>, int>	MapToolGui::mTileObjectIdMap = {};
+std::wstring	MapToolGui::TileBitmap = L"Golem";
+int				MapToolGui::TileSpriteWidth = 0;
+int				MapToolGui::TileSpriteHeight = 0;
+int				MapToolGui::TileColliderWidth = 0;
+int				MapToolGui::TileColliderHeight = 0;
+
+// Id 세팅
+IdSet MapToolGui::mIdSetting = IdSet::DEFALUE;
+int MapToolGui::mPlayerId = PLAYER_ID_START;
+int MapToolGui::mMonsterId = MONSTER_ID_START;
+int MapToolGui::mItemId = ITEM_ID_START;
+int MapToolGui::mTileId = TILE_ID_START;
+
+// 오브젝트 콜라이더 사이즈
+int MapToolGui::ColliderWidth = 0;
+int MapToolGui::ColliderHeight = 0;
+
+// 스프라이트 세팅 값들
+d2dFramework::eSpriteType MapToolGui::SpriteType = d2dFramework::eSpriteType::Circle;
+int MapToolGui::SpriteWidth = 0;
+int MapToolGui::SpriteHeight = 0;
+
+int MapToolGui::ItemImfoCurrentIndex = 0;
 
 MapToolGui::MapToolGui()
 	:bOnbutton(false)
@@ -37,7 +76,12 @@ MapToolGui::MapToolGui()
 	, md3d(nullptr)
 	, mDevice(nullptr)
 	, mPresentParameters{}
-	, CreateObjectButtonIstrue(false)
+	, mbIsCreateTileObjectButtonIstrue(false)
+	, mbIsDeleteTileObjectButtonIstrue(false)
+	, mbIsCreateObjectButtonIstrue(false)
+	, mbIsDeleteObjectButtonIstrue(false)
+	, mbIsColliderCreate(false)
+	, mbIsSpriteCreate(false)
 {
 	mpInstance = this;
 }
@@ -76,8 +120,14 @@ void MapToolGui::GuiRender()
 	if (ImGui::TreeNode("Grid Setting & Create"))
 		GridCreate();
 
+	if (ImGui::TreeNode("Tile Setting"))
+		ObjectTileSetting();
+
 	if (ImGui::TreeNode("Object Setting"))
-		ObjectButton();
+		ObjectSetting();
+
+	if (ImGui::TreeNode("Object Impomation"))
+		ObjectImfomation();
 }
 
 void MapToolGui::GridCreate()
@@ -100,6 +150,10 @@ void MapToolGui::GridCreate()
 			mbIsObject[i].clear();
 		mbIsObject.clear();
 
+		for (int i = 0; i < mbIsTileObject.size(); i++)
+			mbIsTileObject[i].clear();
+		mbIsTileObject.clear();
+
 		mWidth = GridArea[0];
 		mHeight = GridArea[1];
 		mGridDistance = GridInstance;
@@ -109,108 +163,322 @@ void MapToolGui::GridCreate()
 		{
 			mbIsChecked.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
 			mbIsObject.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
+			mbIsTileObject.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
 		}
 		else
 		{
 			mbIsChecked.clear();
 			mbIsObject.clear();
+			mbIsTileObject.clear();
+
+			while(!mObjectSequence.empty())
+				mObjectSequence.pop();
 		}
 
 		// 모든 오브젝트 삭제
 		for (auto e : mObjectIdMap)
 			d2dFramework::ObjectManager::GetInstance()->DeletObject(e.second);
 		mObjectIdMap.clear();
+		for (auto e : mTileObjectIdMap)
+			d2dFramework::ObjectManager::GetInstance()->DeletObject(e.second);
+		mTileObjectIdMap.clear();
 	}
 
 	ImGui::TreePop();
 }
 
-void MapToolGui::ObjectButton()
+// 오브젝트 생성 및 삭제 및 컴포넌트 세팅
+void MapToolGui::ObjectSetting()
 {
-	if (ImGui::Button("CreateObject"))
-		CreateObjectButtonIstrue = true;
-	else
-		CreateObjectButtonIstrue = false;
+	static int ObjectItemCurrentIndex = 0;
+	static std::string ListName[] = { "Defalut", "PlayerId", "MonsterId", "ItemId" };
 
-	if (ImGui::Button("DeleteObject"))
-		DeleteObjectButtonIstrue = true;
+	if (ImGui::BeginListBox("Id Setting"))
+	{
+		for (int n = 0; n < (int)IdSet::END; n++)
+		{
+			const bool Selected = (ObjectItemCurrentIndex == n);
+			if (ImGui::Selectable(ListName[n].c_str(), Selected))
+			{
+				ObjectItemCurrentIndex = n;
+
+				switch (ObjectItemCurrentIndex)
+				{
+				case 0:
+					mIdSetting = IdSet::DEFALUE;
+					break;
+				case 1:
+					mIdSetting = IdSet::PLAYERID;
+					break;
+				case 2:
+					mIdSetting = IdSet::MONSTERID;
+					break;
+				case 3:
+					mIdSetting = IdSet::ITEMID;
+					break;
+				}
+			}
+		}
+
+		ImGui::EndListBox();
+	}
+
+	std::string idtext = "Seleted Id : " + ListName[ObjectItemCurrentIndex];
+	ImGui::Text(idtext.c_str());
+
+	// 오브젝트 생성 버튼
+	if (ImGui::Button("CreateObject"))
+		mbIsCreateObjectButtonIstrue = true;
 	else
-		DeleteObjectButtonIstrue = false;
+		mbIsCreateObjectButtonIstrue = false;
+
+	// 오브젝트 삭제 버튼
+	if (ImGui::Button("DeleteObject"))
+		mbIsDeleteObjectButtonIstrue = true;
+	else
+		mbIsDeleteObjectButtonIstrue = false;
+
+	// 콜라이더 컴포넌트 세팅
+	if (ImGui::TreeNode("Collider Setting"))
+		ColliderSetting();
+
+	// 스프라이트 컴포넌트 세팅
+	if (ImGui::TreeNode("Sprite Setting"))
+		SpriteSetting();
 
 	ImGui::TreePop();
 }
 
-// handle window creation & destruction
-void MapToolGui::CreateHWindow(const char* windowName, const char* className)
+void MapToolGui::ObjectTileSetting()
 {
-	mWindowClass.cbSize = sizeof(WNDCLASSEXA);
-	mWindowClass.style = CS_CLASSDC;
-	mWindowClass.lpfnWndProc = WindowProcess;
-	mWindowClass.cbClsExtra = 0;
-	mWindowClass.cbWndExtra = 0;
-	mWindowClass.hInstance = GetModuleHandleA(0);
-	mWindowClass.hIcon = 0;
-	mWindowClass.hCursor = 0;
-	mWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	mWindowClass.lpszMenuName = 0;
-	mWindowClass.lpszClassName = "Gui";
-	mWindowClass.hIconSm = 0;
+	static int ObjectItemCurrentIndex = 0;
+	static std::vector<std::string> ListName{ "Golem", "Charactor" };
 
-	RegisterClassExA(&mWindowClass);
+	ImGui::InputInt("Sprite Width", &TileSpriteWidth);
+	ImGui::InputInt("Sprite Height", &TileSpriteHeight);
 
-	mHWnd = CreateWindowW(
-		L"Gui",
-		L"ImGui",
-		WS_POPUP,
-		2700,
-		200,
-		WIDTH,
-		HEIGHT,
-		0,
-		0,
-		mWindowClass.hInstance,
-		0
-	);
+	// 타일 Bitmap 선택
+	if (ImGui::BeginListBox("Id Setting"))
+	{
+		for (int n = 0; n < ListName.size(); n++)
+		{
+			const bool Selected = (ObjectItemCurrentIndex == n);
+			if (ImGui::Selectable(ListName[n].c_str(), Selected))
+			{
+				ObjectItemCurrentIndex = n;
 
-	ShowWindow(mHWnd, SW_SHOWDEFAULT);
-	UpdateWindow(mHWnd);
+				if (ObjectItemCurrentIndex == 0)
+					TileBitmap = L"Golem";
+				else if (ObjectItemCurrentIndex == 1)
+					TileBitmap = L"Charactor";
+			}
+		}
+
+		ImGui::EndListBox();
+	}
+
+	// 오브젝트 생성 버튼
+	if (ImGui::Button("CreateObject"))
+		mbIsCreateTileObjectButtonIstrue = true;
+	else
+		mbIsCreateTileObjectButtonIstrue = false;
+
+	// 오브젝트 삭제 버튼
+	if (ImGui::Button("DeleteObject"))
+		mbIsDeleteTileObjectButtonIstrue = true;
+	else
+		mbIsDeleteTileObjectButtonIstrue = false;
+
+	ImGui::TreePop();
 }
 
-void MapToolGui::DestroyHWindow()
+// 콜라이더 세팅
+void MapToolGui::ColliderSetting()
 {
-	DestroyWindow(mHWnd);
-	UnregisterClass(L"Gui", mWindowClass.hInstance);
+	ImGui::InputInt("Collider Width", &ColliderWidth);
+	ImGui::InputInt("Collider Hight", &ColliderHeight);
+
+	if (ImGui::Button("Collider Create & Setting"))
+		mbIsColliderCreate = true;
+	else
+		mbIsColliderCreate = false;
+
+	ImGui::TreePop();
 }
 
-// handle device creation & destruction
-bool MapToolGui::CreateDevice()
+void MapToolGui::SpriteSetting()
 {
-	md3d = Direct3DCreate9(D3D_SDK_VERSION);
+	static int ItemSpriteCurrentIndex = 0;
+	static std::vector<std::string> ListName = { "Rectangle", "Circle", "Sprite" };
 
-	if (!md3d)
-		return false;
+	if (ImGui::BeginListBox("SpriteType List"))
+	{
+		for (int n = 0; n < ListName.size(); n++)
+		{
+			const bool Selected = (ItemSpriteCurrentIndex == n);
+			if (ImGui::Selectable(ListName[n].c_str(), Selected))
+			{
+				ItemSpriteCurrentIndex = n;
 
-	ZeroMemory(&mPresentParameters, sizeof(mPresentParameters));
+				switch (ItemSpriteCurrentIndex)
+				{
+				case 0:
+					SpriteType = d2dFramework::eSpriteType::Rectangle;
+					break;
+				case 1:
+					SpriteType = d2dFramework::eSpriteType::Circle;
+					break;
+				case 2:
+					SpriteType = d2dFramework::eSpriteType::Sprite;
+					break;
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
 
-	mPresentParameters.Windowed = TRUE;
-	mPresentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	mPresentParameters.BackBufferFormat = D3DFMT_UNKNOWN;
-	mPresentParameters.EnableAutoDepthStencil = TRUE;
-	mPresentParameters.AutoDepthStencilFormat = D3DFMT_D16;
-	mPresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+	std::string seletedspritetype = "Selected : " + ListName[ItemSpriteCurrentIndex];
+	ImGui::Text(seletedspritetype.c_str());
 
-	// 디스플레이 어댑터를 나타내는 디바이스를 만드는 함수입니다.
-	if (md3d->CreateDevice(
-		D3DADAPTER_DEFAULT,
-		D3DDEVTYPE_HAL,
-		mHWnd,
-		D3DCREATE_HARDWARE_VERTEXPROCESSING,
-		&mPresentParameters,
-		&mDevice) < 0)
-		return false;
+	ImGui::InputInt("Sprite Width", &SpriteWidth);
+	ImGui::InputInt("Sprite Height", &SpriteHeight);
 
-	return true;
+	if (ImGui::Button("Sprite Create"))
+		mbIsSpriteCreate = true;
+	else
+		mbIsSpriteCreate = false;
+
+	ImGui::TreePop();
 }
+
+void MapToolGui::ObjectImfomation()
+{
+	using namespace d2dFramework;
+
+	static std::vector<std::string> ListName;
+	static int ObjectListCount = 0;
+	std::vector<int> ListId;
+
+	ListName.clear();
+	ListId.clear();
+	ObjectListCount = 0;
+
+	for (int i = 0; i < mbIsChecked.size(); i++)
+	{
+		for (int j = 0; j < mbIsChecked[i].size(); j++)
+		{
+			if (mbIsChecked[i][j] == true && mbIsObject[i][j] == true)
+			{
+				std::pair<int, int> key = std::make_pair(i, j);
+				auto iter = mObjectIdMap.find(key);
+
+				std::string idlist;
+
+				if (iter->second >= ITEM_ID_START)
+				{
+					idlist = "Item Object " + std::to_string(ObjectListCount);
+					ObjectListCount++;
+				}
+				else if (iter->second >= MONSTER_ID_START)
+				{
+					idlist = "Monster Object " + std::to_string(ObjectListCount);
+					ObjectListCount++;
+				}
+				else if (iter->second >= PLAYER_ID_START)
+				{
+					idlist = "Player Object " + std::to_string(ObjectListCount);
+					ObjectListCount++;
+				}
+
+				ListName.push_back(idlist);
+				ListId.push_back(iter->second);
+			}
+		}
+	}
+
+	if (ImGui::BeginListBox("Image List"))
+	{
+		for (int n = 0; n < ListName.size(); n++)
+		{
+			const bool Selected = (ItemImfoCurrentIndex == n);
+			if (ImGui::Selectable(ListName[n].c_str(), Selected))
+			{
+				ItemImfoCurrentIndex = n;
+			}
+		}
+		ImGui::EndListBox();
+	}
+	
+	if (ListId.size() != 0)
+	{
+		GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(ListId[ItemImfoCurrentIndex]);
+		Transform* TransformComponent = object->GetComponent<Transform>();
+		SpriteRenderer* SpriteComponent = object->GetComponent<SpriteRenderer>();
+		AABBCollider* ColliderComponent = object->GetComponent<AABBCollider>();
+
+		std::string text = ListName[ItemImfoCurrentIndex] + ", Id : " + std::to_string(ListId[ItemImfoCurrentIndex]);
+		ImGui::Text(text.c_str());
+		text.clear();
+
+		// 트랜스폼 위치 값 출력
+		if (TransformComponent != nullptr)
+		{
+			ImGui::Text("Transform Is Valid");
+			text = "Location X : " + std::to_string(TransformComponent->GetTransform().dx);
+			ImGui::Text(text.c_str());
+			text.clear();
+			text = "Location Y : " + std::to_string(TransformComponent->GetTransform().dy);
+			ImGui::Text(text.c_str());
+			text.clear();
+		}
+		else
+			ImGui::Text("Transform Is not Valid");
+
+		// 스프라이트 정보 출력
+		if (SpriteComponent != nullptr)
+		{
+			ImGui::Text("SpriteComponent Is Valid");
+			if (SpriteComponent->GetBitmap() != nullptr)
+				ImGui::Text("Bitmap Is Valid");
+			else
+				ImGui::Text("Bitmap Is not Valid");
+			if (SpriteComponent->GetSpriteType() == eSpriteType::Rectangle)
+				ImGui::Text("SpriteType Is Rectangle");
+			if (SpriteComponent->GetSpriteType() == eSpriteType::Circle)
+				ImGui::Text("SpriteType Is Circle");
+			if (SpriteComponent->GetSpriteType() == eSpriteType::Sprite)
+				ImGui::Text("SpriteType Is Sprite");
+			text = "Size X : " + std::to_string(SpriteComponent->GetSize().GetX());
+			ImGui::Text(text.c_str());
+			text.clear();
+			text = "Size Y : " + std::to_string(SpriteComponent->GetSize().GetY());
+			ImGui::Text(text.c_str());
+			text.clear();
+		}
+		else
+			ImGui::Text("SpriteComponnet Is not Valid");
+
+		// 콜라이더 정보 출력 ( AABB ) 
+		if (ColliderComponent != nullptr)
+		{
+			ImGui::Text("ColliderComponent Is Valid");
+			ImGui::Text("ColliderComponent Type Is AABBCollider");
+			text = "Size X : " + std::to_string(ColliderComponent->GetSize().GetX());
+			ImGui::Text(text.c_str());
+			text.clear();
+			text = "Size X : " + std::to_string(ColliderComponent->GetSize().GetX());
+			ImGui::Text(text.c_str());
+			text.clear();
+		}
+		else
+			ImGui::Text("ColliderComponent Is not Valid");
+	}
+
+	ImGui::TreePop();
+}
+
+
+
 
 void MapToolGui::ResetDevice()
 {
@@ -298,6 +566,78 @@ void MapToolGui::EndRender()
 	// Handle loss of D3D9 device
 	if (result == D3DERR_DEVICELOST && mDevice->TestCooperativeLevel() == D3DERR_DEVICENOTRESET)
 		ResetDevice();
+}
+
+// handle window creation & destruction
+void MapToolGui::CreateHWindow(const char* windowName, const char* className)
+{
+	mWindowClass.cbSize = sizeof(WNDCLASSEXA);
+	mWindowClass.style = CS_CLASSDC;
+	mWindowClass.lpfnWndProc = WindowProcess;
+	mWindowClass.cbClsExtra = 0;
+	mWindowClass.cbWndExtra = 0;
+	mWindowClass.hInstance = GetModuleHandleA(0);
+	mWindowClass.hIcon = 0;
+	mWindowClass.hCursor = 0;
+	mWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	mWindowClass.lpszMenuName = 0;
+	mWindowClass.lpszClassName = "Gui";
+	mWindowClass.hIconSm = 0;
+
+	RegisterClassExA(&mWindowClass);
+
+	mHWnd = CreateWindowW(
+		L"Gui",
+		L"ImGui",
+		WS_POPUP,
+		1500,
+		200,
+		WIDTH,
+		HEIGHT,
+		0,
+		0,
+		mWindowClass.hInstance,
+		0
+	);
+
+	ShowWindow(mHWnd, SW_SHOWDEFAULT);
+	UpdateWindow(mHWnd);
+}
+
+void MapToolGui::DestroyHWindow()
+{
+	DestroyWindow(mHWnd);
+	UnregisterClass(L"Gui", mWindowClass.hInstance);
+}
+
+// handle device creation & destruction
+bool MapToolGui::CreateDevice()
+{
+	md3d = Direct3DCreate9(D3D_SDK_VERSION);
+
+	if (!md3d)
+		return false;
+
+	ZeroMemory(&mPresentParameters, sizeof(mPresentParameters));
+
+	mPresentParameters.Windowed = TRUE;
+	mPresentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	mPresentParameters.BackBufferFormat = D3DFMT_UNKNOWN;
+	mPresentParameters.EnableAutoDepthStencil = TRUE;
+	mPresentParameters.AutoDepthStencilFormat = D3DFMT_D16;
+	mPresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+
+	// 디스플레이 어댑터를 나타내는 디바이스를 만드는 함수입니다.
+	if (md3d->CreateDevice(
+		D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL,
+		mHWnd,
+		D3DCREATE_HARDWARE_VERTEXPROCESSING,
+		&mPresentParameters,
+		&mDevice) < 0)
+		return false;
+
+	return true;
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(

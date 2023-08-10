@@ -9,6 +9,7 @@
 #include "RenderManger.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "AABBCollider.h"
 #include "SpriteRenderer.h"
 #include "Collider.h"
 #include "InputManager.h"
@@ -32,8 +33,6 @@ namespace mapTool
 
 		using namespace d2dFramework;
 
-		static unsigned int tempId = 20000;
-
 		getRenderManager()->SetHwnd(MapToolWinApp::GetHwnd());
 		GameProcessor::Init();
 		getSceneManager()->RegisterScene("hoho", new Scene("hoho"));
@@ -42,6 +41,9 @@ namespace mapTool
 		mImGui->CreateHWindow("Map Tool Menu", "Map Tool Class");
 		mImGui->CreateDevice();
 		mImGui->CreateImGui();
+
+		HRESULT hr = getRenderManager()->CreateD2DBitmapFromFile(L"Golem", L"../Bin/image/Golem.png");
+		hr = getRenderManager()->CreateD2DBitmapFromFile(L"Charactor", L"../Bin/image/Charactor.png");
 	}
 
 	void SoulBeaterProcessor::Update()
@@ -79,15 +81,28 @@ namespace mapTool
 	void SoulBeaterProcessor::Render()
 	{
 		POINT pos = d2dFramework::InputManager::GetInstance()->GetMousePos();
-		getRenderManager()->DrawPoint(pos.x, pos.y);
+		getRenderManager()->DrawPoint((float)pos.x, (float)pos.y);
 
 		// 격자판 그리기
-		getRenderManager()->DrawGrid(0, 0, mImGui->GetGridWidth(), mImGui->GetGridHeight(), mImGui->GetGridDistance());
-		CheckedRender();
+		{
+			getRenderManager()->DrawGrid(0, 0, (float)MapToolGui::mWidth, (float)MapToolGui::mHeight, (float)MapToolGui::mGridDistance);
+			CheckedRender();
+			ColliderRender();
+		}
+		
+		// 타일 오브젝트 생성
+		{
+			TileObjectCreate();
+			TileObjectDelete();
+		}
 
-		// 오브젝트 생성 및 삭제
-		ObjectCreate();
-		ObjectDelete();
+		// 오브젝트 생성 ( 컴포넌트 생성 ) 및 삭제
+		{
+			ObjectCreate();
+			ColliderSetting();
+			SpriteSetting();
+			ObjectDelete();
+		}
 
 		getRenderManager()->SetStrokeWidth(2);
 	}
@@ -97,42 +112,150 @@ namespace mapTool
 		using namespace d2dFramework;
 
 		// 버튼 클릭 시 그리드에 맞는 곳 체크
-		if (InputManager::GetInstance()->GetKeyState(VK_LBUTTON) == eKeyState::Push && mImGui->GetGridDistance() != 0)
+		if (InputManager::GetInstance()->GetKeyState(VK_LBUTTON) == eKeyState::Push && MapToolGui::mGridDistance != 0)
 		{
 			POINT point = InputManager::GetInstance()->GetMousePos();
 
 			int mouseX = point.x;
 			int mouseY = point.y;
-			int arrX = mouseX / (float)mImGui->GetGridDistance();
-			int arrY = mouseY / (float)mImGui->GetGridDistance();
+			int arrX = mouseX / (float)MapToolGui::mGridDistance;
+			int arrY = mouseY / (float)MapToolGui::mGridDistance;
 
-			mRect.top = arrY;
-			mRect.left = arrX;
-			mRect.bottom = arrY + mImGui->GetGridDistance();
-			mRect.right = arrX + mImGui->GetGridDistance();
+			mRect.top = (float)arrY;
+			mRect.left = (float)arrX;
+			mRect.bottom = (float)arrY + MapToolGui::mGridDistance;
+			mRect.right = (float)arrX + MapToolGui::mGridDistance;
 
-			if (mImGui->GetGridWidth() / mImGui->GetGridDistance() > arrX && mImGui->GetGridHeight() / mImGui->GetGridDistance() > arrY)
+			if (MapToolGui::mWidth / MapToolGui::mGridDistance > arrX && MapToolGui::mHeight / MapToolGui::mGridDistance > arrY)
 			{
-				if (mImGui->GetIsChecked()[arrX][arrY] == true)
-					mImGui->SetIsChecked(arrX, arrY, false);
+				if (MapToolGui::mbIsChecked[arrX][arrY] == true)
+				{
+					MapToolGui::mbIsChecked[arrX][arrY] = false;
+					MapToolGui::ItemImfoCurrentIndex = 0;
+				}
 				else
-					mImGui->SetIsChecked(arrX, arrY, true);
+					MapToolGui::mbIsChecked[arrX][arrY] = true;
 			}
 		}
 	}
 
 	void SoulBeaterProcessor::CheckedRender()
 	{
-		for (int i = 0; i < mImGui->GetIsChecked().size(); i++)
+		for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
 		{
-			for (int j = 0; j < mImGui->GetIsChecked()[i].size(); j++)
+			for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
 			{
-				if (mImGui->GetIsChecked()[j][i] == true)
+				if (MapToolGui::mbIsChecked[i][j] == true)
 				{
 					getRenderManager()->SetStrokeWidth(5);
-					getRenderManager()->DrawRectangle(j * mImGui->GetGridDistance(), i * mImGui->GetGridDistance(), 
-						(j + 1) * mImGui->GetGridDistance(), (i + 1) * mImGui->GetGridDistance());
+					getRenderManager()->DrawRectangle((float)i * MapToolGui::mGridDistance, (float)j * MapToolGui::mGridDistance,
+						(float)(i + 1) * MapToolGui::mGridDistance, (float)(j + 1) * MapToolGui::mGridDistance);
 					getRenderManager()->SetStrokeWidth(2);
+				}
+			}
+		}
+	}
+
+	void SoulBeaterProcessor::ColliderRender()
+	{
+		using namespace d2dFramework;
+
+		for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
+		{
+			for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
+			{
+				if (MapToolGui::mbIsObject[i][j] == true)
+				{
+					std::pair<int, int> key = std::make_pair(i, j);
+					auto iter = MapToolGui::mObjectIdMap.find(key);
+
+					GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(iter->second);
+					AABBCollider* collider = object->GetComponent<AABBCollider>();
+
+					if (collider != nullptr)
+					{
+						getRenderManager()->DrawRectangle(
+							(float)i * MapToolGui::mGridDistance - collider->GetSize().GetX() * 0.5f  + MapToolGui::mGridDistance * 0.5f
+							, (float)j * MapToolGui::mGridDistance - collider->GetSize().GetY() * 0.5f + MapToolGui::mGridDistance * 0.5f
+							, (float)i * MapToolGui::mGridDistance + collider->GetSize().GetX() * 0.5f + MapToolGui::mGridDistance * 0.5f
+							, (float)j * MapToolGui::mGridDistance + collider->GetSize().GetY() * 0.5f + MapToolGui::mGridDistance * 0.5f);
+					}
+				}
+			}
+		}
+	}
+
+	void SoulBeaterProcessor::TileObjectCreate()
+	{
+		using namespace d2dFramework;
+
+		if (mImGui->GetIsCreateTileObject())
+		{
+			for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
+			{
+				for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
+				{
+					//체크가 되었으면서 오브젝트가 없는 곳에 오브젝트 생성
+					if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsTileObject[i][j] == false)
+					{
+						//오브젝트 생성
+						Vector2 pos =
+						{
+							i * static_cast<float>(MapToolGui::mGridDistance) - GetWidth() * 0.5f + MapToolGui::mGridDistance * 0.5f,
+							j * -static_cast<float>(MapToolGui::mGridDistance) + GetHeight() * 0.5f - MapToolGui::mGridDistance * 0.5f
+						};
+
+						GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mTileId);
+						MapToolGui::mTileObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mTileId++));
+						MapToolGui::mbIsTileObject[i][j] = true;
+
+						Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mTileId++);
+						TransformComponent->SetTranslate(pos);
+						SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(MapToolGui::mTileId++);
+						ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::TileBitmap.c_str()));
+						ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::TileSpriteWidth), static_cast<float>(MapToolGui::TileSpriteHeight) });
+						ComponentRenderer->SetUVRectangle({ 0,0,500,500 });
+						ComponentRenderer->SetSpriteType(eSpriteType::Sprite);
+						ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+					}
+					else if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsTileObject[i][j] == true)
+					{
+						std::pair<int, int> key = std::make_pair(i, j);
+						auto iter = MapToolGui::mTileObjectIdMap.find(key);
+
+						GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(iter->second);
+
+						if (object != nullptr)
+						{
+							SpriteRenderer* ComponentRenderer = object->GetComponent<SpriteRenderer>();
+							ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::TileBitmap.c_str()));
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void SoulBeaterProcessor::TileObjectDelete()
+	{
+		// 타일 오브젝트 삭제
+		if (mImGui->GetIsDeleteTileObject())
+		{
+			for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
+			{
+				for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
+				{
+					std::pair<int, int> key = std::make_pair(i, j);
+					auto iter = MapToolGui::mTileObjectIdMap.find(key);
+
+					// 체크되어 있고 오브젝트가 있고 Id가 있을 때에 오브젝트 삭제
+					if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsTileObject[i][j] == true && iter != MapToolGui::mTileObjectIdMap.end())
+					{
+						MapToolGui::mbIsTileObject[i][j] = false;
+
+						d2dFramework::ObjectManager::GetInstance()->DeletObject(iter->second);
+						MapToolGui::mTileObjectIdMap.erase(iter);
+					}
 				}
 			}
 		}
@@ -144,31 +267,60 @@ namespace mapTool
 
 		if (mImGui->GetIsCreateObject())
 		{
-			//체크가 되었으면서 오브젝트가 없는 곳에 오브젝트 생성
-			for (int i = 0; i < mImGui->GetIsChecked().size(); i++)
+			for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
 			{
-				for (int j = 0; j < mImGui->GetIsChecked()[i].size(); j++)
+				for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
 				{
-					if (mImGui->GetIsChecked()[j][i] == true && mImGui->GetIsObject()[j][i] == false)
+					//체크가 되었으면서 오브젝트가 없는 곳에 오브젝트 생성
+					if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsObject[i][j] == false)
 					{
-						mImGui->SetIsObject(j, i, true);
-
 						//오브젝트 생성
 						Vector2 pos =
 						{
-							j * static_cast<float>(mImGui->GetGridDistance()) - GetWidth() * 0.5f + mImGui->GetGridDistance() * 0.5f,
-							i * -static_cast<float>(mImGui->GetGridDistance()) + GetHeight() * 0.5f - mImGui->GetGridDistance() * 0.5f
+							i * static_cast<float>(MapToolGui::mGridDistance) - GetWidth() * 0.5f + MapToolGui::mGridDistance * 0.5f,
+							j * -static_cast<float>(MapToolGui::mGridDistance) + GetHeight() * 0.5f - MapToolGui::mGridDistance * 0.5f
 						};
 
-						GameObject* Object = ObjectManager::GetInstance()->CreateObject(tempId);
-						mImGui->SetObjectMapInsert(j, i, tempId++);
+						switch (MapToolGui::mIdSetting)
+						{
+						case IdSet::DEFALUE:
+							break;
+						case IdSet::PLAYERID:
+						{
+							GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mPlayerId);
+							MapToolGui::mObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mPlayerId++));
+							MapToolGui::mbIsObject[i][j] = true;
 
-						Transform* TransformComponent = Object->CreateComponent<Transform>(tempId++);
-						TransformComponent->SetTranslate(pos);
-						SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(tempId++);
-						ComponentRenderer->SetSize({ static_cast<float>(mImGui->GetGridDistance()), static_cast<float>(mImGui->GetGridDistance()) });
-						ComponentRenderer->SetSpriteType(eSpriteType::Circle);
-						ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mPlayerId++);
+							TransformComponent->SetTranslate(pos);
+ 
+							SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(MapToolGui::mItemId++);
+							ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
+							ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+							ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+						}
+							break;
+						case IdSet::MONSTERID:
+						{
+							GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mMonsterId);
+							MapToolGui::mObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mMonsterId++));
+							MapToolGui::mbIsObject[i][j] = true;
+
+							Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mMonsterId++);
+							TransformComponent->SetTranslate(pos);
+						}
+							break;
+						case IdSet::ITEMID:
+						{
+							GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mItemId);
+							MapToolGui::mObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mItemId++));
+							MapToolGui::mbIsObject[i][j] = true;
+
+							Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mItemId++);
+							TransformComponent->SetTranslate(pos);
+						}
+							break;
+						}
 					}
 				}
 			}
@@ -177,24 +329,127 @@ namespace mapTool
 
 	void SoulBeaterProcessor::ObjectDelete()
 	{
+		// 오브젝트 삭제
 		if (mImGui->GetIsDeleteObject())
 		{
-			for (int i = 0; i < mImGui->GetIsChecked().size(); i++)
+			for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
 			{
-				for (int j = 0; j < mImGui->GetIsChecked()[i].size(); j++)
+				for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
 				{
-					if (mImGui->GetIsChecked()[i][j] == true && mImGui->GetIsObject()[i][j] == true)
+					std::pair<int, int> key = std::make_pair(i, j);
+					auto iter = MapToolGui::mObjectIdMap.find(key);
+
+					// 체크되어 있고 오브젝트가 있고 Id가 있을 때에 오브젝트 삭제
+					if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsObject[i][j] == true && iter != MapToolGui::mObjectIdMap.end())
 					{
-						std::pair<int, int> key = std::make_pair(i, j);
+						MapToolGui::mbIsObject[i][j] = false;
 
-						if (mImGui->mObjectIdMap.find(key) != mImGui->mObjectIdMap.end())
+						d2dFramework::ObjectManager::GetInstance()->DeletObject(iter->second);
+						MapToolGui::mObjectIdMap.erase(iter);
+					}
+				}
+			}
+		}
+	}
+
+	void SoulBeaterProcessor::ColliderSetting()
+	{
+		using namespace d2dFramework;
+
+		if (mImGui->GetIsCreateCollider())
+		{
+			for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
+			{
+				for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
+				{
+					std::pair<int, int> key = std::make_pair(i, j);
+					auto iter = MapToolGui::mObjectIdMap.find(key);
+
+					// 해당 배열이 체크되어 있고 오브젝트가 있고 오브젝트 아이디가 있을 때 실행
+					if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsChecked[i][j] == true && iter != MapToolGui::mObjectIdMap.end())
+					{
+						GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(iter->second);
+						AABBCollider* collider = object->GetComponent< AABBCollider>();
+
+						// 오브젝트의 콜라이더가 없을 때에만 생성 콜라이더 있으면 기존 콜라이더 세팅 값으로 변경
+						if (collider == nullptr)
 						{
-							mImGui->SetIsObject(i, j, false);
+							if (iter->second >= ITEM_ID_START)
+							{
+								collider = object->CreateComponent<AABBCollider>(MapToolGui::mItemId++);
+								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
+							}
+							else if (iter->second >= MONSTER_ID_START)
+							{
+								collider = object->CreateComponent<AABBCollider>(MapToolGui::mMonsterId++);
+								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
+							}
+							else if (iter->second >= PLAYER_ID_START)
+							{
+								collider = object->CreateComponent<AABBCollider>(MapToolGui::mPlayerId++);
+								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
+							}
+						}
+						else
+						{
+							collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
+						}
+					}
+				}
+			}
+		}
+	}
 
-							auto iter = mImGui->mObjectIdMap.find(key);
+	void SoulBeaterProcessor::SpriteSetting()
+	{
+		using namespace d2dFramework;
 
-							d2dFramework::ObjectManager::GetInstance()->DeletObject(iter->second);
-							mImGui->mObjectIdMap.erase(iter);
+		// 해당 오브젝트에 스프라이트 컴포넌트 생성
+		if (mImGui->GetIsCreateSprite())
+		{
+			for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
+			{
+				for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
+				{
+					std::pair<int, int> key = std::make_pair(i, j);
+					auto iter = MapToolGui::mObjectIdMap.find(key);
+
+					// 해당 배열이 체크되어 있고 오브젝트가 있고 오브젝트 아이디가 있을 때 실행
+					if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsChecked[i][j] == true && iter != MapToolGui::mObjectIdMap.end())
+					{
+						GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(iter->second);
+						SpriteRenderer* ComponentRenderer = object->GetComponent<SpriteRenderer>();
+
+						// 오브젝트의 콜라이더가 없을 때에만 생성 콜라이더 있으면 기존 콜라이더 세팅 값으로 변경
+						if (ComponentRenderer == nullptr)
+						{
+							if (iter->second >= ITEM_ID_START)
+							{
+								ComponentRenderer = object->CreateComponent<SpriteRenderer>(MapToolGui::mItemId++);
+								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
+								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							}
+							else if (iter->second >= MONSTER_ID_START)
+							{
+								ComponentRenderer = object->CreateComponent<SpriteRenderer>(MapToolGui::mMonsterId++);
+								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
+								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							}
+							else if (iter->second >= PLAYER_ID_START)
+							{
+								ComponentRenderer = object->CreateComponent<SpriteRenderer>(MapToolGui::mPlayerId++);
+								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
+								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							}
+						}
+						else
+						{
+							ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
+							ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+							ComponentRenderer->SetBaseColor({ 1,0,0,1 });
 						}
 					}
 				}
@@ -288,55 +543,3 @@ namespace mapTool
 		ImGui::TreePop();
 	}
 }
-
-//{
-//	void SoulBeaterProcessor::ImGuiResetGridSetting()
-//	{
-//		static int GridArea[2] = {};
-//		static int GridInstance = 0;
-//
-//		// 그리드 가로,세로 값세팅 및 그리드 사이 간격 길이 입력
-//		ImGui::InputInt2("Grid Area Width, Height", GridArea);
-//		ImGui::InputInt("Grid Distance", &GridInstance);
-//
-//		// 그리드 세팅 버튼을 누르면 그리드 칸에 맞춰서 세팅
-//		if (ImGui::Button("Grid Setting"))
-//		{
-//			for (int i = 0; i < mbIsChecked.size(); i++)
-//				mbIsChecked[i].clear();
-//			mbIsChecked.clear();
-//
-//			for (int i = 0; i < mbIsObject.size(); i++)
-//				mbIsObject[i].clear();
-//			mbIsObject.clear();
-//
-//			mWidth = GridArea[0];
-//			mHeight = GridArea[1];
-//			mGridDistance = GridInstance;
-//
-//			// 그리드에 맞게 리사이즈
-//			mImGui->mbIsChecked.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
-//			mImGui->mbIsObject.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
-//
-//			// 모든 오브젝트 삭제
-//			for (auto e : mObjectIdMap)
-//				d2dFramework::ObjectManager::GetInstance()->DeletObject(e.second);
-//			mObjectIdMap.clear();
-//		}
-//
-//		ImGui::TreePop();
-//	}
-//
-//void SoulBeaterProcessor::ImGuiRender()
-//{
-//	ImGui::Begin("Map Tool Menu");
-//
-//	// 문자열{ 이미지 이름, 파일 경로 } 을 입력받아 비트맵 로딩하여 이미지 이름으로 리스트에 추가하기 
-//	if (ImGui::TreeNode("Image Create"))
-//		ImGuiImageLoading();
-//
-//	// 격자판 생성 시
-//	if (ImGui::TreeNode("Grid Setting & Create"))
-//		ImGuiResetGridSetting();
-//}
-//}
