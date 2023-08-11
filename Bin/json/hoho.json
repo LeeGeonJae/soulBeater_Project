@@ -1,0 +1,266 @@
+{
+    "SceneID": 10,
+    "m_Gameobjects": [
+        {
+            "GameObject_ID": 20000,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20001,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -200.0,
+                        0.0
+                    ]
+                },
+                {
+                    "ComponentName": "Rigidbody",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20004,
+                    "mVelocity": [
+                        0.0,
+                        0.0
+                    ],
+                    "mAcceleartion": [
+                        0.0,
+                        0.0
+                    ],
+                    "mMass": 1.0,
+                    "mInvMass": 1.0,
+                    "mCOR": 0.20000000298023224,
+                    "mGravityScale": 1.0
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20002,
+                    "mBitmapKey": "",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "mSpriteType": 0
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20003,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        1.0,
+                        1.0
+                    ],
+                    "mSize": [
+                        1.0,
+                        1.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -199.5,
+                            -0.5
+                        ],
+                        [
+                            -200.5,
+                            0.5
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20005,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20005,
+                    "Component_ID": 20006,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        200.0,
+                        0.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20005,
+                    "Component_ID": 20007,
+                    "mBitmapKey": "",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "mSpriteType": 0
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20008,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20008,
+                    "Component_ID": 20009,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        0.0,
+                        200.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20008,
+                    "Component_ID": 20010,
+                    "mBitmapKey": "",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        0.0,
+                        1.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "mSpriteType": 1
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20011,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20011,
+                    "Component_ID": 20012,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        0.0,
+                        -200.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20011,
+                    "Component_ID": 20013,
+                    "mBitmapKey": "",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        0.5,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "mSpriteType": 1
+                }
+            ]
+        }
+    ]
+}

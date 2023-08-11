@@ -35,7 +35,7 @@ namespace d2dFramework
 		assert(mAnimationAsset != nullptr);
 		mAccumulatedTime += deltaTime;
 
-		FrameInfomation current = mAnimationAsset->GetFrameInfomation(mAnimationIndex, mFrameIndex);
+		FrameInformation current = mAnimationAsset->GetFrameInformation(mAnimationIndex, mFrameIndex);
 		while (mAccumulatedTime >= current.AnimationTime)
 		{
 			++mFrameIndex;
@@ -53,7 +53,7 @@ namespace d2dFramework
 			}
 
 			mAccumulatedTime -= current.AnimationTime;
-			current = mAnimationAsset->GetFrameInfomation(mAnimationIndex, mFrameIndex);
+			current = mAnimationAsset->GetFrameInformation(mAnimationIndex, mFrameIndex);
 		}
 	}
 
@@ -75,7 +75,7 @@ namespace d2dFramework
 		D2D1::Matrix3x2F matrix = transform->GetTransform();
 		GetRenderManager()->SetTransform(matrix * cameraTransform);
 		{
-			const FrameInfomation& frameInfo = mAnimationAsset->GetFrameInfomation(mAnimationIndex, mFrameIndex);
+			const FrameInformation& frameInfo = mAnimationAsset->GetFrameInformation(mAnimationIndex, mFrameIndex);
 			GetRenderManager()->DrawBitMap(mOffset, mSize, frameInfo.UVRectangle, mAnimationAsset->GetBitmap());
 		}
 		GetRenderManager()->SetTransform(D2D1::Matrix3x2F::Identity());
@@ -85,5 +85,23 @@ namespace d2dFramework
 	{
 		IRenderable::Release();
 		IUpdateable::Release();
+	}
+
+	void AnimationRenderer::SerializeIn(nlohmann::ordered_json& object)
+	{
+		mOffset.SetXY(object["mOffset"][0], object["mOffset"][1]);
+		mSize.SetXY(object["mSize"][0], object["mSize"][1]);
+		mAnimationKey = object["mAnimationKey"];
+		///TODO 지환이형 도와주세여 여기에 키값으로 애니메이션 에셋 연결하는 거 만들어주세요.
+		//AnimationAsset* mAnimationAsset;
+	}
+
+	void AnimationRenderer::SerializeOut(nlohmann::ordered_json& object)
+	{
+		object["ComponentName"] = "AnimationRenderer";
+		Component::SerializeOut(object);
+		object["AnimationRenderer_mOffset"] = { mSize.GetX(),mSize.GetY() };
+		object["AnimationRenderer_mSize"] = { mSize.GetX(),mSize.GetY() };
+		object["mAnimationKey"] = mAnimationKey;
 	}
 }

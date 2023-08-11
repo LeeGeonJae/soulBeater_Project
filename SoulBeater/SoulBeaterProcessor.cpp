@@ -22,7 +22,6 @@ namespace soulBeater
 		static unsigned int tempId = 20000;
 
 		GameProcessor::Init();
-		getSceneManager()->RegisterScene("hoho", new Scene("hoho"));
 		// register Register Scene;
 
 		GameObject* gm = ObjectManager::GetInstance()->CreateObject(tempId++);

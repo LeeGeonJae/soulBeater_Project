@@ -17,6 +17,9 @@ namespace d2dFramework
 		void Init() override;
 		void Release() override;
 
+		void SerializeIn(nlohmann::ordered_json& object) override;
+		void SerializeOut(nlohmann::ordered_json& object) override;
+
 		void UpdateCollider() override;
 		bool CheckCollision(ICollideable* other, Manifold* outManifold) override;
 

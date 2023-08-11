@@ -17,6 +17,20 @@ namespace d2dFramework
 	{
 	}
 
+	void Collider::SerializeOut(nlohmann::ordered_json& object)
+	{
+		object["Collider_bIsTrigger"] = mbIsTrigger;
+		object["Collider_Offset"] = { mOffset.GetX(),mOffset.GetY() };
+		object["Collider_Size"] = { mSize.GetX(),mSize.GetY() };
+	}
+
+	void Collider::SerializeIn(nlohmann::ordered_json& object)
+	{
+		mbIsTrigger = object["Collider_bIsTrigger"];
+		mOffset.SetXY(object["Collider_Offset"][0], object["Collider_Offset"][1]);
+		mSize.SetXY(object["Collider_Size"][0], object["Collider_Size"][1]);
+	}
+
 	void Collider::Init()
 	{
 		ICollideable::Init();

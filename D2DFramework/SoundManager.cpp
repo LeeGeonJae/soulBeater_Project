@@ -3,7 +3,6 @@
 #include "eFrameworkID.h"
 #include "SoundAsset.h"
 
-
 namespace d2dFramework
 {
 	SoundManager::SoundManager()
@@ -21,6 +20,7 @@ namespace d2dFramework
 	{
 		FMOD::System_Create(&mSystem);
 		mSystem->init(32, FMOD_INIT_NORMAL, nullptr);
+		mSystem->init(32, FMOD_INIT_NORMAL, nullptr); // 한 번에 실행될 수 있는 최대 채널 수를 의미한다.
 	}
 
 	void SoundManager::Release()
@@ -46,6 +46,11 @@ namespace d2dFramework
 		}
 
 		find->second->Play(mSystem);
+		SoundAsset* soundAsset = find->second;
+
+		soundAsset->Play(mSystem);
+		soundAsset->SetFrequency(mFrequency);
+		soundAsset->SetVolume(mVolume);
 	}
 
 	void SoundManager::Stop(unsigned int soundAssetID)
@@ -62,36 +67,73 @@ namespace d2dFramework
 
 	void SoundManager::SetVolumeAll(float volume)
 	{
+		if (volume > 1.f)
+		{
+			volume = 1.f;
+		}
+		else if (volume < 0.f)
+		{
+			volume = 0.f;
+		}
+
+		mVolume = volume;
+
 		for (auto pair : mSoundMap)
 		{
 			pair.second->SetVolume(volume);
+			pair.second->SetVolume(mVolume);
 		}
 	}
 
 	void SoundManager::SetFrequencyAll(float frequency)
 	{
+		if (frequency < 0.f)
+		{
+			frequency = 0.f;
+		}
+
+		mFrequency = frequency;
+
 		for (auto pair : mSoundMap)
 		{
 			unsigned int id = pair.first;
 			SoundAsset* soundAsset = pair.second;
 
 			soundAsset->SetFrequency(frequency);
+			soundAsset->SetFrequency(mFrequency);
+		}
+	}
+	void SoundManager::SetPitchAll(float pitch)
+	{
+		if (pitch < 0.f)
+		{
+			pitch = 0.f;
+		}
+
+		mPitch = pitch;
+
+		for (auto pair : mSoundMap)
+		{
+			unsigned int id = pair.first;
+			SoundAsset* soundAsset = pair.second;
+
+			soundAsset->SetPitch(mPitch);
 		}
 	}
 
-	SoundAsset* SoundManager::CreateSoundAsset(unsigned int soundAssetId, const std::string& filePath)
+	SoundAsset* SoundManager::CreateSoundAsset(unsigned int soundAssetId, const std::string& filePath, bool bIsLoop)
 	{
 		FMOD::Sound* sound = nullptr;
-		FMOD::Channel* channel = nullptr;
-		FMOD::DSP* dsp = nullptr;
 
-		mSystem->createDSPByType(FMOD_DSP_TYPE_DELAY, &dsp);
-		mSystem->createSound(filePath.c_str(), FMOD_LOOP_OFF, NULL, &sound);
-		mSystem->playSound(sound, nullptr, false, &channel);
-		channel->stop();
-		sound->setMode(FMOD_LOOP_OFF);
+		if (bIsLoop)
+		{
+			mSystem->createSound(filePath.c_str(), FMOD_LOOP_NORMAL, NULL, &sound);
+		}
+		{
+			mSystem->createSound(filePath.c_str(), FMOD_LOOP_OFF, NULL, &sound);
+		}
 
-		SoundAsset* soundAsset = new SoundAsset(soundAssetId, sound, channel, dsp);
+		SoundAsset* soundAsset = new SoundAsset(soundAssetId, sound, bIsLoop);
 		mSoundMap.insert({ soundAssetId, soundAsset });
 
 		return soundAsset;

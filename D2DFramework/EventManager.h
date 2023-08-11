@@ -24,7 +24,6 @@ namespace d2dFramework
 		static EventManager* GetInstance();
 
 		void BroadcastEvent(const std::string& event, const std::string& data);
-
 		inline void AddLateBroadcastEvent(const std::string& event, const std::string& data);
 
 		inline void RegisterEventHandler(const std::string& event, unsigned int id, std::function<void(const std::string&)> callback);

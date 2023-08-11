@@ -50,10 +50,16 @@ namespace d2dFramework
 	}
 	D2D1::Matrix3x2F CameraManager::GetCombineMatrix() const
 	{
-		Transform* transform = mCurrnetCamara->GetComponent<Transform>();
 		D2D1::Matrix3x2F cameraToScreen =
 			D2D1::Matrix3x2F::Scale(1, -1)
 			* D2D1::Matrix3x2F::Translation(mSize.GetX() * 0.5f, mSize.GetY() * 0.5f);
+
+		if (mCurrnetCamara == nullptr)
+		{
+			return cameraToScreen;
+		}
+
+		Transform* transform = mCurrnetCamara->GetComponent<Transform>();
 
 		return transform->GetInverseTransform() * cameraToScreen;
 	}

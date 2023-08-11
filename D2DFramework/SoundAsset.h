@@ -18,7 +18,7 @@ namespace d2dFramework
 	class SoundAsset : public BaseEntity
 	{
 	public:
-		SoundAsset(unsigned int id, FMOD::Sound* sound, FMOD::Channel* channel, FMOD::DSP* dsp);
+		SoundAsset(unsigned int id, FMOD::Sound* sound, bool bIsLoop);
 		~SoundAsset();
 
 		void Play(FMOD::System* system);
@@ -28,19 +28,23 @@ namespace d2dFramework
 		inline void SetVolume(float volume);
 		inline void SetDelay(float delayTimeInSecond);
 		inline void SetFrequency(float frequency);
+		inline void SetPitch(float pitch);
 
 		inline bool GetLoop() const;
 		inline float GetVolume() const;
-		inline float GetFrequency(void) const;
+		inline float GetFrequency() const;
+		inline float GetPitch() const;
 
 	private:
 		FMOD::Sound* mSound;
 		FMOD::Channel* mChannel;
 		FMOD::DSP* mDsp;
+		float mDefaultFrequency;
 
 		bool mbIsLoop;
 		float mVolume;
 		float mFrequency;
+		float mPitch;
 	};
 
 	void SoundAsset::SetLoop(bool bIsLoop)
@@ -80,6 +84,16 @@ namespace d2dFramework
 
 		mFrequency = frequency;
 		mChannel->setPitch(frequency);
+		mChannel->setFrequency(mDefaultFrequency * frequency);
+
+		float speed = 0.f;
+		mSound->getMusicSpeed(&speed);
+		mSound->setMusicSpeed(2);
+	}
+	void SoundAsset::SetPitch(float pitch)
+	{
+		mPitch = pitch;
+		mChannel->setPitch(pitch);
 	}
 
 	bool SoundAsset::GetLoop() const
@@ -90,8 +104,12 @@ namespace d2dFramework
 	{
 		return mVolume;
 	}
-	float SoundAsset::GetFrequency(void) const
+	float SoundAsset::GetFrequency() const
 	{
 		return mFrequency;
+	}
+	float SoundAsset::GetPitch() const
+	{
+		return mPitch;
 	}
 }

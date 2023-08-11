@@ -14,15 +14,13 @@
 #include "Collider.h"
 #include "InputManager.h"
 #include "CameraManager.h"
+#include"SceneLoader.h"
 #include "gui.h"
 
 namespace mapTool
 {
 	SoulBeaterProcessor::SoulBeaterProcessor(UINT width, UINT height, std::wstring name)
 		: GameProcessor(width, height, name)
-		, mWidth(0)
-		, mHeight(0)
-		, mGridDistance(0)
 		, mRect{}
 	{
 	}
@@ -35,15 +33,17 @@ namespace mapTool
 
 		getRenderManager()->SetHwnd(MapToolWinApp::GetHwnd());
 		GameProcessor::Init();
-		getSceneManager()->RegisterScene("hoho", new Scene("hoho"));
+		getSceneManager()->CreateScene(50000);
 		// register Register Scene;
 
 		mImGui->CreateHWindow("Map Tool Menu", "Map Tool Class");
 		mImGui->CreateDevice();
 		mImGui->CreateImGui();
 
-		HRESULT hr = getRenderManager()->CreateD2DBitmapFromFile(L"Golem", L"../Bin/image/Golem.png");
-		hr = getRenderManager()->CreateD2DBitmapFromFile(L"Charactor", L"../Bin/image/Charactor.png");
+	/*	HRESULT hr = getRenderManager()->CreateD2DBitmapFromFile(L"Golem", L"../Bin/image/Golem.png");
+		hr = getRenderManager()->CreateD2DBitmapFromFile(L"Charactor", L"../Bin/image/Charactor.png");*/
+
+		SceneLoader::LoadAllBitmaps(getRenderManager());
 	}
 
 	void SoulBeaterProcessor::Update()
@@ -60,10 +60,10 @@ namespace mapTool
 		getRenderManager()->EndDraw();
 
 		// switch the back buffer and the front buffer
-		getRenderManager()->Present();
 
 		mImGui->BeginRender();
 		mImGui->Render();
+		ImGuiImageLoading();
 		mImGui->EndRender();
 	}
 
@@ -85,15 +85,18 @@ namespace mapTool
 
 		// 격자판 그리기
 		{
+			CreateScene();
 			getRenderManager()->DrawGrid(0, 0, (float)MapToolGui::mWidth, (float)MapToolGui::mHeight, (float)MapToolGui::mGridDistance);
 			CheckedRender();
 			ColliderRender();
 		}
-		
+
 		// 타일 오브젝트 생성
 		{
 			TileObjectCreate();
 			TileObjectDelete();
+
+			TileColliderCreate();
 		}
 
 		// 오브젝트 생성 ( 컴포넌트 생성 ) 및 삭제
@@ -102,6 +105,11 @@ namespace mapTool
 			ColliderSetting();
 			SpriteSetting();
 			ObjectDelete();
+		}
+
+		// 세이브
+		{
+			SaveAndLoad();
 		}
 
 		getRenderManager()->SetStrokeWidth(2);
@@ -175,7 +183,7 @@ namespace mapTool
 					if (collider != nullptr)
 					{
 						getRenderManager()->DrawRectangle(
-							(float)i * MapToolGui::mGridDistance - collider->GetSize().GetX() * 0.5f  + MapToolGui::mGridDistance * 0.5f
+							(float)i * MapToolGui::mGridDistance - collider->GetSize().GetX() * 0.5f + MapToolGui::mGridDistance * 0.5f
 							, (float)j * MapToolGui::mGridDistance - collider->GetSize().GetY() * 0.5f + MapToolGui::mGridDistance * 0.5f
 							, (float)i * MapToolGui::mGridDistance + collider->GetSize().GetX() * 0.5f + MapToolGui::mGridDistance * 0.5f
 							, (float)j * MapToolGui::mGridDistance + collider->GetSize().GetY() * 0.5f + MapToolGui::mGridDistance * 0.5f);
@@ -205,19 +213,27 @@ namespace mapTool
 							j * -static_cast<float>(MapToolGui::mGridDistance) + GetHeight() * 0.5f - MapToolGui::mGridDistance * 0.5f
 						};
 
-						GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mTileId);
+						GameObject* Object = getSceneManager()->GetCurrentScene().CreateObject(MapToolGui::mTileId);
+						Object->SetObjectType(eObjectType::Background);
 						MapToolGui::mTileObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mTileId++));
 						MapToolGui::mbIsTileObject[i][j] = true;
 
 						Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mTileId++);
 						TransformComponent->SetTranslate(pos);
 						SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(MapToolGui::mTileId++);
-						ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::TileBitmap.c_str()));
+						ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex].c_str()), MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex]);
 						ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::TileSpriteWidth), static_cast<float>(MapToolGui::TileSpriteHeight) });
 						ComponentRenderer->SetUVRectangle({ 0,0,500,500 });
-						ComponentRenderer->SetSpriteType(eSpriteType::Sprite);
+ 						ComponentRenderer->SetSpriteType(eSpriteType::Sprite);
 						ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+
+						if (mImGui->GetIsCreateTileCollider())
+						{
+							AABBCollider* collider = Object->CreateComponent<AABBCollider>(MapToolGui::mTileId++);
+							collider->SetSize({ static_cast<float>(MapToolGui::mGridDistance), static_cast<float>(MapToolGui::mGridDistance) });
+						}
 					}
+					// 오브젝트가 생성이 되어 있다면 비트맵만 변경
 					else if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsTileObject[i][j] == true)
 					{
 						std::pair<int, int> key = std::make_pair(i, j);
@@ -228,8 +244,33 @@ namespace mapTool
 						if (object != nullptr)
 						{
 							SpriteRenderer* ComponentRenderer = object->GetComponent<SpriteRenderer>();
-							ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::TileBitmap.c_str()));
+							ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::WstringImageListName[MapToolGui::ItemImageCurrentIndex].c_str()), MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex]);
 						}
+					}
+				}
+			}
+		}
+	}
+
+	void SoulBeaterProcessor::TileColliderCreate()
+	{
+		using namespace d2dFramework;
+
+		if (mImGui->GetIsCreateTileCollider())
+		{
+			for (int i = 0; i < MapToolGui::mbIsChecked.size(); i++)
+			{
+				for (int j = 0; j < MapToolGui::mbIsChecked[i].size(); j++)
+				{
+					std::pair<int, int> key = std::make_pair(i, j);
+					auto iter = MapToolGui::mTileObjectIdMap.find(key);
+
+					// 해당 타일이 체크되고 타일 오브젝트가 있을 때
+					if (MapToolGui::mbIsChecked[i][j] == true && MapToolGui::mbIsTileObject[i][j] == true && iter != MapToolGui::mTileObjectIdMap.end())
+					{
+						GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(iter->second);
+						AABBCollider* Collider = object->GetComponent<AABBCollider>();
+						int a = 0;
 					}
 				}
 			}
@@ -287,39 +328,82 @@ namespace mapTool
 							break;
 						case IdSet::PLAYERID:
 						{
-							GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mPlayerId);
+							GameObject* Object = getSceneManager()->GetCurrentScene().CreateObject(MapToolGui::mPlayerId);
+							Object->SetObjectType(eObjectType::Player);
 							MapToolGui::mObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mPlayerId++));
 							MapToolGui::mbIsObject[i][j] = true;
 
 							Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mPlayerId++);
 							TransformComponent->SetTranslate(pos);
- 
-							SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(MapToolGui::mItemId++);
-							ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
-							ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
-							ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(MapToolGui::mPlayerId++);
+							AABBCollider* collider = Object->CreateComponent<AABBCollider>(MapToolGui::mPlayerId++);
+
+							if (MapToolGui::bIsSpriteCheck)
+							{
+								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::CreateSpriteWidth), static_cast<float>(MapToolGui::CreateSpriteHeight) });
+								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+								ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::WstringImageListName[MapToolGui::ObjectItemCurrentIndex].c_str()), MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex]);
+								ComponentRenderer->SetUVRectangle({ 0,0,500,500 });
+								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							}
+							if (MapToolGui::bIsColliderCheck)
+							{
+								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
+							}
 						}
-							break;
+						break;
 						case IdSet::MONSTERID:
 						{
-							GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mMonsterId);
+							GameObject* Object = getSceneManager()->GetCurrentScene().CreateObject(MapToolGui::mMonsterId);
+							Object->SetObjectType(eObjectType::Enemy);
 							MapToolGui::mObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mMonsterId++));
 							MapToolGui::mbIsObject[i][j] = true;
 
 							Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mMonsterId++);
 							TransformComponent->SetTranslate(pos);
+							SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(MapToolGui::mMonsterId++);
+							AABBCollider* collider = Object->CreateComponent<AABBCollider>(MapToolGui::mMonsterId++);
+
+							if (MapToolGui::bIsSpriteCheck)
+							{
+								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::CreateSpriteWidth), static_cast<float>(MapToolGui::CreateSpriteHeight) });
+								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+								ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::WstringImageListName[MapToolGui::ObjectItemCurrentIndex].c_str()), MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex]);
+								ComponentRenderer->SetUVRectangle({ 0,0,500,500 });
+								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							}
+							if (MapToolGui::bIsColliderCheck)
+							{
+								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
+							}
 						}
-							break;
+						break;
 						case IdSet::ITEMID:
 						{
-							GameObject* Object = ObjectManager::GetInstance()->CreateObject(MapToolGui::mItemId);
+							GameObject* Object = getSceneManager()->GetCurrentScene().CreateObject(MapToolGui::mItemId);
+							Object->SetObjectType(eObjectType::Item);
 							MapToolGui::mObjectIdMap.insert(std::make_pair(std::make_pair(i, j), MapToolGui::mItemId++));
 							MapToolGui::mbIsObject[i][j] = true;
 
 							Transform* TransformComponent = Object->CreateComponent<Transform>(MapToolGui::mItemId++);
 							TransformComponent->SetTranslate(pos);
+							SpriteRenderer* ComponentRenderer = Object->CreateComponent<SpriteRenderer>(MapToolGui::mItemId++);
+							AABBCollider* collider = Object->CreateComponent<AABBCollider>(MapToolGui::mItemId++);
+
+							if (MapToolGui::bIsSpriteCheck)
+							{
+								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::CreateSpriteWidth), static_cast<float>(MapToolGui::CreateSpriteHeight) });
+								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+								ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::WstringImageListName[MapToolGui::ObjectItemCurrentIndex].c_str()), MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex]);
+								ComponentRenderer->SetUVRectangle({ 0,0,500,500 });
+								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
+							}
+							if (MapToolGui::bIsColliderCheck)
+							{
+								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
+							}
 						}
-							break;
+						break;
 						}
 					}
 				}
@@ -372,25 +456,7 @@ namespace mapTool
 						AABBCollider* collider = object->GetComponent< AABBCollider>();
 
 						// 오브젝트의 콜라이더가 없을 때에만 생성 콜라이더 있으면 기존 콜라이더 세팅 값으로 변경
-						if (collider == nullptr)
-						{
-							if (iter->second >= ITEM_ID_START)
-							{
-								collider = object->CreateComponent<AABBCollider>(MapToolGui::mItemId++);
-								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
-							}
-							else if (iter->second >= MONSTER_ID_START)
-							{
-								collider = object->CreateComponent<AABBCollider>(MapToolGui::mMonsterId++);
-								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
-							}
-							else if (iter->second >= PLAYER_ID_START)
-							{
-								collider = object->CreateComponent<AABBCollider>(MapToolGui::mPlayerId++);
-								collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
-							}
-						}
-						else
+						if (collider != nullptr)
 						{
 							collider->SetSize({ static_cast<float>(MapToolGui::ColliderWidth), static_cast<float>(MapToolGui::ColliderHeight) });
 						}
@@ -420,35 +486,13 @@ namespace mapTool
 						GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(iter->second);
 						SpriteRenderer* ComponentRenderer = object->GetComponent<SpriteRenderer>();
 
-						// 오브젝트의 콜라이더가 없을 때에만 생성 콜라이더 있으면 기존 콜라이더 세팅 값으로 변경
-						if (ComponentRenderer == nullptr)
-						{
-							if (iter->second >= ITEM_ID_START)
-							{
-								ComponentRenderer = object->CreateComponent<SpriteRenderer>(MapToolGui::mItemId++);
-								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
-								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
-								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
-							}
-							else if (iter->second >= MONSTER_ID_START)
-							{
-								ComponentRenderer = object->CreateComponent<SpriteRenderer>(MapToolGui::mMonsterId++);
-								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
-								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
-								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
-							}
-							else if (iter->second >= PLAYER_ID_START)
-							{
-								ComponentRenderer = object->CreateComponent<SpriteRenderer>(MapToolGui::mPlayerId++);
-								ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
-								ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
-								ComponentRenderer->SetBaseColor({ 1,0,0,1 });
-							}
-						}
-						else
+						// 오브젝트의 스프라이트가 없을 때에만 생성 콜라이더 있으면 기존 스프라이트 세팅 값으로 변경
+						if (ComponentRenderer != nullptr)
 						{
 							ComponentRenderer->SetSize({ static_cast<float>(MapToolGui::SpriteWidth), static_cast<float>(MapToolGui::SpriteHeight) });
 							ComponentRenderer->SetSpriteType(MapToolGui::SpriteType);
+							ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::WstringImageListName[MapToolGui::ObjectItemCurrentIndex].c_str()), MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex]);
+							ComponentRenderer->SetUVRectangle({ 0,0,500,500 });
 							ComponentRenderer->SetBaseColor({ 1,0,0,1 });
 						}
 					}
@@ -461,85 +505,72 @@ namespace mapTool
 	{
 		using namespace d2dFramework;
 
-		// ImGui 텍스트 박스에 입력될 static char
-		static char ImageName[100] = "Image Name";
-		static char ImagePath[256] = "Image Path";
-
-		// ImGui의 리스트 이름(함수와 호환이 될 자료형 리스트 이름)
-		static std::vector<std::string> ListName = {};
-		static std::vector<std::wstring> WstringListName = {};
-
-		static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-
-		// 텍스트 박스 생성
-		ImGui::InputTextMultiline("##source1", ImageName, IM_ARRAYSIZE(ImageName), ImVec2(100.f, 23.f), flags);
-		ImGui::InputTextMultiline("##source2", ImagePath, IM_ARRAYSIZE(ImagePath), ImVec2(-FLT_MIN, 23.f), flags);
-
-		if (ImGui::Button("Image Create Button"))
+		if (mImGui->GetIsImageLoading())
 		{
-			// 로케일 설정
-			std::locale loc("");
-
-			// char 배열을 wchar_t 배열로 변환
-			std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-			std::wstring wstrName = converter.from_bytes(ImageName);
-			std::wstring wstrPath = converter.from_bytes(ImagePath);
-
-			const WCHAR* const ImageNameWchar = wstrName.c_str();
-			const WCHAR* const ImagePathWchar = wstrPath.c_str();
-
 			// 비트맵을 찾고 비트맵이 있으면 종료
-			auto iter = getRenderManager()->GetBitmapOrNull(ImageNameWchar);
+			auto iter = getRenderManager()->GetBitmapOrNull(MapToolGui::wstrImageName.c_str());
 
 			if (iter == nullptr)
 			{
 				// 파일 경로에 이미지 파일 있으면 생성
-				HRESULT hr = getRenderManager()->CreateD2DBitmapFromFile(ImageNameWchar, ImagePathWchar);
+				HRESULT hr = getRenderManager()->CreateD2DBitmapFromFile(MapToolGui::wstrImageName.c_str(), MapToolGui::wstrImagePath.c_str());
 
 				if (SUCCEEDED(hr))
 				{
 					// 이미지 리스트에 넣을 문자열 저장
-					ListName.push_back(ImageName);
-					WstringListName.push_back(ImageNameWchar);
+					MapToolGui::ImageListName.push_back(MapToolGui::ImageName);
+					MapToolGui::WstringImageListName.push_back(MapToolGui::wstrImageName);
 				}
 			}
 		}
 
-		// 이미지 리스트 생성 및 이미지 클릭 시 이미지 적용
-		static int ItemCurrentIndex = 0;
-
-		if (ImGui::BeginListBox("Image List"))
+		if (mImGui->GetIsImageSeleted())
 		{
-			for (int n = 0; n < ListName.size(); n++)
+			// 선택 된 오브젝트 비트맵 수정
+			for (auto ObjectMap : MapToolGui::mObjectIdMap)
 			{
-				const bool Selected = (ItemCurrentIndex == n);
-				if (ImGui::Selectable(ListName[n].c_str(), Selected))
+				if (MapToolGui::mbIsChecked[ObjectMap.first.first][ObjectMap.first.second] == true)
 				{
-					ItemCurrentIndex = n;
+					GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(ObjectMap.second);
 
-					// 선택 된 오브젝트 비트맵 수정
-					for (auto ObjectMap : mObjectIdMap)
-					{
-						if (mbIsChecked[ObjectMap.first.second][ObjectMap.first.first] == true)
-						{
-							GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(ObjectMap.second);
+					if (object == nullptr)
+						return;
 
-							if (object == nullptr)
-								return;
-
-							// 비트맵으로 수정
-							SpriteRenderer* ComponentRenderer = object->GetComponent<SpriteRenderer>();
-							ComponentRenderer->SetSpriteType(eSpriteType::Sprite);
-							ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(WstringListName[n].c_str()));
-							ComponentRenderer->SetSize({ static_cast<float>(mGridDistance), static_cast<float>(mGridDistance) });
-							ComponentRenderer->SetUVRectangle({ 0,0, 500, 500 });
-						}
-					}
+					// 비트맵으로 수정
+					SpriteRenderer* ComponentRenderer = object->GetComponent<SpriteRenderer>();
+					ComponentRenderer->SetSpriteType(eSpriteType::Sprite);
+					ComponentRenderer->SetBitmap(getRenderManager()->GetBitmapOrNull(MapToolGui::WstringImageListName[MapToolGui::ItemImageCurrentIndex].c_str()), MapToolGui::WstringImageListName[MapToolGui::TileObjectItemCurrentIndex]);
+					ComponentRenderer->SetUVRectangle({ 0,0, 500, 500 });
 				}
 			}
 		}
-		ImGui::EndListBox();
+	}
 
-		ImGui::TreePop();
+	void SoulBeaterProcessor::CreateScene()
+	{
+		using namespace d2dFramework;
+
+		if (mImGui->GetIsCreateScene())
+		{
+			MapToolScene = getSceneManager()->CreateScene(MapToolGui::SceneId);
+			getSceneManager()->SetCurrentScene(MapToolGui::SceneId);
+		}
+	}
+
+	void SoulBeaterProcessor::SaveAndLoad()
+	{
+		using namespace d2dFramework;
+
+		if (mImGui->GetIsSave())
+		{
+			if (MapToolScene != nullptr)
+				SceneLoader::SaveScene(MapToolScene);
+		}
+		if (mImGui->GetIsLoad())
+		{
+			if (MapToolScene != nullptr)
+				SceneLoader::LoadScene(MapToolScene);
+		}
 	}
 }
+

@@ -30,6 +30,10 @@ LRESULT __stdcall WindowProcess(
 // static 변수 초기화
 MapToolGui* MapToolGui::mpInstance = nullptr;
 
+// 씬 아이디
+int  MapToolGui::SceneId = 1000;
+
+// 그리드 가로, 세로, 간격
 unsigned int MapToolGui::mWidth = 0;
 unsigned int MapToolGui::mHeight = 0;
 unsigned int MapToolGui::mGridDistance = 0;
@@ -43,11 +47,11 @@ std::queue<int>						MapToolGui::mObjectSequence = {};
 // 타일 오브젝트
 std::vector<std::vector<bool>>		MapToolGui::mbIsTileObject = {};
 std::map<std::pair<int, int>, int>	MapToolGui::mTileObjectIdMap = {};
-std::wstring	MapToolGui::TileBitmap = L"Golem";
 int				MapToolGui::TileSpriteWidth = 0;
 int				MapToolGui::TileSpriteHeight = 0;
 int				MapToolGui::TileColliderWidth = 0;
 int				MapToolGui::TileColliderHeight = 0;
+int				MapToolGui::TileObjectItemCurrentIndex = 0;
 
 // Id 세팅
 IdSet MapToolGui::mIdSetting = IdSet::DEFALUE;
@@ -55,17 +59,34 @@ int MapToolGui::mPlayerId = PLAYER_ID_START;
 int MapToolGui::mMonsterId = MONSTER_ID_START;
 int MapToolGui::mItemId = ITEM_ID_START;
 int MapToolGui::mTileId = TILE_ID_START;
+d2dFramework::eObjectType MapToolGui::ObjectType = d2dFramework::eObjectType::None;
 
 // 오브젝트 콜라이더 사이즈
+bool MapToolGui::bIsColliderCheck = false;
 int MapToolGui::ColliderWidth = 0;
 int MapToolGui::ColliderHeight = 0;
 
 // 스프라이트 세팅 값들
+bool MapToolGui::bIsSpriteCheck = false;
 d2dFramework::eSpriteType MapToolGui::SpriteType = d2dFramework::eSpriteType::Circle;
+int	MapToolGui::CreateSpriteWidth = 0;
+int	MapToolGui::CreateSpriteHeight = 0;
 int MapToolGui::SpriteWidth = 0;
 int MapToolGui::SpriteHeight = 0;
+int	MapToolGui::ObjectItemCurrentIndex = 0;
 
+// 오브젝트 정보 출력 세팅 값들
 int MapToolGui::ItemImfoCurrentIndex = 0;
+
+// 이미지 파일
+std::vector<std::string> MapToolGui::ImageListName = { "Golem", "Charactor" };
+std::vector<std::wstring> MapToolGui::WstringImageListName = { L"Golem", L"Charactor" };
+std::wstring MapToolGui::wstrImageName = {};
+std::wstring MapToolGui::wstrImagePath = {};
+// ImGui 텍스트 박스에 입력될 static char
+char MapToolGui::ImageName[100] = "Image Name";
+char MapToolGui::ImagePath[256] = "Image Path";
+int MapToolGui::ItemImageCurrentIndex = 0;
 
 MapToolGui::MapToolGui()
 	:bOnbutton(false)
@@ -77,11 +98,14 @@ MapToolGui::MapToolGui()
 	, mDevice(nullptr)
 	, mPresentParameters{}
 	, mbIsCreateTileObjectButtonIstrue(false)
+	, mbIsCreateTileColliderIstrue(false)
 	, mbIsDeleteTileObjectButtonIstrue(false)
 	, mbIsCreateObjectButtonIstrue(false)
 	, mbIsDeleteObjectButtonIstrue(false)
 	, mbIsColliderCreate(false)
 	, mbIsSpriteCreate(false)
+	, mbIsSaveButton(false)
+	, mbIsCreateScene(false)
 {
 	mpInstance = this;
 }
@@ -89,6 +113,8 @@ MapToolGui::MapToolGui()
 MapToolGui::~MapToolGui()
 {
 }
+
+
 
 void MapToolGui::Render()
 {
@@ -110,25 +136,67 @@ void MapToolGui::Render()
 	ImGui::End();
 }
 
+
+
 void MapToolGui::GuiRender()
 {
-	// 문자열{ 이미지 이름, 파일 경로 } 을 입력받아 비트맵 로딩하여 이미지 이름으로 리스트에 추가하기 
-	//if (ImGui::TreeNode("Image Create"))
-	//	ImGuiImageLoading();
+	GuiMenu();
 
-	// 격자판 생성 시
-	if (ImGui::TreeNode("Grid Setting & Create"))
+	ImGui::InputInt("SceneId : ", &SceneId);
+	ImGui::Text("");
+
+	// 격자판 생성 및 세팅
+	if (ImGui::CollapsingHeader("Grid Setting & Create"))
 		GridCreate();
+	ImGui::Text("");
 
-	if (ImGui::TreeNode("Tile Setting"))
+	// 타일 세팅
+	if (ImGui::CollapsingHeader("Tile Setting"))
 		ObjectTileSetting();
+	ImGui::Text("");
 
-	if (ImGui::TreeNode("Object Setting"))
+	// 오브젝트 세팅
+	if (ImGui::CollapsingHeader("Object Setting"))
 		ObjectSetting();
+	ImGui::Text("");
 
-	if (ImGui::TreeNode("Object Impomation"))
+	// 오브젝트의 컴폰넌트 수정
+	if (ImGui::CollapsingHeader("Component Edit"))
+		ComponentEdit();
+	ImGui::Text("");
+
+	// 이미지 세팅
+	if (ImGui::CollapsingHeader("Image Setting"))
+		ImGuiImageLoading();
+	ImGui::Text("");
+
+	// 오브젝트 정보 세팅
+	if (ImGui::CollapsingHeader("Object Impomation"))
 		ObjectImfomation();
+	ImGui::Text("");
+
+	// 오브젝트 정보 세팅
+	if (ImGui::CollapsingHeader("Tile Object Impomation"))
+		TileObjectImfomation();
+	ImGui::Text("");
 }
+
+
+
+void MapToolGui::GuiMenu()
+{
+	if (ImGui::Button("Save"))
+		mbIsSaveButton = true;
+	else
+		mbIsSaveButton = false;
+
+	if (ImGui::Button("Load"))
+		mbIsLoadButton = true;
+	else
+		mbIsLoadButton = false;
+}
+
+
 
 void MapToolGui::GridCreate()
 {
@@ -142,6 +210,8 @@ void MapToolGui::GridCreate()
 	// 그리드 세팅 버튼을 누르면 그리드 칸에 맞춰서 세팅
 	if (ImGui::Button("Grid Setting"))
 	{
+		mbIsCreateScene = true;							// Scene 생성
+
 		for (int i = 0; i < mbIsChecked.size(); i++)
 			mbIsChecked[i].clear();
 		mbIsChecked.clear();
@@ -171,7 +241,7 @@ void MapToolGui::GridCreate()
 			mbIsObject.clear();
 			mbIsTileObject.clear();
 
-			while(!mObjectSequence.empty())
+			while (!mObjectSequence.empty())
 				mObjectSequence.pop();
 		}
 
@@ -183,9 +253,11 @@ void MapToolGui::GridCreate()
 			d2dFramework::ObjectManager::GetInstance()->DeletObject(e.second);
 		mTileObjectIdMap.clear();
 	}
-
-	ImGui::TreePop();
+	else
+		mbIsCreateScene = false;
 }
+
+
 
 // 오브젝트 생성 및 삭제 및 컴포넌트 세팅
 void MapToolGui::ObjectSetting()
@@ -193,6 +265,7 @@ void MapToolGui::ObjectSetting()
 	static int ObjectItemCurrentIndex = 0;
 	static std::string ListName[] = { "Defalut", "PlayerId", "MonsterId", "ItemId" };
 
+	// 오브젝트 종류에 맞는 ID 시작값 세팅
 	if (ImGui::BeginListBox("Id Setting"))
 	{
 		for (int n = 0; n < (int)IdSet::END; n++)
@@ -223,94 +296,42 @@ void MapToolGui::ObjectSetting()
 		ImGui::EndListBox();
 	}
 
-	std::string idtext = "Seleted Id : " + ListName[ObjectItemCurrentIndex];
-	ImGui::Text(idtext.c_str());
+	ImGui::Checkbox("Collider Component", &bIsColliderCheck);
+	ImGui::Checkbox("Sprite Component", &bIsSpriteCheck);
+
+	if (bIsColliderCheck)
+	{
+		ImGui::InputInt("Collider Width", &ColliderWidth);
+		ImGui::InputInt("Collider Hight", &ColliderHeight);
+	}
+	ImGui::Text("");
+	if (bIsSpriteCheck)
+	{
+		ObjectSpriteSetting();
+	}
+	ImGui::Text("");
 
 	// 오브젝트 생성 버튼
-	if (ImGui::Button("CreateObject"))
+	if (ImGui::Button("Create Object"))
 		mbIsCreateObjectButtonIstrue = true;
 	else
 		mbIsCreateObjectButtonIstrue = false;
 
 	// 오브젝트 삭제 버튼
-	if (ImGui::Button("DeleteObject"))
+	if (ImGui::Button("Delete Object"))
 		mbIsDeleteObjectButtonIstrue = true;
 	else
 		mbIsDeleteObjectButtonIstrue = false;
-
-	// 콜라이더 컴포넌트 세팅
-	if (ImGui::TreeNode("Collider Setting"))
-		ColliderSetting();
-
-	// 스프라이트 컴포넌트 세팅
-	if (ImGui::TreeNode("Sprite Setting"))
-		SpriteSetting();
-
-	ImGui::TreePop();
 }
 
-void MapToolGui::ObjectTileSetting()
-{
-	static int ObjectItemCurrentIndex = 0;
-	static std::vector<std::string> ListName{ "Golem", "Charactor" };
 
-	ImGui::InputInt("Sprite Width", &TileSpriteWidth);
-	ImGui::InputInt("Sprite Height", &TileSpriteHeight);
 
-	// 타일 Bitmap 선택
-	if (ImGui::BeginListBox("Id Setting"))
-	{
-		for (int n = 0; n < ListName.size(); n++)
-		{
-			const bool Selected = (ObjectItemCurrentIndex == n);
-			if (ImGui::Selectable(ListName[n].c_str(), Selected))
-			{
-				ObjectItemCurrentIndex = n;
-
-				if (ObjectItemCurrentIndex == 0)
-					TileBitmap = L"Golem";
-				else if (ObjectItemCurrentIndex == 1)
-					TileBitmap = L"Charactor";
-			}
-		}
-
-		ImGui::EndListBox();
-	}
-
-	// 오브젝트 생성 버튼
-	if (ImGui::Button("CreateObject"))
-		mbIsCreateTileObjectButtonIstrue = true;
-	else
-		mbIsCreateTileObjectButtonIstrue = false;
-
-	// 오브젝트 삭제 버튼
-	if (ImGui::Button("DeleteObject"))
-		mbIsDeleteTileObjectButtonIstrue = true;
-	else
-		mbIsDeleteTileObjectButtonIstrue = false;
-
-	ImGui::TreePop();
-}
-
-// 콜라이더 세팅
-void MapToolGui::ColliderSetting()
-{
-	ImGui::InputInt("Collider Width", &ColliderWidth);
-	ImGui::InputInt("Collider Hight", &ColliderHeight);
-
-	if (ImGui::Button("Collider Create & Setting"))
-		mbIsColliderCreate = true;
-	else
-		mbIsColliderCreate = false;
-
-	ImGui::TreePop();
-}
-
-void MapToolGui::SpriteSetting()
+void MapToolGui::ObjectSpriteSetting()
 {
 	static int ItemSpriteCurrentIndex = 0;
 	static std::vector<std::string> ListName = { "Rectangle", "Circle", "Sprite" };
 
+	// 스프라이트 타입 리스트
 	if (ImGui::BeginListBox("SpriteType List"))
 	{
 		for (int n = 0; n < ListName.size(); n++)
@@ -337,19 +358,160 @@ void MapToolGui::SpriteSetting()
 		ImGui::EndListBox();
 	}
 
-	std::string seletedspritetype = "Selected : " + ListName[ItemSpriteCurrentIndex];
-	ImGui::Text(seletedspritetype.c_str());
+	// 타일 Bitmap 선택
+	if (ImGui::BeginListBox("Sprite Bitmap Setting"))
+	{
+		for (int n = 0; n < ImageListName.size(); n++)
+		{
+			const bool Selected = (ObjectItemCurrentIndex == n);
+			if (ImGui::Selectable(ImageListName[n].c_str(), Selected))
+			{
+				ObjectItemCurrentIndex = n;
+			}
+		}
 
+		ImGui::EndListBox();
+	}
+
+	// 스프라이트 가로, 세로 길이 세팅
+	ImGui::InputInt("Sprite Width", &CreateSpriteWidth);
+	ImGui::InputInt("Sprite Height", &CreateSpriteHeight);
+}
+
+
+
+void MapToolGui::ObjectTileSetting()
+{
+	ImGui::InputInt("Tile Sprite Width", &TileSpriteWidth);
+	ImGui::InputInt("Tile Sprite Height", &TileSpriteHeight);
+	ImGui::Text("");
+
+	ImGui::Checkbox("TileCollider Is Valid", &mbIsCreateTileColliderIstrue);
+	ImGui::Text("");
+
+	// 타일 Bitmap 선택
+	if (ImGui::BeginListBox("Tile Bitmap Setting"))
+	{
+		for (int n = 0; n < ImageListName.size(); n++)
+		{
+			const bool Selected = (TileObjectItemCurrentIndex == n);
+			if (ImGui::Selectable(ImageListName[n].c_str(), Selected))
+			{
+				TileObjectItemCurrentIndex = n;
+			}
+		}
+
+		ImGui::EndListBox();
+	}
+
+	// 타일 오브젝트 생성 버튼
+	if (ImGui::Button("Create Tile Object"))
+		mbIsCreateTileObjectButtonIstrue = true;
+	else
+		mbIsCreateTileObjectButtonIstrue = false;
+
+	// 타일 오브젝트 삭제 버튼
+	if (ImGui::Button("Delete Tile Object"))
+		mbIsDeleteTileObjectButtonIstrue = true;
+	else
+		mbIsDeleteTileObjectButtonIstrue = false;
+}
+
+
+
+// 콜라이더 세팅
+void MapToolGui::ColliderSetting()
+{
+	// 콜라이더 가로 세로 세팅
+	ImGui::InputInt("Collider Width", &ColliderWidth);
+	ImGui::InputInt("Collider Hight", &ColliderHeight);
+
+	// 콜라이더 생성
+	if (ImGui::Button("Create Collider"))
+		mbIsColliderCreate = true;
+	else
+		mbIsColliderCreate = false;
+
+	ImGui::Text("");
+	ImGui::TreePop();
+}
+
+
+
+void MapToolGui::SpriteSetting()
+{
+	static int ItemSpriteCurrentIndex = 0;
+	static std::vector<std::string> ListName = { "Rectangle", "Circle", "Sprite" };
+
+	// 스프라이트 타입 리스트
+	if (ImGui::BeginListBox("SpriteType List"))
+	{
+		for (int n = 0; n < ListName.size(); n++)
+		{
+			const bool Selected = (ItemSpriteCurrentIndex == n);
+			if (ImGui::Selectable(ListName[n].c_str(), Selected))
+			{
+				ItemSpriteCurrentIndex = n;
+
+				switch (ItemSpriteCurrentIndex)
+				{
+				case 0:
+					SpriteType = d2dFramework::eSpriteType::Rectangle;
+					break;
+				case 1:
+					SpriteType = d2dFramework::eSpriteType::Circle;
+					break;
+				case 2:
+					SpriteType = d2dFramework::eSpriteType::Sprite;
+					break;
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	// 타일 Bitmap 선택
+	if (ImGui::BeginListBox("Sprite Bitmap Setting"))
+	{
+		for (int n = 0; n < ImageListName.size(); n++)
+		{
+			const bool Selected = (ObjectItemCurrentIndex == n);
+			if (ImGui::Selectable(ImageListName[n].c_str(), Selected))
+			{
+				ObjectItemCurrentIndex = n;
+			}
+		}
+
+		ImGui::EndListBox();
+	}
+
+	// 스프라이트 가로, 세로 길이 세팅
 	ImGui::InputInt("Sprite Width", &SpriteWidth);
 	ImGui::InputInt("Sprite Height", &SpriteHeight);
 
-	if (ImGui::Button("Sprite Create"))
+	// 스프라이트 생성
+	if (ImGui::Button("Create Sprite"))
 		mbIsSpriteCreate = true;
 	else
 		mbIsSpriteCreate = false;
 
 	ImGui::TreePop();
 }
+
+
+
+void MapToolGui::ComponentEdit()
+{
+	// 콜라이더 컴포넌트 세팅
+	if (ImGui::TreeNode("Collider Setting"))
+		ColliderSetting();
+
+	// 스프라이트 컴포넌트 세팅
+	if (ImGui::TreeNode("Sprite Setting"))
+		SpriteSetting();
+}
+
+
 
 void MapToolGui::ObjectImfomation()
 {
@@ -363,6 +525,7 @@ void MapToolGui::ObjectImfomation()
 	ListId.clear();
 	ObjectListCount = 0;
 
+	// 해당 오브젝트 Id값 및 오브젝트 종류 출력 정보
 	for (int i = 0; i < mbIsChecked.size(); i++)
 	{
 		for (int j = 0; j < mbIsChecked[i].size(); j++)
@@ -396,7 +559,8 @@ void MapToolGui::ObjectImfomation()
 		}
 	}
 
-	if (ImGui::BeginListBox("Image List"))
+	// 오브젝트 정보 리스트 목록
+	if (ImGui::BeginListBox("Object imfomartion List"))
 	{
 		for (int n = 0; n < ListName.size(); n++)
 		{
@@ -409,6 +573,7 @@ void MapToolGui::ObjectImfomation()
 		ImGui::EndListBox();
 	}
 	
+	// 선택된 오브젝트를 찾고 해당 오브젝트의 정보 출력
 	if (ListId.size() != 0)
 	{
 		GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(ListId[ItemImfoCurrentIndex]);
@@ -474,7 +639,167 @@ void MapToolGui::ObjectImfomation()
 			ImGui::Text("ColliderComponent Is not Valid");
 	}
 
-	ImGui::TreePop();
+}
+
+
+
+void MapToolGui::TileObjectImfomation()
+{
+	using namespace d2dFramework;
+
+	static std::vector<std::string> ListName;
+	static int TileObjectListCount = 0;
+	std::vector<int> ListId;
+
+	ListName.clear();
+	ListId.clear();
+	TileObjectListCount = 0;
+
+	// 해당 오브젝트 Id값 및 오브젝트 종류 출력 정보
+	for (int i = 0; i < mbIsChecked.size(); i++)
+	{
+		for (int j = 0; j < mbIsChecked[i].size(); j++)
+		{
+			if (mbIsChecked[i][j] == true && mbIsTileObject[i][j] == true)
+			{
+				std::pair<int, int> key = std::make_pair(i, j);
+				auto iter = mTileObjectIdMap.find(key);
+
+				std::string idlist;
+
+				idlist = "Tile Object " + std::to_string(TileObjectListCount);
+				TileObjectListCount++;
+
+				ListName.push_back(idlist);
+				ListId.push_back(iter->second);
+			}
+		}
+	}
+
+	// 오브젝트 정보 리스트 목록
+	if (ImGui::BeginListBox("Tile Object imfomartion List"))
+	{
+		for (int n = 0; n < ListName.size(); n++)
+		{
+			const bool Selected = (ItemImfoCurrentIndex == n);
+			if (ImGui::Selectable(ListName[n].c_str(), Selected))
+			{
+				ItemImfoCurrentIndex = n;
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	// 선택된 오브젝트를 찾고 해당 오브젝트의 정보 출력
+	if (ListId.size() != 0)
+	{
+		GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(ListId[ItemImfoCurrentIndex]);
+		Transform* TransformComponent = object->GetComponent<Transform>();
+		SpriteRenderer* SpriteComponent = object->GetComponent<SpriteRenderer>();
+		AABBCollider* ColliderComponent = object->GetComponent<AABBCollider>();
+
+		std::string text = ListName[ItemImfoCurrentIndex] + ", Id : " + std::to_string(ListId[ItemImfoCurrentIndex]);
+		ImGui::Text(text.c_str());
+		text.clear();
+
+		// 트랜스폼 위치 값 출력
+		if (TransformComponent != nullptr)
+		{
+			ImGui::Text("Transform Is Valid");
+			text = "Location X : " + std::to_string(TransformComponent->GetTransform().dx);
+			ImGui::Text(text.c_str());
+			text.clear();
+			text = "Location Y : " + std::to_string(TransformComponent->GetTransform().dy);
+			ImGui::Text(text.c_str());
+			text.clear();
+		}
+		else
+			ImGui::Text("Transform Is not Valid");
+
+		// 스프라이트 정보 출력
+		if (SpriteComponent != nullptr)
+		{
+			ImGui::Text("SpriteComponent Is Valid");
+			if (SpriteComponent->GetBitmap() != nullptr)
+				ImGui::Text("Bitmap Is Valid");
+			else
+				ImGui::Text("Bitmap Is not Valid");
+			if (SpriteComponent->GetSpriteType() == eSpriteType::Rectangle)
+				ImGui::Text("SpriteType Is Rectangle");
+			if (SpriteComponent->GetSpriteType() == eSpriteType::Circle)
+				ImGui::Text("SpriteType Is Circle");
+			if (SpriteComponent->GetSpriteType() == eSpriteType::Sprite)
+				ImGui::Text("SpriteType Is Sprite");
+			text = "Size X : " + std::to_string(SpriteComponent->GetSize().GetX());
+			ImGui::Text(text.c_str());
+			text.clear();
+			text = "Size Y : " + std::to_string(SpriteComponent->GetSize().GetY());
+			ImGui::Text(text.c_str());
+			text.clear();
+		}
+		else
+			ImGui::Text("SpriteComponnet Is not Valid");
+
+		// 콜라이더 정보 출력 ( AABB ) 
+		if (ColliderComponent != nullptr)
+		{
+			ImGui::Text("ColliderComponent Is Valid");
+			ImGui::Text("ColliderComponent Type Is AABBCollider");
+			text = "Size X : " + std::to_string(ColliderComponent->GetSize().GetX());
+			ImGui::Text(text.c_str());
+			text.clear();
+			text = "Size X : " + std::to_string(ColliderComponent->GetSize().GetX());
+			ImGui::Text(text.c_str());
+			text.clear();
+		}
+		else
+			ImGui::Text("ColliderComponent Is not Valid");
+	}
+}
+
+
+
+void MapToolGui::ImGuiImageLoading()
+{
+	using namespace d2dFramework;
+
+	static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
+
+	// 텍스트 박스 생성
+	ImGui::InputTextMultiline("##source1", ImageName, IM_ARRAYSIZE(ImageName), ImVec2(100.f, 23.f), flags);
+	ImGui::InputTextMultiline("##source2", ImagePath, IM_ARRAYSIZE(ImagePath), ImVec2(-FLT_MIN, 23.f), flags);
+
+	if (ImGui::Button("Image Create Button"))
+	{
+		mbIsImageLoading = true;
+
+		// 로케일 설정
+		std::locale loc("");
+
+		// char 배열을 wchar_t 배열로 변환
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+		wstrImageName = converter.from_bytes(ImageName);
+		wstrImagePath = converter.from_bytes(ImagePath);
+	}
+	else
+		mbIsImageLoading = false;
+	ImGui::Text("");
+
+	// 이미지 리스트 목록
+	if (ImGui::BeginListBox("Image List"))
+	{
+		for (int n = 0; n < ImageListName.size(); n++)
+		{
+			const bool Selected = (ItemImageCurrentIndex == n);
+			if (ImGui::Selectable(ImageListName[n].c_str(), Selected))
+			{
+				mbIsImageSelected = true;
+			}
+			else
+				mbIsImageSelected = false;
+		}
+		ImGui::EndListBox();
+	}
 }
 
 
@@ -590,7 +915,7 @@ void MapToolGui::CreateHWindow(const char* windowName, const char* className)
 		L"Gui",
 		L"ImGui",
 		WS_POPUP,
-		1500,
+		2700,
 		200,
 		WIDTH,
 		HEIGHT,

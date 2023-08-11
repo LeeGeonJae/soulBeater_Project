@@ -1,19 +1,12 @@
 #pragma once
 
 #include "BaseEntity.h"
+#include "eKeyState.h"
 
 #include <Windows.h>
 
 namespace d2dFramework
 {
-	enum class eKeyState
-	{
-		None,
-		Push,
-		Hold,
-		Pop,
-	};
-
 	class InputManager final : public BaseEntity
 	{
 		friend class GameProcessor;

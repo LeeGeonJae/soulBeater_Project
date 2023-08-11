@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Bin/include/fmod/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../D2DFramework/;../Bin/include/fmod/;../Bin/include/json/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -143,11 +143,15 @@
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationRenderer.cpp" />
+    <ClCompile Include="AsyncInputManager.cpp" />
     <ClCompile Include="BaseEntity.cpp" />
+    <ClCompile Include="BeatManager.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="RenderManager.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="ISerialize.h" />
+    <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SoundAsset.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
@@ -166,9 +170,11 @@
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="OBBCollider.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -178,12 +184,15 @@
     <ClInclude Include="AABBCollider.h" />
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationRenderer.h" />
+    <ClInclude Include="AsyncInputManager.h" />
     <ClInclude Include="BaseEntity.h" />
+    <ClInclude Include="BeatManager.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="eObjectType.h" />
-    <ClInclude Include="FrameInfomation.h" />
-    <ClInclude Include="RenderManger.h" />
+    <ClInclude Include="FrameInformation.h" />
+    <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SoundAsset.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SpriteRenderer.h" />
@@ -208,9 +217,11 @@
     <ClInclude Include="OBB.h" />
     <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="RenderManger.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="StringHelper.h" />
     <ClInclude Include="TimeManger.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector2.h" />

@@ -1,13 +1,12 @@
 #pragma once
 
 #include "BaseEntity.h"
-#include "FrameInfomation.h"
+#include "FrameInformation.h"
 #include "eObjectType.h"
 
+#include <cassert>
 #include <d2d1.h>
 #include <d2d1_1.h>
-#include <dxgi1_2.h>
-#include <d3d11.h>
 #include <dwrite.h>
 #include <wincodec.h>
 #include <string>
@@ -35,10 +34,9 @@ namespace d2dFramework
 
 		void BeginDraw();
 		void EndDraw();
-		void Present();
+		void Clear(D2D1::Matrix3x2F matrix = D2D1::Matrix3x2F::Identity(), D2D1_COLOR_F color = { 1.f, 1.f, 1.f, 1.f });
 
 		void Render(CameraManager* cameraManager);
-		void Clear(D2D1::Matrix3x2F matrix = D2D1::Matrix3x2F::Identity(), D2D1_COLOR_F color = { 1.f, 1.f, 1.f, 1.f });
 
 		void DrawPoint(float x, float y);
 		void DrawPoint(const D2D1_POINT_2F& point);
@@ -63,17 +61,17 @@ namespace d2dFramework
 		void DrawPolygon(const std::vector<D2D1_POINT_2F>& pointList);
 		void DrawGrid(float x, float y, float width, float height, float interval);
 
-		void DrawBitMap(float left, float top, float right, float bottom, float uvLeft, float uvTop, float uvRight, float uvBottom, ID2D1Bitmap1* bitmap);
-		void DrawBitMap(const Vector2& offset, const Vector2& size, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap1* bitmap);
-		void DrawBitMap(const D2D1_RECT_F& rectangle, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap1* bitmap);
+		void DrawBitMap(float left, float top, float right, float bottom, float uvLeft, float uvTop, float uvRight, float uvBottom, ID2D1Bitmap* bitmap);
+		void DrawBitMap(const Vector2& offset, const Vector2& size, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap* bitmap);
+		void DrawBitMap(const D2D1_RECT_F& rectangle, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap* bitmap);
 
 		void WriteText(const wchar_t* text, float left, float top, float right, float bottom);
 		void WriteText(const wchar_t* text, const D2D1_RECT_F& rectangle);
 
 		HRESULT CreateD2DBitmapFromFile(const WCHAR* imagePath);
 		HRESULT CreateD2DBitmapFromFile(const WCHAR* key, const WCHAR* imagePath);
-		HRESULT CreateAnimationAsset(const WCHAR* imagePath, const std::vector<std::vector<FrameInfomation>>& frameInfo);
-		HRESULT CreateAnimationAsset(const WCHAR* key, const WCHAR* imagePath, const std::vector<std::vector<FrameInfomation>>& frameInfo);
+		HRESULT CreateAnimationAsset(const WCHAR* imagePath, const std::vector<std::vector<FrameInformation>>& frameInfo);
+		HRESULT CreateAnimationAsset(const WCHAR* key, const WCHAR* imagePath, const std::vector<std::vector<FrameInformation>>& frameInfo);
 
 		inline void SetHwnd(HWND Hwnd);
 		void SetTransform(const D2D1::Matrix3x2F& trasform);
@@ -81,10 +79,8 @@ namespace d2dFramework
 		D2D1_COLOR_F SetColor(const D2D1_COLOR_F& color);
 		void SetStrokeWidth(float strokeWidth);
 
-		inline HWND GetHwnd() const;
-		inline ID3D11Device* GetD3DDevice() const;
-		inline ID3D11DeviceContext* GetD3DDeviceContext() const;
-		inline ID2D1Bitmap1* GetBitmapOrNull(const WCHAR* key);
+		inline ID2D1DeviceContext* GetD2DDeviceContext() const;
+		inline ID2D1Bitmap* GetBitmapOrNull(const WCHAR* key);
 		inline AnimationAsset* GetAnimationAssetOrNull(const WCHAR* key);
 
 	private:
@@ -97,26 +93,20 @@ namespace d2dFramework
 
 		HWND mHwnd;
 
-		ID2D1Factory1* mFactory;
-		ID2D1Device* mD2DDevice;
+		ID2D1Factory* mFactory;
+		ID2D1HwndRenderTarget* mRenderTarget;
 		ID2D1DeviceContext* mD2DDeviceContext;
-		ID2D1Bitmap1* mD2DRenderTarget;
-
-		ID3D11Device* mD3DDevice;
-		ID3D11DeviceContext* mD3DDeviceContext;
-		IDXGISwapChain1* mSwapChain;
-		ID3D11RenderTargetView* mD3DRenderTarget;
-
 		IWICImagingFactory* mWICFactory;
 		IDWriteFactory* mWriteFactory;
+
 		IDWriteTextFormat* mTextFormat;
 		ID2D1SolidColorBrush* mBrush;
 		float mStrokeWidth;
 		D2D1::ColorF mBeforeColor;
-		std::map<std::wstring, ID2D1Bitmap1*> mBitmapMap;
-		std::map<std::wstring, AnimationAsset*> mAnimationAssetMap;
 
 		std::unordered_map<unsigned int, IRenderable*> mRenderable[static_cast<unsigned int>(eObjectType::Size)];
+		std::map<std::wstring, ID2D1Bitmap*> mBitmapMap;
+		std::map<std::wstring, AnimationAsset*> mAnimationAssetMap;
 	};
 
 	void RenderManager::SetHwnd(HWND Hwnd)
@@ -124,20 +114,13 @@ namespace d2dFramework
 		mHwnd = Hwnd;
 	}
 
-	HWND RenderManager::GetHwnd() const
+	ID2D1DeviceContext* RenderManager::GetD2DDeviceContext() const
 	{
-		return mHwnd;
-	}
-	ID3D11Device* RenderManager::GetD3DDevice() const
-	{
-		return mD3DDevice;
-	}
-	ID3D11DeviceContext* RenderManager::GetD3DDeviceContext() const
-	{
-		return mD3DDeviceContext;
+		assert(mD2DDeviceContext != nullptr);
+		return mD2DDeviceContext;
 	}
 
-	ID2D1Bitmap1* RenderManager::GetBitmapOrNull(const WCHAR* imangePath)
+	ID2D1Bitmap* RenderManager::GetBitmapOrNull(const WCHAR* imangePath)
 	{
 		auto iter = mBitmapMap.find(imangePath);
 
@@ -150,5 +133,4 @@ namespace d2dFramework
 
 		return iter == mAnimationAssetMap.end() ? nullptr : iter->second;
 	}
-
 }

@@ -25,15 +25,21 @@ namespace d2dFramework
 		~SpriteRenderer() override = default;
 
 		void Init() override;
-		bool IsOutsideBoundingBox(const D2D1::Matrix3x2F& cameraTransform, const AABB& boundingBox) override;
-		void Render(const D2D1::Matrix3x2F& cameraTransform) override;
 		void Release() override;
 
+		bool IsOutsideBoundingBox(const D2D1::Matrix3x2F& cameraTransform, const AABB& boundingBox) override;
+		void Render(const D2D1::Matrix3x2F& cameraTransform) override;
+		
+		void SerializeIn(nlohmann::ordered_json& object) override;
+		void SerializeOut(nlohmann::ordered_json& object) override;
+		
 		inline void SetOffSet(const Vector2& offset);
 		inline void SetSize(const Vector2& size);
 		inline void SetBaseColor(const D2D1_COLOR_F& baseColor);
 		inline void SetBorderColor(const D2D1_COLOR_F& borderColor);
-		inline void SetBitmap(ID2D1Bitmap1* bitmap);
+		inline void SetBitmap(ID2D1Bitmap* bitmap);
+		inline void SetBitmap(ID2D1Bitmap* bitmap,std::wstring bitmapKey);
+
 		inline void SetUVRectangle(const D2D1_RECT_F& rectangle);
 		inline void SetSpriteType(eSpriteType spriteType);
 
@@ -43,7 +49,7 @@ namespace d2dFramework
 		inline const Vector2& GetSize(void) const;
 		inline const D2D1_COLOR_F& GetBaseColor(void) const;
 		inline const D2D1_COLOR_F& GetBorderColor(void) const;
-		inline ID2D1Bitmap1* GetBitmap(void) const;
+		inline ID2D1Bitmap* GetBitmap(void) const;
 		inline const D2D1_RECT_F& GetUVRectangle(void) const;
 		inline eSpriteType GetSpriteType(void) const;
 
@@ -54,9 +60,9 @@ namespace d2dFramework
 		D2D1_COLOR_F mBaseColor;
 		D2D1_COLOR_F mBorderColor;
 
-		ID2D1Bitmap1* mBitmap;
+		ID2D1Bitmap* mBitmap;
 		D2D1_RECT_F mUVRectangle;
-
+		std::string mBitmapKey;
 		eSpriteType mSpriteType;
 	};
 
@@ -76,9 +82,15 @@ namespace d2dFramework
 	{
 		mBorderColor = borderColor;
 	}
-	void SpriteRenderer::SetBitmap(ID2D1Bitmap1* bitmap)
+	void SpriteRenderer::SetBitmap(ID2D1Bitmap* bitmap)
 	{
 		mBitmap = bitmap;
+	}
+	void SpriteRenderer::SetBitmap(ID2D1Bitmap* bitmap, std::wstring bitmapKey)
+	{
+		mBitmap = bitmap;
+		std::string str(bitmapKey.begin(), bitmapKey.end());
+		mBitmapKey = str;
 	}
 	void SpriteRenderer::SetUVRectangle(const D2D1_RECT_F& rectangle)
 	{
@@ -113,7 +125,7 @@ namespace d2dFramework
 	{
 		return mBorderColor;
 	}
-	ID2D1Bitmap1* SpriteRenderer::GetBitmap(void) const
+	ID2D1Bitmap* SpriteRenderer::GetBitmap(void) const
 	{
 		return mBitmap;
 	}

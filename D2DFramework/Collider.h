@@ -10,12 +10,13 @@ namespace d2dFramework
 {
 	class GameObject;
 
-	class Collider abstract : public ICollideable
+	class Collider abstract : public ICollideable, public ISerialize
 	{
 	public:
 		Collider(eColliderType colliderType);
 		virtual ~Collider() = default;
-
+		virtual void SerializeOut(nlohmann::ordered_json& object) override;
+		virtual void SerializeIn(nlohmann::ordered_json& object) override;
 		virtual void UpdateCollider() = 0;
 		virtual bool CheckCollision(ICollideable* other, Manifold* outManifold) = 0;
 		virtual inline GameObject* GetGameObject() const = 0;

@@ -78,6 +78,9 @@
     <ClCompile Include="IFixedUpdateable.cpp">
       <Filter>소스 파일\Interface</Filter>
     </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
@@ -156,7 +159,22 @@
     <ClCompile Include="BaseEntity.cpp">
       <Filter>소스 파일\AbstractClass</Filter>
     </ClCompile>
-    <ClCompile Include="RenderManager.cpp">
+    <ClCompile Include="ISerialize.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelper.cpp">
+      <Filter>소스 파일\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncInputManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -168,6 +186,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManger.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
     <ClInclude Include="TimeManger.h">
@@ -254,7 +275,7 @@
     <ClInclude Include="eFrameworkID.h">
       <Filter>헤더 파일\Enum</Filter>
     </ClInclude>
-    <ClInclude Include="FrameInfomation.h">
+    <ClInclude Include="FrameInformation.h">
       <Filter>헤더 파일\Structor</Filter>
     </ClInclude>
     <ClInclude Include="CameraManager.h">
@@ -278,7 +299,19 @@
     <ClInclude Include="Component.h">
       <Filter>헤더 파일\AbstractClass</Filter>
     </ClInclude>
-    <ClInclude Include="RenderManger.h">
+    <ClInclude Include="StringHelper.h">
+      <Filter>소스 파일\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="AsyncInputManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
   </ItemGroup>

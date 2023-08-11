@@ -30,7 +30,10 @@ namespace d2dFramework
 		const std::string& key = EventManager::GetInstance()->GetEventName(eDefaultEvent::ChangeScene);
 		auto changeScene = [this](const std::string& data) -> void
 		{
-			auto nextScene = mSceneMap.find(data);
+			//TODO 이거 잘못들어가면 터짐!!
+			const int id = std::stoi(data);
+
+			const auto nextScene = mSceneMap.find(id);
 			if (nextScene == mSceneMap.end())
 			{
 				return;
@@ -41,7 +44,9 @@ namespace d2dFramework
 			mCurrentScene->Enter();
 		};
 
+
 		EventManager::GetInstance()->RegisterEventHandler(key, BaseEntity::GetId(), changeScene);
+
 	}
 	void SceneManager::Release()
 	{
@@ -54,6 +59,29 @@ namespace d2dFramework
 			scene->Exit();
 		}
 	}
+
+	Scene* SceneManager::CreateScene(unsigned int sceneID)
+	{
+		auto iter = mSceneMap.find(sceneID);
+		assert(iter == mSceneMap.end());
+
+		Scene* scene = new Scene(sceneID);
+		mSceneMap.insert({ sceneID, scene });
+
+		return scene;
+	}
+
+	Scene* SceneManager::FindSceneOrNull(unsigned int sceneID)
+	{
+		auto iter = mSceneMap.find(sceneID);
+		if (iter == mSceneMap.end())
+		{
+			return nullptr;
+		}
+
+		return iter->second;
+	}
+
 
 	void SceneManager::FixedUpdate(float deltaTime)
 	{
@@ -77,17 +105,5 @@ namespace d2dFramework
 		}
 	}
 
-	void SceneManager::RegisterScene(const std::string& sceneName, Scene* scene)
-	{
-		if (mCurrentScene == nullptr)
-		{
-			mCurrentScene = scene;
-			mCurrentScene->Enter();
-		}
 
-		auto iter = mSceneMap.find(sceneName);
-		assert(iter == mSceneMap.end()); // 동일한 이름의 씬을 등록하면 안댐
-
-		mSceneMap.insert({ sceneName, scene });
-	}
 }

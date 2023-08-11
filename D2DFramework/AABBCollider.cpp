@@ -27,6 +27,23 @@ namespace d2dFramework
 		Collider::Release();
 	}
 
+	void AABBCollider::SerializeIn(nlohmann::ordered_json& object)
+	{
+		Collider::SerializeIn(object);
+		mSize.SetXY(object["mSize"][0], object["mSize"][1]);
+		mWorldAABB.BottomRight.SetXY(object["mWorldAABB"][0][0], object["mWorldAABB"][0][1]);
+		mWorldAABB.TopLeft.SetXY(object["mWorldAABB"][1][0], object["mWorldAABB"][1][1]);
+	}
+
+	void AABBCollider::SerializeOut(nlohmann::ordered_json& object)
+	{
+		object["ComponentName"] = "AABBCollider";
+		Component::SerializeOut(object);
+		Collider::SerializeOut(object);
+		object["mSize"] = { mSize.GetX(),mSize.GetY() };
+		object["mWorldAABB"] = { {mWorldAABB.BottomRight.GetX(),mWorldAABB.BottomRight.GetY()},{mWorldAABB.TopLeft.GetX(),mWorldAABB.TopLeft.GetY()} };
+	}
+
 	void AABBCollider::UpdateCollider()
 	{
 		Transform* transform = GetGameObject()->GetComponent<Transform>();

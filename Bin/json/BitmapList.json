@@ -1,0 +1,12 @@
+{
+  "BitmapList": [
+    {
+      "BitmapKey": "Golem",
+      "FilePath": "../Bin/image/Golem.png"
+    },
+    {
+      "BitmapKey": "Charactor",
+      "FilePath": "../Bin/image/Charactor.png"
+    }
+  ]
+}

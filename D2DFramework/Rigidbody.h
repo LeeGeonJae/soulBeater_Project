@@ -16,7 +16,8 @@ namespace d2dFramework
 		void Init() override;
 		void FixedUpdate(float deltaTime) override;
 		void Release() override;
-
+		void SerializeIn(nlohmann::ordered_json& object) override;
+		void SerializeOut(nlohmann::ordered_json& object) override;
 		inline GameObject* GetGameObject() const override;
 		inline unsigned int GetId() const override;
 

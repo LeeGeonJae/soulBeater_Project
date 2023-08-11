@@ -4,18 +4,17 @@
 
 namespace d2dFramework
 {
-	SoundAsset::SoundAsset(unsigned int id, FMOD::Sound* sound, FMOD::Channel* channel, FMOD::DSP* dsp)
+	SoundAsset::SoundAsset(unsigned int id, FMOD::Sound* sound, bool bIsLoop)
 		: BaseEntity(id)
 		, mSound(sound)
-		, mChannel(channel)
-		, mDsp(dsp)
 		, mbIsLoop(false)
+		, mChannel(nullptr)
 		, mVolume(0.5f)
 		, mFrequency(1.f)
+		, mPitch(1.f)
+		, mDefaultFrequency(0.f)
 	{
 		assert(sound != nullptr);
-		assert(channel != nullptr);
-		assert(dsp != nullptr);
 	}
 
 	SoundAsset::~SoundAsset()
@@ -24,7 +23,16 @@ namespace d2dFramework
 
 	void SoundAsset::Play(FMOD::System* system)
 	{
+		//mChannel->stop();
 		system->playSound(mSound, nullptr, false, &mChannel);
+		if (mDefaultFrequency == 0.f)
+		{
+			mChannel->getFrequency(&mDefaultFrequency);
+		}
+
+		SetVolume(mVolume);
+		SetFrequency(mFrequency);
+		SetPitch(mPitch);
 	}
 
 	void SoundAsset::Stop()

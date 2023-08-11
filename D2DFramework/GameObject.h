@@ -8,18 +8,21 @@
 #include <unordered_map>
 #include <typeinfo>
 
+#include "ISerialize.h"
+
 namespace d2dFramework
 {
 	class Component;
 
-	class GameObject : public BaseEntity
+	class GameObject : public BaseEntity, public ISerialize
 	{
 		friend class ObjectManager;
 
 	public:
 		void Init();
 		void Release();
-
+		void SerializeIn(nlohmann::ordered_json& object) override;
+		void SerializeOut(nlohmann::ordered_json& object) override;
 		template <typename T>
 		T* CreateComponent(unsigned int id);
 		template <typename T>
@@ -75,6 +78,7 @@ namespace d2dFramework
 
 		return find;
 	}
+
 
 	void GameObject::SetObjectType(eObjectType objectType)
 	{

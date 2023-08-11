@@ -35,11 +35,15 @@ namespace d2dFramework
 		D2D1_RECT_F result =
 		{
 			-size.GetX() * 0.5f + offset.GetX(),
-			size.GetY() * 0.5f + offset.GetY(),
+			-size.GetY() * 0.5f + offset.GetY(),
 			size.GetX() * 0.5f + offset.GetX(),
-			-size.GetY() * 0.5f + offset.GetY()
+			size.GetY() * 0.5f + offset.GetY()
 		};
 
 		return result;
+	}
+
+	double MathHelper::GetDoubleRemainder(double dividend, double divisor) {
+		return dividend - (divisor * static_cast<int>(dividend / divisor));
 	}
 }

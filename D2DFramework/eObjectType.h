@@ -6,6 +6,7 @@ namespace d2dFramework
 	{
 		None,
 		Background,
+		Item,
 		Enemy,
 		Player,
 		UI,

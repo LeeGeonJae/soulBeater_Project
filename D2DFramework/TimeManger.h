@@ -18,6 +18,8 @@ namespace d2dFramework
 		inline float GetDeltaTime();
 		inline unsigned int GetFPS();
 
+		inline const LARGE_INTEGER& GetFrequency() const;
+
 	private:
 		LARGE_INTEGER mCurTime;
 		LARGE_INTEGER mPrevTime;
@@ -36,5 +38,10 @@ namespace d2dFramework
 	unsigned int TimeManager::GetFPS()
 	{
 		return mFPS;
+	}
+
+	const LARGE_INTEGER& TimeManager::GetFrequency() const
+	{
+		return mFrequency;
 	}
 }

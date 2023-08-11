@@ -8,7 +8,8 @@
 #include "Collision.h"
 
 #include <cassert>
-
+#include <locale>
+#include <codecvt>
 namespace d2dFramework
 {
 	SpriteRenderer::SpriteRenderer(unsigned int id, GameObject* owner)
@@ -44,7 +45,7 @@ namespace d2dFramework
 		D2D1::Matrix3x2F matrix = transform->GetTransform();
 
 		D2D1_COLOR_F prevColor = GetRenderManager()->SetColor(mBorderColor);
-		GetRenderManager()->SetTransform(matrix * cameraTransform);
+		GetRenderManager()->SetTransform((D2D1::Matrix3x2F::Scale(1, -1) * matrix) * cameraTransform);
 		switch (mSpriteType)
 		{
 		case d2dFramework::eSpriteType::Rectangle:
@@ -72,5 +73,49 @@ namespace d2dFramework
 	void SpriteRenderer::Release()
 	{
 		IRenderable::Release();
+	}
+
+	void SpriteRenderer::SerializeIn(nlohmann::ordered_json& object)
+	{
+		mBitmapKey = object["mBitmapKey"];
+		mOffset.SetXY(object["mOffset"][0], object["mOffset"][1]);
+		mSize.SetXY(object["mSize"][0], object["mSize"][1]);
+		mBaseColor = { object["mBaseColor"][0]
+			,object["mBaseColor"][1]
+			,object["mBaseColor"][2]
+			,object["mBaseColor"][3] };
+		mBorderColor = { object["mBorderColor"][0]
+			,object["mBorderColor"][1]
+			,object["mBorderColor"][2]
+			,object["mBorderColor"][3] };
+		mUVRectangle = { object["mUVRectangle"][0]
+			,object["mUVRectangle"][1]
+			,object["mUVRectangle"][2]
+			,object["mUVRectangle"][3] };
+		mSpriteType = (eSpriteType)object["mSpriteType"];
+		///mBitmap 얘는 어떻게 serializeout 할까??
+		///비트맵 Path를 Json에 저장해서 Bitmap 설정하는 방식이 좋지 않을까?
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+		std::wstring wstr = converter.from_bytes(mBitmapKey);
+
+		mBitmap=GetRenderManager()->GetBitmapOrNull(wstr.c_str());
+		///TODO 일단 여기 BtiMap전용 자료형 Const WCHAR*로 만들었습니다.
+		const WCHAR* wideString = reinterpret_cast<const WCHAR*>(mBitmapKey.c_str());
+
+	}
+
+	void SpriteRenderer::SerializeOut(nlohmann::ordered_json& object)
+	{
+		object["ComponentName"] = "SpriteRenderer";
+		Component::SerializeOut(object);
+		object["mBitmapKey"] = mBitmapKey;
+		object["mOffset"] = { mOffset.GetX(),mOffset.GetY() };
+		object["mSize"] = { mSize.GetX(),mSize.GetY() };
+		object["mBaseColor"] = { mBaseColor.r,mBaseColor.g,mBaseColor.b,mBaseColor.a };
+		object["mBorderColor"] = { mBorderColor.r,mBorderColor.g,mBorderColor.b,mBorderColor.a };
+		object["mUVRectangle"] = { mUVRectangle.left,mUVRectangle.top,mUVRectangle.right,mUVRectangle.bottom };
+		object["mSpriteType"] = mSpriteType;
+
+		///TODO 여기도 BitmapPath 저장해놨는데, 연결방법을 아직 구현안함.
 	}
 };

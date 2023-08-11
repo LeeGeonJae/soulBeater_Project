@@ -1,0 +1,190 @@
+{
+  "AnimationKey": "Player",
+  "AnimationState": [
+    {
+      "FrameInfomations": [
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        }
+      ]
+    },
+    {
+      "FrameInfomations": [
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        }
+      ]
+    },
+    {
+      "FrameInfomations": [
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        }
+      ]
+    },
+    {
+      "FrameInfomations": [
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        },
+        {
+          "AnimationTime": 0,
+          "UVRectangle_left": 0,
+          "UVRectangle_top": 0,
+          "UVRectangle_right": 0,
+          "UVRectangle_left_bottom": 0
+        }
+      ]
+    }
+  ]
+
+}

@@ -5,10 +5,11 @@
 #include "Vector2.h"
 #include "Component.h"
 #include "GameObject.h"
+#include "ISerialize.h"
 
 namespace d2dFramework
 {
-	class Transform : public Component
+	class Transform final : public Component
 	{
 	public:
 		Transform(unsigned int id, GameObject* owner);
@@ -16,6 +17,9 @@ namespace d2dFramework
 
 		virtual void Init() {}
 		virtual void Release() {}
+
+		void SerializeIn(nlohmann::ordered_json& object) override;
+		void SerializeOut(nlohmann::ordered_json& object) override;
 
 		inline void SetScale(const Vector2& scale);
 		inline void SetRotate(float rotateInDegree);

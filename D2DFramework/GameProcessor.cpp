@@ -1,6 +1,5 @@
 #include "GameProcessor.h"
 
-#include "WinApp.h"
 #include "RenderManger.h"
 #include "TimeManger.h"
 #include "InputManager.h"
@@ -15,6 +14,7 @@
 #include "IFixedUpdateable.h"
 #include "ICollideable.h"
 #include "IRenderable.h"
+#include "WinApp.h"
 
 #include "eFrameworkID.h"
 
@@ -74,13 +74,10 @@ namespace d2dFramework
 		mSceneManager->Init();
 		mSoundManager->Init();
 
-		EventManager::mInstance;
+		// EventManager::mInstance;
 		InputManager::mInstance->Init();
 
 		mCameraManager->SetScreenSize({ static_cast<float>(mWidth), static_cast<float>(mHeight) });
-		mDefaultCamera = ObjectManager::mInstance->CreateObject(static_cast<unsigned int>(eFrameworkID::DefaultCamera));
-		mDefaultCamera->CreateComponent<Transform>(static_cast<unsigned int>(eFrameworkID::DefaultCameraTransform));
-		mCameraManager->RegisterCamera(mDefaultCamera);
 	}
 
 	void GameProcessor::Update()

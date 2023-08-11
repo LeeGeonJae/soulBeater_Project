@@ -42,13 +42,34 @@ namespace d2dFramework
 
 		void SetVolumeAll(float volume);
 		void SetFrequencyAll(float frequency);
+		void SetPitchAll(float pitch);
 
-		SoundAsset* CreateSoundAsset(unsigned int soundAssetId, const std::string& filePath);
+		inline float GetVolume() const;
+		inline float GetFrequencey() const;
+		inline float GetPitch() const;
 		SoundAsset* GetSoundAssetOrNull(unsigned int soundAssetId);
 
+		SoundAsset* CreateSoundAsset(unsigned int soundAssetId, const std::string& filePath, bool bIsLoop);
+
 	private:
+		float mFrequency = 1.f;
+		float mVolume = 1.f;
+		float mPitch = 1.f;
+
 		FMOD::System* mSystem;
 		std::map<unsigned int, SoundAsset*> mSoundMap;
 	};
 
+	float SoundManager::GetVolume() const
+	{
+		return mVolume;
+	}
+	float SoundManager::GetFrequencey() const
+	{
+		return mFrequency;
+	}
+	float SoundManager::GetPitch() const
+	{
+		return mPitch;
+	}
 }

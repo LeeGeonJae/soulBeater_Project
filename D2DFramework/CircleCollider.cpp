@@ -30,6 +30,27 @@ namespace d2dFramework
 		Collider::Release();
 	}
 
+	void CircleCollider::SerializeIn(nlohmann::ordered_json& object)
+	{
+		//Component::SerializeIn(object);
+
+		Collider::SerializeIn(object);
+		 mRadius= object["mRadius"];
+		 mWorldCircle.Center.SetXY(object["mWorldCircle.Center"][0], object["mWorldCircle.Center"][1]);
+		 mWorldCircle.Radius = object["mWorldCircle.Radius"];
+	}
+
+	void CircleCollider::SerializeOut(nlohmann::ordered_json& object)
+	{
+		object["ComponentName"] = "CircleCollider";
+		Component::SerializeOut(object);
+		Collider::SerializeOut(object);
+
+		object["mRadius"] = mRadius;
+		object["mWorldCircle.Center"] = { mWorldCircle.Center.GetX(), mWorldCircle.Center.GetY() };
+		object["mWorldCircle.Radius"] = mWorldCircle.Radius;
+	}
+
 	void CircleCollider::UpdateCollider()
 	{
 		Transform* transform = GetGameObject()->GetComponent<Transform>();

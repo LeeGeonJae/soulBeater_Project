@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d2d1.h>
+#include <d2d1_1.h>
 
 #include "Component.h"
 #include "IRenderable.h"
@@ -20,7 +21,8 @@ namespace d2dFramework
 
 		void Init() override;
 		void Release() override;
-
+		void SerializeIn(nlohmann::ordered_json& object) override;
+		void SerializeOut(nlohmann::ordered_json& object) override;
 		void Update(float deltaTime) override;
 		bool IsOutsideBoundingBox(const D2D1::Matrix3x2F& cameraTransform, const AABB& boundingBox) override;
 		void Render(const D2D1::Matrix3x2F& cameraTransform) override;
@@ -45,6 +47,7 @@ namespace d2dFramework
 		bool mbIsLoop;
 
 		AnimationAsset* mAnimationAsset;
+		std::string mAnimationKey;
 	};
 
 	void AnimationRenderer::SetOffSet(const Vector2& offset)

@@ -21,6 +21,8 @@ namespace d2dFramework
 		inline GameObject* FindObjectOrNull(unsigned int id);
 		inline void DeletObject(unsigned int id);
 
+		inline const std::unordered_map<unsigned int, GameObject*>& GetObjects() const;
+
 	private:
 		ObjectManager();
 		~ObjectManager();
@@ -76,5 +78,10 @@ namespace d2dFramework
 
 		GameObject* gameObject = iter->second;
 		mDeleteObject.push(gameObject);
+	}
+
+	const std::unordered_map<unsigned int, GameObject*>& ObjectManager::GetObjects() const
+	{
+		return mValidObjectMap;
 	}
 }

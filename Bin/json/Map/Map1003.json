@@ -1,0 +1,960 @@
+{
+    "SceneID": 1003,
+    "GridWidth": -33686019,
+    "GridHeight": 0,
+    "GridDistance": -1073730878,
+    "m_Gameobjects": [
+        {
+            "GameObject_ID": 20000,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20001,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -620.0,
+                        10.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20002,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20003,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -605.0,
+                            -5.0
+                        ],
+                        [
+                            -635.0,
+                            25.0
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20004,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20004,
+                    "Component_ID": 20005,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -420.0,
+                        110.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20004,
+                    "Component_ID": 20006,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20004,
+                    "Component_ID": 20007,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -405.0,
+                            95.0
+                        ],
+                        [
+                            -435.0,
+                            125.0
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20008,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20008,
+                    "Component_ID": 20009,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -320.0,
+                        410.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20008,
+                    "Component_ID": 20010,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20008,
+                    "Component_ID": 20011,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -305.0,
+                            395.0
+                        ],
+                        [
+                            -335.0,
+                            425.0
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20012,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20012,
+                    "Component_ID": 20013,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -220.0,
+                        110.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20012,
+                    "Component_ID": 20014,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20012,
+                    "Component_ID": 20015,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -205.0,
+                            95.0
+                        ],
+                        [
+                            -235.0,
+                            125.0
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20016,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20016,
+                    "Component_ID": 20017,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -120.0,
+                        310.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20016,
+                    "Component_ID": 20018,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20016,
+                    "Component_ID": 20019,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -105.0,
+                            295.0
+                        ],
+                        [
+                            -135.0,
+                            325.0
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20020,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20020,
+                    "Component_ID": 20021,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -120.0,
+                        10.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20020,
+                    "Component_ID": 20022,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20020,
+                    "Component_ID": 20023,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -105.0,
+                            -5.0
+                        ],
+                        [
+                            -135.0,
+                            25.0
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20024,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20024,
+                    "Component_ID": 20025,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -20.0,
+                        310.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20024,
+                    "Component_ID": 20026,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20024,
+                    "Component_ID": 20027,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -5.0,
+                            295.0
+                        ],
+                        [
+                            -35.0,
+                            325.0
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40000,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40001,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -620.0,
+                        10.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40002,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40003,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40003,
+                    "Component_ID": 40004,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -420.0,
+                        110.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40003,
+                    "Component_ID": 40005,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40006,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40006,
+                    "Component_ID": 40007,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -320.0,
+                        410.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40006,
+                    "Component_ID": 40008,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40009,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40009,
+                    "Component_ID": 40010,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -220.0,
+                        110.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40009,
+                    "Component_ID": 40011,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40012,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40012,
+                    "Component_ID": 40013,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -120.0,
+                        310.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40012,
+                    "Component_ID": 40014,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40015,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40015,
+                    "Component_ID": 40016,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -120.0,
+                        10.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40015,
+                    "Component_ID": 40017,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40018,
+            "mObjectType": 0,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40018,
+                    "Component_ID": 40019,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -20.0,
+                        310.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40018,
+                    "Component_ID": 40020,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        }
+    ]
+}

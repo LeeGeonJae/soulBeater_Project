@@ -27,18 +27,22 @@ namespace d2dFramework
 		void Update(float deltaTime);
 		void Release();
 
-		void RegisterScene(const std::string& sceneName, Scene* scene);
+		Scene* CreateScene(unsigned int sceneID);
+		Scene* FindSceneOrNull(unsigned int sceneID);
+
 		inline void RegisterFixedUpdateable(IFixedUpdateable* fixedUpdateable);
 		inline void RegisterUpdateable(IUpdateable* updateable);
 
 		inline void UnregisterFixedUpdateable(IFixedUpdateable* fixedUpdateable);
 		inline void UnregisterUpdateable(IUpdateable* updateable);
 
+		inline void SetCurrentScene(unsigned int sceneID);
+
 		inline Scene& GetCurrentScene() const;
 
 	private:
 		Scene* mCurrentScene;
-		std::map<std::string, Scene*> mSceneMap;
+		std::map<unsigned int, Scene*> mSceneMap;
 
 		std::unordered_map<unsigned int, IFixedUpdateable*> mFixedUpdateable[GameObject::MAX_REFERENCE_DEPTH];
 		std::unordered_map<unsigned int, IUpdateable*> mUpdateable[GameObject::MAX_REFERENCE_DEPTH];
@@ -64,6 +68,14 @@ namespace d2dFramework
 	{
 		GameObject* gameObject = updateable->GetGameObject();
 		mUpdateable[gameObject->GetReferenceDepth()].erase(mUpdateable->find(updateable->GetId()));
+	}
+
+	void SceneManager::SetCurrentScene(unsigned int sceneID)
+	{
+		auto finded = mSceneMap.find(sceneID);
+		assert(finded != mSceneMap.end());
+
+		mCurrentScene = finded->second;
 	}
 
 	Scene& SceneManager::GetCurrentScene() const
