@@ -40,8 +40,7 @@ namespace mapTool
 			hInstance,
 			gameProcessor);
 
-		gameProcessor->SetHwnd(mHwnd);
-		gameProcessor->Init();
+		gameProcessor->Init(mHwnd);
 		ShowWindow(mHwnd, nCmdShow);
 
 		MSG msg = { 0, };

@@ -24,18 +24,18 @@ namespace mapTool
 		SoulBeaterProcessor(UINT width, UINT height, std::wstring name);
 		virtual ~SoulBeaterProcessor() = default;
 
-		virtual void Init() override;
+		virtual void Init(HWND hwnd) override;
 		virtual void Update() override;
 		virtual void Release() override;
 
 	public:
 		ID2D1Bitmap* GetBitmap(std::wstring key)
 		{
-			return getRenderManager()->GetBitmapOrNull(key.c_str());
+			return d2dFramework::RenderManager::GetInstance()->GetBitmapOrNull(key.c_str());
 		}
 		HRESULT CreateBitmap(std::wstring key, std::wstring path)
 		{
-			return getRenderManager()->CreateD2DBitmapFromFile(key.c_str(), path.c_str());
+			return d2dFramework::RenderManager::GetInstance()->CreateD2DBitmapFromFile(key.c_str(), path.c_str());
 		}
 
 	private:
@@ -62,7 +62,7 @@ namespace mapTool
 		// 클릭한 곳 표시 ( 임시 ) 
 		D2D1_RECT_F mRect;
 
-		MapToolGui* mImGui = new MapToolGui;
+		MapToolGui* mImGui;
 
 		d2dFramework::Scene* MapToolScene;
 	};

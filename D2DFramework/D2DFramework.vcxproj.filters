@@ -165,9 +165,6 @@
     <ClCompile Include="StringHelper.cpp">
       <Filter>소스 파일\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="SceneLoader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="AsyncInputManager.cpp">
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
@@ -176,6 +173,33 @@
     </ClCompile>
     <ClCompile Include="EffectManager.cpp">
       <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Repeller.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoader.cpp">
+      <Filter>소스 파일\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>소스 파일\ManagedClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>소스 파일\ManagedClass</Filter>
+    </ClCompile>
+    <ClCompile Include="GridComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GridMoveComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="eSceneType.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +215,7 @@
     <ClInclude Include="RenderManger.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="TimeManger.h">
+    <ClInclude Include="TimeManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
     <ClInclude Include="hRectangle.h">
@@ -275,7 +299,7 @@
     <ClInclude Include="eFrameworkID.h">
       <Filter>헤더 파일\Enum</Filter>
     </ClInclude>
-    <ClInclude Include="FrameInformation.h">
+    <ClInclude Include="FrameInfomation.h">
       <Filter>헤더 파일\Structor</Filter>
     </ClInclude>
     <ClInclude Include="CameraManager.h">
@@ -299,12 +323,6 @@
     <ClInclude Include="Component.h">
       <Filter>헤더 파일\AbstractClass</Filter>
     </ClInclude>
-    <ClInclude Include="StringHelper.h">
-      <Filter>소스 파일\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneLoader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="EffectManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
@@ -313,6 +331,60 @@
     </ClInclude>
     <ClInclude Include="BeatManager.h">
       <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Repeller.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>헤더 파일\ManagedClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>헤더 파일\ManagedClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="GridComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectPool.h">
+      <Filter>헤더 파일\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLoader.h">
+      <Filter>헤더 파일\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="StringHelper.h">
+      <Filter>헤더 파일\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="GridMoveComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GridPosition.h">
+      <Filter>헤더 파일\Structor</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyInformation.h">
+      <Filter>헤더 파일\Structor</Filter>
+    </ClInclude>
+    <ClInclude Include="GridVector.h">
+      <Filter>헤더 파일\Structor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DemoVersion_Geon\GridInfomation.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeComponent.h">
+      <Filter>헤더 파일\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="eTransformLayer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeManager.h">
+      <Filter>헤더 파일\Helper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,10 +6,12 @@
 #include "AABB.h"
 #include "OBB.h"
 #include "Collision.h"
+#include "GridComponent.h"
 
 #include <cassert>
 #include <locale>
 #include <codecvt>
+
 namespace d2dFramework
 {
 	SpriteRenderer::SpriteRenderer(unsigned int id, GameObject* owner)
@@ -21,6 +23,9 @@ namespace d2dFramework
 		, mBitmap(nullptr)
 		, mUVRectangle{ 0.f, 0.f, 1.f, 1.f }
 		, mSpriteType(eSpriteType::Rectangle)
+		, mbIsActive(true)
+		, mbIsLeft(false)
+		, mTransformLayer(eTransformLayer::None)
 	{
 	}
 
@@ -41,11 +46,34 @@ namespace d2dFramework
 
 	void SpriteRenderer::Render(const D2D1::Matrix3x2F& cameraTransform)
 	{
+		if (!mbIsActive)
+		{
+			return;
+		}
+
 		Transform* transform = GetGameObject()->GetComponent<Transform>();
-		D2D1::Matrix3x2F matrix = transform->GetTransform();
+		D2D1::Matrix3x2F matrix = D2D1::Matrix3x2F::Scale(mbIsLeft ? -1.f : 1.f, -1.f) * transform->GetTransform();
+
+		switch (mTransformLayer)
+		{
+		case eTransformLayer::None:
+			GetRenderManager()->SetTransform(matrix * cameraTransform);
+			break;
+		case eTransformLayer::Grid:
+		{
+			D2D1::Matrix3x2F tempMatrix = GetRenderManager()->GetGridObjectTransform();
+			GetRenderManager()->SetTransform(matrix * tempMatrix);
+			break;
+		}
+		case eTransformLayer::UI:
+			GetRenderManager()->SetTransform(GetRenderManager()->GetUITransform() * matrix);
+			break;
+		default:
+			break;
+		}
 
 		D2D1_COLOR_F prevColor = GetRenderManager()->SetColor(mBorderColor);
-		GetRenderManager()->SetTransform((D2D1::Matrix3x2F::Scale(1, -1) * matrix) * cameraTransform);
+
 		switch (mSpriteType)
 		{
 		case d2dFramework::eSpriteType::Rectangle:
@@ -62,6 +90,8 @@ namespace d2dFramework
 			assert(mBitmap != nullptr);
 			GetRenderManager()->DrawBitMap(mOffset, mSize, mUVRectangle, mBitmap);
 			break;
+		case d2dFramework::eSpriteType::Inheritance:
+			break;
 		default:
 			assert(false);
 			break;
@@ -73,6 +103,7 @@ namespace d2dFramework
 	void SpriteRenderer::Release()
 	{
 		IRenderable::Release();
+		mbIsActive = false;
 	}
 
 	void SpriteRenderer::SerializeIn(nlohmann::ordered_json& object)
@@ -98,7 +129,7 @@ namespace d2dFramework
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 		std::wstring wstr = converter.from_bytes(mBitmapKey);
 
-		mBitmap=GetRenderManager()->GetBitmapOrNull(wstr.c_str());
+		mBitmap = GetRenderManager()->GetBitmapOrNull(wstr.c_str());
 		///TODO 일단 여기 BtiMap전용 자료형 Const WCHAR*로 만들었습니다.
 		const WCHAR* wideString = reinterpret_cast<const WCHAR*>(mBitmapKey.c_str());
 

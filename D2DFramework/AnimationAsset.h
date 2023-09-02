@@ -19,7 +19,6 @@ namespace d2dFramework
 		AnimationAsset(const AnimationAsset& other) = delete;
 		AnimationAsset& operator=(const AnimationAsset& other) = delete;
 
-
 		inline ID2D1Bitmap* GetBitmap() const;
 
 		inline const std::vector<std::vector<FrameInformation>>& GetFrameInformations() const;

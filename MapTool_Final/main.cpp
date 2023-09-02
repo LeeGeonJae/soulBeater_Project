@@ -9,6 +9,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	mapTool::SoulBeaterProcessor soulBeaterProcessor(1940, 1120, L"demo");
+	mapTool::SoulBeaterProcessor soulBeaterProcessor(1920, 1080, L"demo");
 	return mapTool::MapToolWinApp::Run(&soulBeaterProcessor, hInstance, nCmdShow);
 }

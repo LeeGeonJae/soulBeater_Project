@@ -23,21 +23,40 @@
 
 namespace d2dFramework
 {
+	RenderManager* RenderManager::mInstance = nullptr;
+
+	RenderManager* RenderManager::GetInstance()
+	{
+		assert(mInstance != nullptr);
+		return mInstance;
+	}
+
 	RenderManager::RenderManager()
 		: BaseEntity(static_cast<unsigned int>(eFrameworkID::RenderManager))
 		, mFactory(nullptr)
-		, mRenderTarget(nullptr)
+		, mBitmapRenderTarget(nullptr)
 		, mWICFactory(nullptr)
 		, mTextFormat(nullptr)
 		, mD2DDeviceContext(nullptr)
-		, mBeforeColor{ 0.f, }
+		, mBeforeColor{ 0, }
 		, mHwnd(NULL)
+		, mGradientStops(nullptr)
+		, mRenderTarget(nullptr)
+		, mWriteFactory(nullptr)
+		, mBrush(nullptr)
+		, mStrokeWidth()
+		, mRenderable{}
+		, mRadialGradientBrush()
+		, mLinearGradientBrush()
+		, mLayer()
 	{
 	}
 
-	void RenderManager::Init()
+	void RenderManager::init(HWND hwnd)
 	{
 		HRESULT hr;
+
+		mHwnd = hwnd;
 
 		hr = CoInitialize(NULL);
 		assert(SUCCEEDED(hr));
@@ -53,49 +72,34 @@ namespace d2dFramework
 		);
 		assert(SUCCEEDED(hr));
 
-		RECT rc;
-		GetClientRect(mHwnd, &rc);
-
-		D2D1_SIZE_U size = D2D1::SizeU(
-			static_cast<UINT>(rc.right - rc.left),
-			static_cast<UINT>(rc.bottom - rc.top)
-		);
-		hr = mFactory->CreateHwndRenderTarget(
-			D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(mHwnd, size),
-			&mRenderTarget);
-		assert(SUCCEEDED(hr));
+		hr = createDeviceResources(mHwnd);
 
 		hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),
 			reinterpret_cast<IUnknown**>(&mWriteFactory));
 		assert(SUCCEEDED(hr));
 
 		SetFontSize(INIT_FONT_SIZE);
-		SetColor({ 0.f,0.f,0.f,1.f });
 		SetStrokeWidth(INIT_STROKE_SIZE);
 
 		for (unsigned int i = 0; i < static_cast<unsigned int>(eObjectType::Size); ++i)
 		{
 			mRenderable[i].reserve(RESERVE_SIZE);
 		}
-
-		hr = mRenderTarget->QueryInterface(&mD2DDeviceContext);
-		assert(SUCCEEDED(hr));
 	}
 
-	void RenderManager::Release()
+	void RenderManager::release()
 	{
 		for (unsigned int i = 0; i < static_cast<unsigned int>(eObjectType::Size); ++i)
 		{
 			mRenderable[i].clear();
 		}
 
-		mTextFormat->Release(); mTextFormat = nullptr;
-		mFactory->Release(); mFactory = nullptr;
-		mRenderTarget->Release(); mRenderTarget = nullptr;
-		mWICFactory->Release(); mWICFactory = nullptr;
-		mWriteFactory->Release(); mWriteFactory = nullptr;
-		mD2DDeviceContext->Release(); mD2DDeviceContext = nullptr;
+		if (mTextFormat != nullptr) { mTextFormat->Release(); mTextFormat = nullptr; }
+		if (mFactory != nullptr) { mFactory->Release(); mFactory = nullptr; }
+		if (mBitmapRenderTarget != nullptr) { mBitmapRenderTarget->Release(); mBitmapRenderTarget = nullptr; }
+		if (mWICFactory != nullptr) { mWICFactory->Release(); mWICFactory = nullptr; }
+		if (mWriteFactory != nullptr) { mWriteFactory->Release(); mWriteFactory = nullptr; }
+		if (mD2DDeviceContext != nullptr) { mD2DDeviceContext->Release(); mD2DDeviceContext = nullptr; }
 
 		for (auto iter = mBitmapMap.begin(); iter != mBitmapMap.end(); ++iter)
 		{
@@ -110,6 +114,8 @@ namespace d2dFramework
 
 		mBitmapMap.clear();
 		mAnimationAssetMap.clear();
+
+		mHwnd = NULL;
 	}
 
 	void RenderManager::RegisterRenderable(IRenderable* renderable)
@@ -128,89 +134,144 @@ namespace d2dFramework
 		mRenderable[index].erase(renderable->GetId());
 	}
 
-	void RenderManager::BeginDraw()
+	void RenderManager::BitmapBeginDraw()
 	{
-		mRenderTarget->BeginDraw();
-		mRenderTarget->Clear({ 255,255,255 });
+		HRESULT hr = createDeviceResources(mHwnd);
+		if (FAILED(hr))
+		{
+			return;
+		}
+
+		mBitmapRenderTarget->BeginDraw();
+		mBitmapRenderTarget->Clear({ 1, 1,1, 1 });
 	}
 
-	void RenderManager::Render(CameraManager* cameraManager)
+	void RenderManager::BitmapEndDraw()
+	{
+		HRESULT hr = mBitmapRenderTarget->EndDraw();
+
+		if (hr == D2DERR_RECREATE_TARGET)
+		{
+			DiscardDeviceResource();
+			createDeviceResources(mHwnd);
+		}
+	}
+
+	void RenderManager::BeginDraw()
+	{
+		HRESULT hr = createDeviceResources(mHwnd);
+		if (FAILED(hr))
+		{
+			return;
+		}
+
+		mRenderTarget->BeginDraw();
+		mRenderTarget->Clear({ 0,0,0,1 });
+	}
+
+	void RenderManager::EndDraw()
+	{
+		HRESULT  hr = mRenderTarget->EndDraw();
+
+		if (hr == D2DERR_RECREATE_TARGET)
+		{
+			DiscardDeviceResource();
+			createDeviceResources(mHwnd);
+		}
+	}
+
+	void RenderManager::Clear(D2D1::Matrix3x2F matrix, D2D1_COLOR_F color)
+	{
+		mBitmapRenderTarget->SetTransform(matrix);
+		mBitmapRenderTarget->Clear(color);
+		mBitmapRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+	}
+
+	void RenderManager::CopyBitmapRenderToHwndRender(D2D1::Matrix3x2F matrix)
+	{
+		ID2D1Bitmap* bitmap = NULL;
+		mBitmapRenderTarget->GetBitmap(&bitmap);
+		assert(bitmap != NULL);
+		mRenderTarget->SetTransform(matrix);
+		mRenderTarget->DrawBitmap(bitmap);
+		mRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+	}
+
+	void RenderManager::DrawRadialGradiendBrush(const D2D1_ELLIPSE& ellipse)
+	{
+		//mBitmapRenderTarget->FillEllipse(ellipse, mLinearGradientBrush);
+		//
+		//D2D1_ELLIPSE e = { {400,300},200,200 };
+		//
+		//mBitmapRenderTarget->FillEllipse(e, mRadialGradientBrush);	
+		//
+		//mBitmapRenderTarget->FillRectangle(D2D1::RectF(0, 0, 100, 100), mBrush);
+	}
+
+	void RenderManager::CreateRadialGradientBrush()
+	{
+		D2D1_GRADIENT_STOP gradientStops[2];
+		gradientStops[0] = D2D1::GradientStop(0.0f, D2D1::ColorF(D2D1::ColorF::White));
+		//gradientStops[0].position = 0.0f;
+		gradientStops[1] = D2D1::GradientStop(1.0f, D2D1::ColorF(D2D1::ColorF::Black));
+		//gradientStops[1].position = 1.0f;
+
+		HRESULT hr = mBitmapRenderTarget->CreateGradientStopCollection(
+			gradientStops,
+			2,
+			D2D1_GAMMA_2_2,
+			D2D1_EXTEND_MODE_CLAMP,
+			&mGradientStops
+		);
+		assert(SUCCEEDED(hr));
+
+		assert(mGradientStops != nullptr);
+		hr = mBitmapRenderTarget->CreateLinearGradientBrush(
+			D2D1::LinearGradientBrushProperties(
+				D2D1::Point2F(0, 0),
+				D2D1::Point2F(150, 150)),
+			mGradientStops,
+			&mLinearGradientBrush
+		);
+		assert(SUCCEEDED(hr));
+
+		hr = mBitmapRenderTarget->CreateRadialGradientBrush(
+			D2D1::RadialGradientBrushProperties(
+				D2D1::Point2F(400, 300), D2D1::Point2F(400, 300),
+				200, 200),
+			mGradientStops,
+			&mRadialGradientBrush
+		);
+		assert(SUCCEEDED(hr));
+
+	}
+
+	void RenderManager::render(CameraManager* cameraManager)
 	{
 		assert(cameraManager != nullptr);
 
-		AABB cameraAABB = { {0, 0 }, cameraManager->GetScrennSize() };
+		// AABB cameraAABB = { {0, 0 }, cameraManager->GetScrennSize() };
+		AABB cameraAABB = { {-1000, -1000 }, {2000, 2000 } };
 		D2D1::Matrix3x2F matrix = cameraManager->GetCombineMatrix();
 
 		for (unsigned int i = 0; i < static_cast<unsigned int>(eObjectType::Size); ++i)
 		{
 			for (auto pair : mRenderable[i])
 			{
-				if (pair.second->IsOutsideBoundingBox(matrix, cameraAABB))
-				{
-					continue;
-				}
+				//if (pair.second->IsOutsideBoundingBox(matrix, cameraAABB))
+				//{
+				//	continue;
+				//}
 
 				pair.second->Render(matrix);
 			}
 		}
 	}
 
-	void RenderManager::Clear(D2D1::Matrix3x2F matrix, D2D1_COLOR_F color)
-	{
-		mRenderTarget->SetTransform(matrix);
-		mRenderTarget->Clear(color);
-		mRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-	}
-
-	void RenderManager::EndDraw()
-	{
-		mRenderTarget->EndDraw();
-	}
-
-	void RenderManager::SetTransform(const D2D1::Matrix3x2F& trasform)
-	{
-		mRenderTarget->SetTransform(trasform);
-	}
-
-	void RenderManager::SetFontSize(unsigned int size)
-	{
-		if (mTextFormat != nullptr)
-		{
-			mTextFormat->Release();
-			mTextFormat = nullptr;
-		}
-
-		HRESULT hr;
-		hr = mWriteFactory->CreateTextFormat(L"Gulim", NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL, size, L"ko-KR", &mTextFormat);
-
-		assert(SUCCEEDED(hr));
-	}
-
-	D2D1_COLOR_F RenderManager::SetColor(const D2D1_COLOR_F& color)
-	{
-		if (mBrush != nullptr)
-		{
-			D2D1_COLOR_F before = mBrush->GetColor();
-			mBrush->SetColor(color);
-
-			return before;
-		}
-
-		HRESULT hr = mRenderTarget->CreateSolidColorBrush(color, &mBrush);
-		assert(SUCCEEDED(hr));
-
-		return mBrush->GetColor();
-	}
-
-	void RenderManager::SetStrokeWidth(float strokeWidth)
-	{
-		mStrokeWidth = strokeWidth;
-	}
 
 	void RenderManager::DrawPoint(float x, float y)
 	{
-		mRenderTarget->FillEllipse(D2D1::Ellipse(D2D1::Point2F(x, y), mStrokeWidth, mStrokeWidth), mBrush);
+		mBitmapRenderTarget->FillEllipse(D2D1::Ellipse(D2D1::Point2F(x, y), mStrokeWidth, mStrokeWidth), mBrush);
 	}
 
 	void RenderManager::DrawPoint(const D2D1_POINT_2F& point)
@@ -220,7 +281,7 @@ namespace d2dFramework
 
 	void RenderManager::DrawLine(float x1, float y1, float x2, float y2)
 	{
-		mRenderTarget->DrawLine(D2D1::Point2F(x1, y1), D2D1::Point2F(x2, y2), mBrush, mStrokeWidth);
+		mBitmapRenderTarget->DrawLine(D2D1::Point2F(x1, y1), D2D1::Point2F(x2, y2), mBrush, mStrokeWidth);
 	}
 
 	void RenderManager::DrawLine(const D2D1_POINT_2F& start, const D2D1_POINT_2F& end)
@@ -230,7 +291,7 @@ namespace d2dFramework
 
 	void RenderManager::DrawCircle(float x, float y, float radiusX, float radiusY)
 	{
-		mRenderTarget->DrawEllipse(D2D1::Ellipse(D2D1::Point2F(x, y), radiusX, radiusY), mBrush, mStrokeWidth);
+		mBitmapRenderTarget->DrawEllipse(D2D1::Ellipse(D2D1::Point2F(x, y), radiusX, radiusY), mBrush, mStrokeWidth);
 	}
 
 	void RenderManager::DrawCircle(const Vector2& offset, const Vector2& size)
@@ -245,7 +306,7 @@ namespace d2dFramework
 
 	void RenderManager::FillCircle(float x, float y, float radiusX, float radiusY)
 	{
-		mRenderTarget->FillEllipse(D2D1::Ellipse(D2D1::Point2F(x, y), radiusX, radiusY), mBrush);
+		mBitmapRenderTarget->FillEllipse(D2D1::Ellipse(D2D1::Point2F(x, y), radiusX, radiusY), mBrush);
 	}
 
 	void RenderManager::FillCircle(const Vector2& offset, const Vector2& size)
@@ -260,7 +321,7 @@ namespace d2dFramework
 
 	void RenderManager::DrawRectangle(float left, float top, float right, float bottom)
 	{
-		mRenderTarget->DrawRectangle(D2D1::Rect(left, top, right, bottom), mBrush, mStrokeWidth);
+		mBitmapRenderTarget->DrawRectangle(D2D1::Rect(left, top, right, bottom), mBrush, mStrokeWidth);
 	}
 
 	void RenderManager::DrawRectangle(const Vector2& offset, const Vector2& size)
@@ -275,7 +336,7 @@ namespace d2dFramework
 
 	void RenderManager::FillRectangle(float left, float top, float right, float bottom)
 	{
-		mRenderTarget->FillRectangle(D2D1::Rect(left, top, right, bottom), mBrush);
+		mBitmapRenderTarget->FillRectangle(D2D1::Rect(left, top, right, bottom), mBrush);
 	}
 
 	void RenderManager::FillRectangle(const Vector2& offset, const Vector2& size)
@@ -323,28 +384,28 @@ namespace d2dFramework
 		}
 	}
 
-	void RenderManager::DrawBitMap(float left, float top, float right, float bottom, float uvLeft, float uvTop, float uvRight, float uvBottom, ID2D1Bitmap* bitmap)
+	void RenderManager::DrawBitMap(float left, float top, float right, float bottom, float uvLeft, float uvTop, float uvRight, float uvBottom, ID2D1Bitmap* bitmap, float alpha)
 	{
 		assert(bitmap != nullptr);
 
-		DrawBitMap({ left, top, right, bottom }, { uvLeft, uvTop, uvRight, uvBottom }, bitmap);
+		DrawBitMap({ left, top, right, bottom }, { uvLeft, uvTop, uvRight, uvBottom }, bitmap, alpha);
 	}
 
-	void RenderManager::DrawBitMap(const Vector2& offset, const Vector2& size, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap* bitmap)
+	void RenderManager::DrawBitMap(const Vector2& offset, const Vector2& size, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap* bitmap, float alpha)
 	{
 		assert(bitmap != nullptr);
 
-		DrawBitMap(MathHelper::CreateRectangle(offset, size), uvRectangle, bitmap);
+		DrawBitMap(MathHelper::CreateRectangle(offset, size), uvRectangle, bitmap, alpha);
 	}
 
-	void RenderManager::DrawBitMap(const D2D1_RECT_F& rectangle, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap* bitmap)
+	void RenderManager::DrawBitMap(const D2D1_RECT_F& rectangle, const D2D1_RECT_F& uvRectangle, ID2D1Bitmap* bitmap, float alpha)
 	{
 		assert(bitmap != nullptr);
-
-		mRenderTarget->DrawBitmap(bitmap
+		/// D2D1_BITMAP_INTERPOLATION_MODE_LINEAR 에서 수정 
+		mBitmapRenderTarget->DrawBitmap(bitmap
 			, rectangle
-			, 1.0f
-			, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
+			, alpha
+			, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 			, uvRectangle);
 	}
 
@@ -352,8 +413,7 @@ namespace d2dFramework
 	{
 		assert(text != nullptr);
 
-		mRenderTarget->DrawText(text, wcslen(text), mTextFormat, { left, top, right, bottom }, mBrush);
-
+		mBitmapRenderTarget->DrawText(text, (UINT)wcslen(text), mTextFormat, { left, top, right, bottom }, mBrush);
 	}
 
 	void RenderManager::WriteText(const wchar_t* text, const D2D1_RECT_F& rectangle)
@@ -398,7 +458,7 @@ namespace d2dFramework
 		hr = createDeviceResources(mHwnd);
 		if (FAILED(hr)) { goto END; }
 
-		hr = mRenderTarget->CreateBitmapFromWicBitmap(convertedBitmap, NULL, &bitmap);
+		hr = mBitmapRenderTarget->CreateBitmapFromWicBitmap(convertedBitmap, NULL, &bitmap);
 		if (FAILED(hr)) { goto END; }
 		mBitmapMap.emplace(filePath, bitmap);
 
@@ -459,7 +519,7 @@ namespace d2dFramework
 		hr = createDeviceResources(mHwnd);
 		if (FAILED(hr)) { goto END; }
 
-		hr = mRenderTarget->CreateBitmapFromWicBitmap(convertedBitmap, NULL, &bitmap);
+		hr = mBitmapRenderTarget->CreateBitmapFromWicBitmap(convertedBitmap, NULL, &bitmap);
 		if (FAILED(hr)) { goto END; }
 		mBitmapMap.emplace(key, bitmap);
 
@@ -537,34 +597,45 @@ namespace d2dFramework
 		return S_OK;
 	}
 
+	void RenderManager::DiscardDeviceResource()
+	{
+		mRenderTarget->Release(); mRenderTarget = nullptr;
+		mBitmapRenderTarget->Release(); mBitmapRenderTarget = nullptr;
+		mBrush->Release(); mBrush = nullptr;
+
+	}
+
 	HRESULT RenderManager::createDeviceResources(HWND hWnd)
 	{
 		HRESULT hr = S_OK;
 
-		if (!mRenderTarget)
+		if (!mBitmapRenderTarget)
 		{
 			RECT rc;
-			hr = GetClientRect(hWnd, &rc) ? S_OK : E_FAIL;
+			hr = GetWindowRect(hWnd, &rc) ? S_OK : E_FAIL;
 
 			if (SUCCEEDED(hr))
 			{
-				// Create a D2D render target properties
-				D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties = D2D1::RenderTargetProperties();
+				D2D1_SIZE_U size = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
 
-				// Set the DPI to be the default system DPI to allow direct mapping
-				// between image pixels and desktop pixels in different system DPI settings
+				D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties = D2D1::RenderTargetProperties();
 				renderTargetProperties.dpiX = DEFAULT_DPI;
 				renderTargetProperties.dpiY = DEFAULT_DPI;
-
-				// Create a D2D render target
-				D2D1_SIZE_U size = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
 
 				hr = mFactory->CreateHwndRenderTarget(
 					renderTargetProperties,
 					D2D1::HwndRenderTargetProperties(hWnd, size),
 					&mRenderTarget
 				);
+				assert(SUCCEEDED(hr));
 
+				hr = mRenderTarget->CreateCompatibleRenderTarget(&mBitmapRenderTarget);
+				assert(SUCCEEDED(hr));
+
+				hr = mBitmapRenderTarget->QueryInterface(&mD2DDeviceContext);
+				assert(SUCCEEDED(hr));
+
+				SetColor({ 0.f,0.f,0.f,1.f });
 			}
 		}
 

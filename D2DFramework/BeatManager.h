@@ -1,50 +1,59 @@
 #pragma once
 
+#include "BaseEntity.h"
+#include "MathHelper.h"
+
 #include <Windows.h>
 
 namespace d2dFramework
 {
-	class BeatManager
+	class BeatManager final : public BaseEntity
 	{
 	public:
-		BeatManager(unsigned int bpm);
-		~BeatManager() = default;
+		BeatManager();
+		~BeatManager() override = default;
 		BeatManager(const BeatManager& other) = default;
 		BeatManager& operator=(const BeatManager& other) = default;
 
-		inline void Init(); // 비트가 변경되면 호출되어야 한다.
+		void Init(unsigned int bpm, LARGE_INTEGER frequency);
 
 		inline void SetBPM(unsigned int bpm);
 
-		inline double GetBeatIntervalTime();
-		inline LARGE_INTEGER GetStandardStartTime();
+		inline double GetIntervalTime() const;
+		inline LARGE_INTEGER GetLastBPMChaneTime() const;
+		inline double GetIntervalDefferenceTime(LARGE_INTEGER currentTime) const;
 
 	private:
 		unsigned int mBPM;
 		double mBeatIntervalTime;
-		LARGE_INTEGER mStandardStartTime;
+		LARGE_INTEGER mLastBPMChangeTime;
+		LARGE_INTEGER mFrequency;
 	};
-
-	void BeatManager::Init()
-	{
-		QueryPerformanceCounter(&mStandardStartTime);
-		mBeatIntervalTime = 60.0 / mBPM;
-
-	}
 
 	void BeatManager::SetBPM(unsigned int bpm)
 	{
 		mBPM = bpm;
-		Init();
+		QueryPerformanceCounter(&mLastBPMChangeTime);
+		mBeatIntervalTime = 60.0 / mBPM;
 	}
 
-	double BeatManager::GetBeatIntervalTime()
+	double BeatManager::GetIntervalTime() const
 	{
 		return mBeatIntervalTime;
 	}
 
-	LARGE_INTEGER BeatManager::GetStandardStartTime()
+	LARGE_INTEGER BeatManager::GetLastBPMChaneTime() const
 	{
-		return mStandardStartTime;
+		return mLastBPMChangeTime;
+	}
+
+	double BeatManager::GetIntervalDefferenceTime(LARGE_INTEGER currentTime) const
+	{
+		double dfffTime = static_cast<double>(currentTime.QuadPart - mLastBPMChangeTime.QuadPart) / mFrequency.QuadPart;
+
+		double remainderTime = MathHelper::GetDoubleRemainder(dfffTime, mBeatIntervalTime);
+		double otherDefferenceTime = mBeatIntervalTime - remainderTime;
+
+		return remainderTime < otherDefferenceTime ? remainderTime : otherDefferenceTime;
 	}
 }

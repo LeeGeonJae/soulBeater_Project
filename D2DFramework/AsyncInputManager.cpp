@@ -1,10 +1,37 @@
 #include "AsyncInputManager.h"
 
+#include "eFrameworkID.h"
+
 namespace d2dFramework
 {
 	AsyncInputManager::AsyncInputManager()
-		: mbIsEnd(false)
+		: BaseEntity(static_cast<unsigned int>(eFrameworkID::AsyncInputManager))
+		, mHandleKeys()
+		, mKeyQueue()
+		, mMutex()
+		, mbIsEnd(false)
 	{
+	}
+
+	AsyncInputManager::~AsyncInputManager()
+	{
+		Release();
+	}
+
+	void AsyncInputManager::Release()
+	{
+		mMutex.lock();
+
+		mHandleKeys.clear();
+
+		while (!mKeyQueue.empty())
+		{
+			mKeyQueue.pop();
+		}
+
+		mbIsEnd = true;
+
+		mMutex.unlock();
 	}
 
 	void AsyncInputManager::Update()

@@ -116,7 +116,7 @@ namespace d2dFramework
 	const D2D1::Matrix3x2F Transform::GetInverseTransform(void) const
 	{
 		D2D1::Matrix3x2F matrix = GetTransform();
-		assert(D2D1InvertMatrix(&matrix));
+		D2D1InvertMatrix(&matrix);
 
 		return matrix;
 	}

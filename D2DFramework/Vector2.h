@@ -29,6 +29,7 @@ namespace d2dFramework
 		Vector2& operator*=(int scalar);
 		Vector2& operator*=(float scalar);
 		Vector2& operator*=(const D2D1::Matrix3x2F& matrix);
+		inline Vector2 operator-();
 
 		void Normalize();
 		void Rotate(float rotateInRadian);
@@ -45,6 +46,11 @@ namespace d2dFramework
 		inline float GetX() const;
 		inline float GetY() const;
 	};
+
+	Vector2 Vector2::operator-()
+	{
+		return Vector2(-x, -y);
+	}
 
 	float Vector2::GetX() const
 	{

@@ -1,5 +1,8 @@
 #include "EffectManager.h"
 
+#include "eFrameworkID.h"
+
+#include <string>
 #include <cassert>
 #include <d2d1effects_2.h>
 
@@ -8,53 +11,59 @@
 
 namespace d2dFramework
 {
-	void EffectManager::Init()
+	EffectManager::EffectManager()
+		: BaseEntity(static_cast<unsigned int>(eFrameworkID::EffectManager))
+		, mD2DDeviceContext(nullptr)
+		, mSpotLight(nullptr)
+		, mDirectionBlur(nullptr)
+		, mGaussianBlur(nullptr)
+		, mVignetteEffect(nullptr)
+		, mAlphaBlendEffect(nullptr)
+		, mOpacityEffect(nullptr)
+		, mEdgeDetection(nullptr)
+		, mMorphology(nullptr)
+		, mInvert(nullptr)
+		, mGrayScale(nullptr)
+		, mImage(nullptr)
+		, mBlackBackground(nullptr)
 	{
-		if (mD2DDeviceContext == nullptr)
-		{
-			return;
-		}
+	}
+
+	EffectManager::~EffectManager()
+	{
+		Release();
+	}
+
+	void EffectManager::Init(ID2D1DeviceContext* d2dDeviceContext)
+	{
+		mD2DDeviceContext = d2dDeviceContext;
+		Release();
 
 		mD2DDeviceContext->CreateEffect(CLSID_D2D1SpotSpecular, &mSpotLight);
-		mD2DDeviceContext->CreateEffect(CLSID_D2D1GaussianBlur, &mDirectionBlur);
+		mD2DDeviceContext->CreateEffect(CLSID_D2D1DirectionalBlur, &mDirectionBlur);
 		mD2DDeviceContext->CreateEffect(CLSID_D2D1GaussianBlur, &mGaussianBlur);
 		mD2DDeviceContext->CreateEffect(CLSID_D2D1Vignette, &mVignetteEffect);
 		mD2DDeviceContext->CreateEffect(CLSID_D2D1Blend, &mAlphaBlendEffect);
 		mD2DDeviceContext->CreateEffect(CLSID_D2D1Opacity, &mOpacityEffect);
 		mD2DDeviceContext->CreateEffect(CLSID_D2D1EdgeDetection, &mEdgeDetection);
-		mD2DDeviceContext->CreateEffect(CLSID_D2D1EdgeDetection, &mMorphology);
-		mD2DDeviceContext->CreateEffect(CLSID_D2D1EdgeDetection, &mInvert);
-		mD2DDeviceContext->CreateEffect(CLSID_D2D1EdgeDetection, &mGrayScale);
+		mD2DDeviceContext->CreateEffect(CLSID_D2D1Morphology, &mMorphology);
+		mD2DDeviceContext->CreateEffect(CLSID_D2D1Invert, &mInvert);
+		mD2DDeviceContext->CreateEffect(CLSID_D2D1Grayscale, &mGrayScale);
+
+		createHelperBitmap();
 	}
 
 	void EffectManager::Release()
 	{
-		mSpotLight->Release();
-		mGaussianBlur->Release();
-		mVignetteEffect->Release();
-		mAlphaBlendEffect->Release();
-		mOpacityEffect->Release();
-		mEdgeDetection->Release();
-		mMorphology->Release();
-		mInvert->Release();
-		mGrayScale->Release();
-	}
-
-	void EffectManager::Render()
-	{
-		mD2DDeviceContext->DrawImage(mGaussianBlur);
-		mD2DDeviceContext->DrawImage(mAlphaBlendEffect, { 0, 500 });
-		
-		mD2DDeviceContext->DrawImage(mDirectionBlur, { 500, 0 });
-		mD2DDeviceContext->DrawImage(mOpacityEffect, { 500, 500 });
-		
-		mD2DDeviceContext->DrawImage(mInvert, { 1000, 0 });
-		mD2DDeviceContext->DrawImage(mSpotLight, { 1000, 0 });
-		mD2DDeviceContext->DrawImage(mEdgeDetection, { 1000, 500 });
-
-		mD2DDeviceContext->DrawImage(mVignetteEffect, { 1500, 0 });
-		//mD2DDeviceContext->DrawImage(mMorphology, { 1500, 500 });
-		mD2DDeviceContext->DrawImage(mGrayScale, { 1500, 500 });
+		if (mSpotLight != nullptr) { mSpotLight->Release(); mSpotLight = nullptr; }
+		if (mGaussianBlur != nullptr) { mGaussianBlur->Release(); mGaussianBlur = nullptr; }
+		if (mVignetteEffect != nullptr) { mVignetteEffect->Release(); mVignetteEffect = nullptr; }
+		if (mAlphaBlendEffect != nullptr) { mAlphaBlendEffect->Release(); mAlphaBlendEffect = nullptr; }
+		if (mOpacityEffect != nullptr) { mOpacityEffect->Release(); mOpacityEffect = nullptr; }
+		if (mEdgeDetection != nullptr) { mEdgeDetection->Release(); mEdgeDetection = nullptr; }
+		if (mMorphology != nullptr) { mMorphology->Release(); mMorphology = nullptr; }
+		if (mInvert != nullptr) { mInvert->Release(); mInvert = nullptr; }
+		if (mGrayScale != nullptr) { mGrayScale->Release(); mGrayScale = nullptr; }
 	}
 
 	ID2D1Bitmap* EffectManager::CreateSpotLight(ID2D1Bitmap* bitmap
@@ -78,13 +87,18 @@ namespace d2dFramework
 
 		mSpotLight->GetOutput(&image);
 
-		return nullptr;
+		mAlphaBlendEffect->SetInput(0, bitmap);
+		// mAlphaBlendEffect->SetInput(1, mBlackBackground);
+		// mAlphaBlendEffect->SetInput(2, image);
+		mAlphaBlendEffect->SetValue(D2D1_BLEND_PROP_MODE, 0);
+		ID2D1Image* blendImage = nullptr;
 
-		// non working..
+		mAlphaBlendEffect->GetOutput(&blendImage);
+
 		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
 		, static_cast<UINT32>(bitmap->GetSize().height) };
 
-		ID2D1Bitmap* result = convertImageToBitmap(image, size);
+		ID2D1Bitmap* result = convertImageToBitmap(blendImage, size);
 
 		return result;
 	}
@@ -98,11 +112,11 @@ namespace d2dFramework
 		mDirectionBlur->SetValue(D2D1_DIRECTIONALBLUR_PROP_ANGLE, angle);
 		mDirectionBlur->GetOutput(&image);
 
-		return nullptr;
-
-		// non working..
-		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
-		, static_cast<UINT32>(bitmap->GetSize().height) };
+		D2D1_SIZE_U size =
+		{
+			static_cast<UINT32>(bitmap->GetSize().width),
+			static_cast<UINT32>(bitmap->GetSize().height)
+		};
 
 		ID2D1Bitmap* result = convertImageToBitmap(image, size);
 
@@ -115,14 +129,13 @@ namespace d2dFramework
 
 		mGaussianBlur->SetInput(0, bitmap);
 		mGaussianBlur->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, blurVal);
+		mGaussianBlur->GetOutput(&image);
 
-		mSpotLight->GetOutput(&image);
-
-		return nullptr;
-
-		// non working..
-		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
-		, static_cast<UINT32>(bitmap->GetSize().height) };
+		D2D1_SIZE_U size =
+		{
+			static_cast<UINT32>(bitmap->GetSize().width),
+			static_cast<UINT32>(bitmap->GetSize().height)
+		};
 
 		ID2D1Bitmap* result = convertImageToBitmap(image, size);
 
@@ -138,6 +151,8 @@ namespace d2dFramework
 		mOpacityEffect->GetOutput(&opacityImage);
 
 		ID2D1Image* blurImage = nullptr;
+		mGaussianBlur->SetInput(0, bitmap);
+		mGaussianBlur->SetValue(D2D1_GAUSSIANBLUR_PROP_STANDARD_DEVIATION, blurVal);
 		mGaussianBlur->GetOutput(&blurImage);
 
 		mAlphaBlendEffect->SetInput(0, blurImage);
@@ -147,9 +162,6 @@ namespace d2dFramework
 		ID2D1Image* blendImage = nullptr;
 		mAlphaBlendEffect->GetOutput(&blendImage);
 
-		return nullptr;
-
-		// non working..
 		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
 , static_cast<UINT32>(bitmap->GetSize().height) };
 
@@ -169,9 +181,6 @@ namespace d2dFramework
 
 		mVignetteEffect->GetOutput(&image);
 
-		return nullptr;
-
-		// non working..
 		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
 		, static_cast<UINT32>(bitmap->GetSize().height) };
 
@@ -180,7 +189,7 @@ namespace d2dFramework
 		return result;
 	}
 
-	ID2D1Bitmap* EffectManager::CreateEdgeDetection(ID2D1Bitmap* bitmap, float strength, float blurRadius )
+	ID2D1Bitmap* EffectManager::CreateEdgeDetection(ID2D1Bitmap* bitmap, float strength, float blurRadius)
 	{
 		ID2D1Image* image = nullptr;
 
@@ -192,9 +201,6 @@ namespace d2dFramework
 		mEdgeDetection->SetValue(D2D1_EDGEDETECTION_PROP_ALPHA_MODE, D2D1_ALPHA_MODE_PREMULTIPLIED);
 		mEdgeDetection->GetOutput(&image);
 
-		return nullptr;
-
-		// non working..
 		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
 		, static_cast<UINT32>(bitmap->GetSize().height) };
 
@@ -213,9 +219,6 @@ namespace d2dFramework
 		mMorphology->SetValue(D2D1_MORPHOLOGY_PROP_HEIGHT, height);
 		mMorphology->GetOutput(&image);
 
-		return nullptr;
-
-		// non working..
 		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
 		, static_cast<UINT32>(bitmap->GetSize().height) };
 
@@ -231,9 +234,6 @@ namespace d2dFramework
 		mInvert->SetInput(0, bitmap);
 		mInvert->GetOutput(&image);
 
-		return nullptr;
-
-		// non working..
 		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
 		, static_cast<UINT32>(bitmap->GetSize().height) };
 
@@ -248,9 +248,6 @@ namespace d2dFramework
 		mGrayScale->SetInput(0, bitmap);
 		mGrayScale->GetOutput(&image);
 
-		return nullptr;
-
-		// non working..
 		D2D1_SIZE_U size = { static_cast<UINT32>(bitmap->GetSize().width)
 		, static_cast<UINT32>(bitmap->GetSize().height) };
 
@@ -264,7 +261,6 @@ namespace d2dFramework
 		ID2D1Image* oldTarget = NULL;
 		ID2D1Bitmap1* targetBitmap = NULL;
 
-		// "D2D1_BITMAP_OPTIONS_TARGET" 모드로 적절한 비트맵을 생성.
 		D2D1_BITMAP_PROPERTIES1 bitmapProperties =
 			D2D1::BitmapProperties1(
 				D2D1_BITMAP_OPTIONS_TARGET,
@@ -273,9 +269,6 @@ namespace d2dFramework
 		HRESULT hr = mD2DDeviceContext->CreateBitmap(size, 0, 0, bitmapProperties, &targetBitmap);
 		assert(SUCCEEDED(hr));
 
-		mD2DDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
-
-		mD2DDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
 		mD2DDeviceContext->GetTarget(&oldTarget);
 		mD2DDeviceContext->SetTarget(targetBitmap);
 		{
@@ -283,12 +276,38 @@ namespace d2dFramework
 			mD2DDeviceContext->Clear();
 			mD2DDeviceContext->DrawImage(img);
 			hr = mD2DDeviceContext->EndDraw();
-			assert(SUCCEEDED(hr));
+			//assert(SUCCEEDED(hr));
 		}
 		mD2DDeviceContext->SetTarget(oldTarget);
 
 		oldTarget->Release();
 
 		return targetBitmap;
+	}
+
+	void EffectManager::createHelperBitmap()
+	{
+		ID2D1Image* oldTarget = NULL;
+
+		D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+			D2D1::BitmapProperties1(
+				D2D1_BITMAP_OPTIONS_TARGET,
+				D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)
+			);
+
+		HRESULT hr = mD2DDeviceContext->CreateBitmap({ 1902, 1022 }, 0, 0, bitmapProperties, &mBlackBackground);
+		assert(SUCCEEDED(hr));
+
+		mD2DDeviceContext->GetTarget(&oldTarget);
+		mD2DDeviceContext->SetTarget(mBlackBackground);
+		{
+			mD2DDeviceContext->BeginDraw();
+			mD2DDeviceContext->Clear({ 1.f,1.f,1.f,0.3f });
+			hr = mD2DDeviceContext->EndDraw();
+			//assert(SUCCEEDED(hr));
+		}
+		mD2DDeviceContext->SetTarget(oldTarget);
+
+		oldTarget->Release();
 	}
 }

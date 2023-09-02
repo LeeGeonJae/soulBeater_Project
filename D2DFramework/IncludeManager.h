@@ -1,0 +1,16 @@
+#pragma once
+
+#include "AsyncInputManager.h"
+#include "BeatManager.h"
+#include "CameraManager.h"
+#include "CollisionManager.h"
+#include "ComponentManager.h"
+#include "EffectManager.h"
+#include "EventManager.h"
+#include "InputManager.h"
+#include "ObjectManager.h"
+#include "ParticleManager.h"
+#include "RenderManger.h"
+#include "SceneManager.h"
+#include "SoundManager.h"
+#include "TimeManager.h"

@@ -19,16 +19,23 @@ namespace d2dFramework
 		: BaseEntity(static_cast<unsigned int>(eFrameworkID::InputManager))
 		, mKeyStates{ eKeyState::None, }
 		, mMousePos{}
+		, mHwnd(NULL)
 	{
 	}
 
-	void InputManager::Init()
+	void InputManager::init(HWND hwnd)
 	{
+		mHwnd = hwnd;
 		memset(&mMousePos, 0, sizeof(mMousePos));
 		memset(mKeyStates, static_cast<int>(eKeyState::None), KEY_STATES_SIZE * sizeof(eKeyState));
 	}
 
-	void InputManager::Update()
+	void InputManager::release()
+	{
+		mHwnd = NULL;
+	}
+
+	void InputManager::update()
 	{
 		POINT curMousePos;
 		GetCursorPos(&curMousePos);

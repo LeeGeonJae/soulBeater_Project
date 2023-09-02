@@ -3,8 +3,13 @@
 #include "BaseEntity.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "IFixedUpdateable.h"
+#include "IUpdateable.h"
+#include "eObjectType.h"
 
 #include <cassert>
+#include <set>
+#include <map>
 #include <unordered_map>
 #include <queue>
 
@@ -13,15 +18,32 @@ namespace d2dFramework
 	class ObjectManager final : public BaseEntity
 	{
 		friend class GameProcessor;
+		friend class GameObject;
+		friend class Scene;
 
 	public:
 		static ObjectManager* GetInstance();
 
-		inline GameObject* CreateObject(unsigned int id);
-		inline GameObject* FindObjectOrNull(unsigned int id);
-		inline void DeletObject(unsigned int id);
+		void Release();
 
-		inline const std::unordered_map<unsigned int, GameObject*>& GetObjects() const;
+		inline GameObject* CreateObject(unsigned int id, bool bIsIndepentent = false);
+		inline GameObject* CreateObject(unsigned int id, float lifeSpan, bool bIsIndepentent = false);
+		inline void DeleteObject(unsigned int id, bool bIsIndepentent = false);
+		inline GameObject* FindObjectOrNull(unsigned int id, bool bIsIndepentent = false) const;
+		inline void ClearObjects(bool bIsIndepentent = false);
+
+		inline const std::set<unsigned int>& GetObjectTypeIDs(eObjectType objectType) const;
+
+		inline void RegisterFixedUpdateable(IFixedUpdateable* fixedUpdateable);
+		inline void RegisterUpdateable(IUpdateable* updateable);
+		inline void UnregisterFixedUpdateable(IFixedUpdateable* fixedUpdateable);
+		inline void UnregisterUpdateable(IUpdateable* updateable);
+
+		inline const std::unordered_map<unsigned int, GameObject*>& GetIndependentObjectMap() const;
+		inline const std::unordered_map<unsigned int, GameObject*>& GetObjectMaps() const;
+		inline const std::queue<GameObject*>& GetCreateObjectQueue() const;
+		inline const std::queue<GameObject*>& GetIndependentCreateObjectQueue() const;
+		inline const std::queue<unsigned int>& GetDeleteObjectQueue() const;
 
 	private:
 		ObjectManager();
@@ -29,59 +51,169 @@ namespace d2dFramework
 		ObjectManager(const ObjectManager&) = delete;
 		ObjectManager& operator=(const ObjectManager&) = delete;
 
+		void fixedUpdate(float deltaTime);
+		void update(float deltaTime);
+
 		void handleObjectLifeSpan();
-		void release();
 
 	private:
-		enum { RESERVE_SIZE = 4096 };
+		enum { SCENE_INDEPEDENT_OBJECT_RESER_SIZE = 512 };
+		enum { RESERVE_SIZE = 512 };
 
 		static ObjectManager* mInstance;
 
-		std::unordered_map<unsigned int, GameObject*> mValidObjectMap;
-		std::queue<GameObject*> mCreateObject;
-		std::queue<GameObject*> mDeleteObject;
+		std::unordered_map<unsigned int, GameObject*> mIndependentObjectMaps;
+		std::unordered_map<unsigned int, GameObject*> mObjectMaps;
+		std::queue<GameObject*> mCreateObjectQueue;
+		std::queue<GameObject*> mIndepententCreateObjectQueue;
+		std::queue<unsigned int> mDeleteObjectQueue;
 
-		// GameObject object pool
+		std::unordered_map<unsigned int, IFixedUpdateable*> mFixedUpdateable[GameObject::MAX_REFERENCE_DEPTH];
+		std::unordered_map<unsigned int, IUpdateable*> mUpdateable[GameObject::MAX_REFERENCE_DEPTH];
+
+		std::set<unsigned int> mObjectTypeIDs[static_cast<unsigned int>(eObjectType::Size)];
+
+		std::map<unsigned int, float> mHasLifeSpanObjects;
 	};
 
-	GameObject* ObjectManager::CreateObject(unsigned int id)
+	const std::set<unsigned int>& ObjectManager::GetObjectTypeIDs(eObjectType objectType) const
 	{
-		auto iter = mValidObjectMap.find(id);
-		assert(iter == mValidObjectMap.end());
+		assert(objectType != eObjectType::Size);
+		return mObjectTypeIDs[static_cast<unsigned int>(objectType)];
+	}
 
+	GameObject* ObjectManager::FindObjectOrNull(unsigned int id, bool bIsIndepentent) const
+	{
+		if (!bIsIndepentent)
+		{
+			auto iter = mObjectMaps.find(id);
+			if (iter == mObjectMaps.end())
+			{
+				return nullptr;
+			}
+
+			return iter->second;
+		}
+		else
+		{
+			auto iter = mIndependentObjectMaps.find(id);
+			if (iter == mIndependentObjectMaps.end())
+			{
+				return nullptr;
+			}
+
+			return iter->second;
+		}
+	}
+
+	GameObject* ObjectManager::CreateObject(unsigned int id, bool bIsIndepentent)
+	{
+		assert(mObjectMaps.find(id) == mObjectMaps.end());
+		assert(mIndependentObjectMaps.find(id) == mIndependentObjectMaps.end());
+
+		auto iter = mObjectMaps.find(id);
 		GameObject* gameObject = new GameObject(id);
-		mValidObjectMap.insert({ id, gameObject });
-		mCreateObject.push(gameObject);
+
+		if (!bIsIndepentent)
+		{
+			mCreateObjectQueue.push(gameObject);
+		}
+		else
+		{
+			mIndepententCreateObjectQueue.push(gameObject);
+		}
 
 		return gameObject;
 	}
 
-	GameObject* ObjectManager::FindObjectOrNull(unsigned int id)
+	inline GameObject* ObjectManager::CreateObject(unsigned int id, float lifeSpan, bool bIsIndepentent)
 	{
-		auto iter = mValidObjectMap.find(id);
-		if (iter == mValidObjectMap.end())
+		assert(mObjectMaps.find(id) == mObjectMaps.end());
+		assert(mIndependentObjectMaps.find(id) == mIndependentObjectMaps.end());
+
+		auto iter = mObjectMaps.find(id);
+		GameObject* gameObject = new GameObject(id);
+
+		if (!bIsIndepentent)
 		{
-			return nullptr;
+			mCreateObjectQueue.push(gameObject);
+		}
+		else
+		{
+			mIndepententCreateObjectQueue.push(gameObject);
 		}
 
-		return iter->second;
+		mHasLifeSpanObjects.insert({ id, lifeSpan });
+
+		return gameObject;
 	}
 
-	void ObjectManager::DeletObject(unsigned int id)
+	void ObjectManager::DeleteObject(unsigned int id, bool bIsIndepentent)
 	{
-		auto iter = mValidObjectMap.find(id);
+		mDeleteObjectQueue.push(id);
+	}
 
-		if (iter == mValidObjectMap.end())
+	void ObjectManager::ClearObjects(bool bIsIndepentent)
+	{
+		if (!bIsIndepentent)
 		{
-			return;
+			for (auto iter = mObjectMaps.begin(); iter != mObjectMaps.end(); ++iter)
+			{
+				GameObject* gameObject = iter->second;
+				mDeleteObjectQueue.push(gameObject->GetId());
+			}
 		}
-
-		GameObject* gameObject = iter->second;
-		mDeleteObject.push(gameObject);
+		else
+		{
+			for (auto iter = mIndependentObjectMaps.begin(); iter != mIndependentObjectMaps.end(); ++iter)
+			{
+				GameObject* gameObject = iter->second;
+				mDeleteObjectQueue.push(gameObject->GetId());
+			}
+		}
 	}
 
-	const std::unordered_map<unsigned int, GameObject*>& ObjectManager::GetObjects() const
+	const std::unordered_map<unsigned int, GameObject*>& ObjectManager::GetIndependentObjectMap() const
 	{
-		return mValidObjectMap;
+		return mIndependentObjectMaps;
+	}
+
+	const std::unordered_map<unsigned int, GameObject*>& ObjectManager::GetObjectMaps() const
+	{
+		return mObjectMaps;
+	}
+
+	void ObjectManager::RegisterFixedUpdateable(IFixedUpdateable* fixedUpdateable)
+	{
+		GameObject* gameObject = fixedUpdateable->GetGameObject();
+		mFixedUpdateable[gameObject->GetReferenceDepth()].insert({ fixedUpdateable->GetId(), fixedUpdateable });
+	}
+	void ObjectManager::RegisterUpdateable(IUpdateable* updateable)
+	{
+		GameObject* gameObject = updateable->GetGameObject();
+		mUpdateable[gameObject->GetReferenceDepth()].insert({ updateable->GetId(), updateable });
+	}
+
+	void ObjectManager::UnregisterFixedUpdateable(IFixedUpdateable* fixedUpdateable)
+	{
+		GameObject* gameObject = fixedUpdateable->GetGameObject();
+		mFixedUpdateable[gameObject->GetReferenceDepth()].erase(mFixedUpdateable->find(fixedUpdateable->GetId()));
+	}
+	void ObjectManager::UnregisterUpdateable(IUpdateable* updateable)
+	{
+		GameObject* gameObject = updateable->GetGameObject();
+		mUpdateable[gameObject->GetReferenceDepth()].erase(mUpdateable->find(updateable->GetId()));
+	}
+	const std::queue<GameObject*>& ObjectManager::GetCreateObjectQueue() const
+	{
+		return mCreateObjectQueue;
+	}
+	const std::queue<GameObject*>& ObjectManager::GetIndependentCreateObjectQueue() const
+	{
+		return mIndepententCreateObjectQueue;
+	}
+	const std::queue<unsigned int>& ObjectManager::GetDeleteObjectQueue() const
+	{
+		return mDeleteObjectQueue;
 	}
 }

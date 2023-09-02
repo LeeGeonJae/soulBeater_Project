@@ -1,0 +1,22 @@
+﻿  TestProjectJH.cpp
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\RenderManger.h(132,32): warning C4244: '인수': 'unsigned int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(52,15): error C2660: 'd2dFramework::BeatManager::Init': 함수는 1개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\BeatManager.h(18,8): message : 'd2dFramework::BeatManager::Init' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(52,15): message : 인수 목록 '(testProjectJH::TestProjectJH::<unnamed-enum-DEFUALT_BPM>)'을(를) 일치시키는 동안
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(208,71): error C2039: 'GetBeatIntervalTime': 'd2dFramework::BeatManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\BeatManager.h(10,8): message : 'd2dFramework::BeatManager' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(208,32): error C2660: 'd2dFramework::MathHelper::GetDoubleRemainder': 함수는 1개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\MathHelper.h(24,17): message : 'd2dFramework::MathHelper::GetDoubleRemainder' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(208,32): message : 인수 목록 '(double)'을(를) 일치시키는 동안
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(219,63): error C2039: 'GetBeatIntervalTime': 'd2dFramework::BeatManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\BeatManager.h(10,8): message : 'd2dFramework::BeatManager' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(246,21): error C2660: 'd2dFramework::SoundManager::Play': 함수는 1개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SoundManager.h(57,8): message : 'd2dFramework::SoundManager::Play' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(246,21): message : 인수 목록 '(unsigned int)'을(를) 일치시키는 동안
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(250,21): error C2661: 'd2dFramework::SoundManager::Stop': 오버로드된 함수에서 1개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(250,21): message : 인수 목록 '(unsigned int)'을(를) 일치시키는 동안
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(255,21): error C2660: 'd2dFramework::SoundManager::Play': 함수는 1개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SoundManager.h(57,8): message : 'd2dFramework::SoundManager::Play' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(255,21): message : 인수 목록 '(unsigned int)'을(를) 일치시키는 동안
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(259,21): error C2661: 'd2dFramework::SoundManager::Stop': 오버로드된 함수에서 1개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\TestProjectJH\TestProjectJH.cpp(259,21): message : 인수 목록 '(unsigned int)'을(를) 일치시키는 동안

@@ -7,7 +7,7 @@
 
 namespace d2dFramework
 {
-	float Rigidbody::mGravityWeight = 0.f;
+	// float Rigidbody::mGravityWeight = 0.f;
 
 	Rigidbody::Rigidbody(unsigned int id, GameObject* owner)
 		: Component(id, owner)
@@ -25,7 +25,7 @@ namespace d2dFramework
 		IFixedUpdateable::Init();
 	}
 
-	void Rigidbody::FixedUpdate(float deltaTime)
+	void Rigidbody::fixedUpdate(float deltaTime)
 	{
 		Transform* transform = GetGameObject()->GetComponent<Transform>();
 
@@ -57,7 +57,7 @@ namespace d2dFramework
 		object["mAcceleartion"] = { mAcceleartion.GetX(),mAcceleartion.GetY() };
 		object["mMass"] = mMass;
 		object["mInvMass"] = mInvMass;
-		object["mCOR"]= mCOR;
+		object["mCOR"] = mCOR;
 		object["mGravityScale"] = mGravityScale;
 	}
 }

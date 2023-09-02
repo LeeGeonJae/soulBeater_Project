@@ -1,6 +1,8 @@
 #pragma once
 
 #include "eKeyState.h"
+#include "BaseEntity.h"
+#include "KeyInformation.h"
 
 #include <queue>
 #include <Windows.h>
@@ -9,24 +11,23 @@
 
 namespace d2dFramework
 {
-	struct KeyInformation
-	{
-		char Key;
-		LARGE_INTEGER Time;
-	};
+	
 
-	class AsyncInputManager
+	class AsyncInputManager final : public BaseEntity
 	{
 	public:
 		AsyncInputManager();
-		~AsyncInputManager() = default;
+		~AsyncInputManager();
+
+		void Release();
 
 		void Update();
 		std::queue<KeyInformation> Flush();
 
+		inline void AddHandleKey(char vKeyCode);
+
 		inline bool GetIsEnd();
 
-		inline void AddHandleKey(char vKeyCode);
 		inline void SetIsEnd(bool bIsEnd);
 
 	private:
@@ -35,15 +36,6 @@ namespace d2dFramework
 		std::mutex mMutex;
 		bool mbIsEnd;
 	};
-
-	bool AsyncInputManager::GetIsEnd()
-	{
-		mMutex.lock();
-		bool result = mbIsEnd;
-		mMutex.unlock();
-
-		return result;
-	}
 
 	void AsyncInputManager::AddHandleKey(char vKeyCode)
 	{
@@ -55,5 +47,14 @@ namespace d2dFramework
 		mMutex.lock();
 		mbIsEnd = bIsEnd;
 		mMutex.unlock();
+	}
+
+	bool AsyncInputManager::GetIsEnd()
+	{
+		mMutex.lock();
+		bool result = mbIsEnd;
+		mMutex.unlock();
+
+		return result;
 	}
 }

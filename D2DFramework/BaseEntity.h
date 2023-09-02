@@ -12,6 +12,12 @@ namespace d2dFramework
 
 		inline unsigned int GetId() const;
 
+		// 디버깅용 명시적 호출 절대 금지
+		static void ClearIdMap()
+		{
+			mIDSet.clear();
+		}
+
 	private:
 		static std::unordered_set<unsigned int> mIDSet;
 

@@ -4,7 +4,7 @@
 
 namespace d2dFramework
 {
-	class SceneManager;
+	class ObjectManager;
 	class GameObject;
 
 	class IFixedUpdateable
@@ -16,25 +16,25 @@ namespace d2dFramework
 		virtual ~IFixedUpdateable() = default;
 
 		virtual void Init() = 0;
-		virtual void FixedUpdate(float deltaTime) = 0;
+		virtual void fixedUpdate(float deltaTime) = 0;
 		virtual void Release() = 0;
 
 		virtual inline GameObject* GetGameObject() const = 0;
 		virtual inline unsigned int GetId() const = 0;
 
 	protected:
-		inline SceneManager* GetSceneManager() const;
+		inline ObjectManager* GetObjectManager() const;
 
 	private:
-		static void SetSceneManager(SceneManager* sceneManager);
+		static void SetObjectManager(ObjectManager* objectManager);
 
-	private:
-		static SceneManager* mSceneManager;
+	private:		
+		static ObjectManager* mObjectManager;
 	};
 
-	SceneManager* IFixedUpdateable::GetSceneManager() const
+	ObjectManager* IFixedUpdateable::GetObjectManager() const
 	{
-		assert(mSceneManager != nullptr);
-		return mSceneManager;
+		assert(mObjectManager != nullptr);
+		return mObjectManager;
 	}
 }

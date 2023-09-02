@@ -20,74 +20,40 @@ namespace d2dFramework
 	void Scene::Enter()
 	{
 		SceneLoader::LoadScene(this);
-		GameObject* gameObject = CreateObject(1);
-
 	}
 
 	void Scene::Exit()
 	{
-		EventManager::GetInstance()->BroadcastEvent("SceneChange", "mName");
-	}
-
-	GameObject* Scene::CreateObject(unsigned int id)
-	{
-		GameObject* gameObject= ObjectManager::GetInstance()->CreateObject(id);
-		mObjectIDs.insert(id);
-		return gameObject;
+		// 오브젝트를 삭제 큐에 등록
+		ObjectManager::GetInstance()->ClearObjects(false);
+		// 삭제 큐에 등록된 오브젝트 즉시 삭제
+		ObjectManager::GetInstance()->handleObjectLifeSpan();
+		// 각씬마다 타일 아이디가 중복되어서 해당 방식으로 처리, 올바른 방식은 아님
 	}
 
 	void Scene::SerializeIn(nlohmann::ordered_json& object)
 	{
-		this->mGridWidth = object["GridWidth"];
-		this->mGridHeight = object["GridHeight"];
-		this->mGridDistance = object["GridDistance"];
-
 		for (auto& jsonGameObject : object["m_Gameobjects"])
 		{
 			unsigned int GameObject_ID = jsonGameObject["GameObject_ID"];
-			GameObject* pGameObject = this->CreateObject(GameObject_ID);
+			GameObject* pGameObject = ObjectManager::GetInstance()->CreateObject(GameObject_ID);
 			pGameObject->SerializeIn(jsonGameObject);
-
-			///child설정... 까다로워서 일단 대기
-		/*	if (jsonGameObject.contains("mChildren"))
-			{
-				for (auto& test_Gameobjects : jsonGameObject["mChildren"])
-				{
-					unsigned int ChildGameObject_ID = test_Gameobjects["GameObject_ID"];
-					GameObject* pChildGameObject = outScene->CreateObject(ChildGameObject_ID);
-					pChildGameObject->SerializeIn(test_Gameobjects);
-					pChildGameObject->SetParent(pGameObject);
-				}
-			}*/
 		}
-		
 	}
 
 	void Scene::SerializeOut(nlohmann::ordered_json& object)
 	{
-		const std::unordered_map<unsigned int, GameObject*>& objects = ObjectManager::GetInstance()->GetObjects();
+		// 수정 : 홍지환, 씬 종속적인 오브젝트는 모두 오브젝트 매니저 Vaild에 저장되도록 로직 수정하여 해당 소스도 변경
+		const std::unordered_map<unsigned int, GameObject*>& objectMaps = ObjectManager::GetInstance()->GetObjectMaps();
 		object["SceneID"] = this->GetId();
-		object["GridWidth"] = this->mGridWidth;
-		object["GridHeight"] = this->mGridHeight;
-		object["GridDistance"]=this->mGridDistance;
-	
 
-		for (unsigned int gameObjectID : this->mObjectIDs)
+		for (auto& pair : objectMaps)
 		{
 			nlohmann::ordered_json jsonGameObject;
-			if (objects.find(gameObjectID) != objects.end())
-			{
-				objects.find(gameObjectID)->second->SerializeOut(jsonGameObject);
-				object["m_Gameobjects"].push_back(jsonGameObject);
-			}
-			else
-			{
-				///TODO 터뜨리는 오류코드 필요.
-			}
 
+			GameObject* gameObject = pair.second;
+			gameObject->SerializeOut(jsonGameObject);
+			object["m_Gameobjects"].push_back(jsonGameObject);
 		}
-
-
 	}
-		
 }

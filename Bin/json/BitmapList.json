@@ -1,12 +1,160 @@
 {
   "BitmapList": [
     {
-      "BitmapKey": "Golem",
-      "FilePath": "../Bin/image/Golem.png"
+      "BitmapKey": "Particle0",
+      "FilePath": "./image/Particles/Particle0.png"
     },
     {
-      "BitmapKey": "Charactor",
-      "FilePath": "../Bin/image/Charactor.png"
+      "BitmapKey": "Particle1",
+      "FilePath": "./image/Particles/Particle1.png"
+    },
+    {
+      "BitmapKey": "Particle2",
+      "FilePath": "./image/Particles/Particle2.png"
+    },
+    {
+      "BitmapKey": "Particle3",
+      "FilePath": "./image/Particles/Particle3.png"
+    },
+    {
+      "BitmapKey": "Particle4",
+      "FilePath": "./image/Particles/Particle4.png"
+    },
+    {
+      "BitmapKey": "Particle5",
+      "FilePath": "./image/Particles/Particle5.png"
+    },
+    {
+      "BitmapKey": "Particle6",
+      "FilePath": "./image/Particles/Particle6.png"
+    },
+    {
+      "BitmapKey": "Particle7",
+      "FilePath": "./image/Particles/Particle7.png"
+    },
+    {
+      "BitmapKey": "StartUI",
+      "FilePath": "./image/UI/StartUI.png"
+    },
+    {
+      "BitmapKey": "InGameUI",
+      "FilePath": "./image/UI/InGameUI.png"
+    },
+    {
+      "BitmapKey": "InBossUI",
+      "FilePath": "./image/UI/InBossUI.png"
+    },
+    {
+      "BitmapKey": "InGamePauseUI",
+      "FilePath": "./image/UI/InGamePauseUI.png"
+    },
+    {
+      "BitmapKey": "HelpUI",
+      "FilePath": "./image/UI/HelpUI.png"
+    },
+    {
+      "BitmapKey": "SettingUI",
+      "FilePath": "./image/UI/SettingUI.png"
+    },
+    {
+      "BitmapKey": "GameOverUI",
+      "FilePath": "./image/UI/GameOverUI.png"
+    },
+    {
+      "BitmapKey": "StartButton",
+      "FilePath": "./image/UI/Button/StartButton.png"
+    },
+    {
+      "BitmapKey": "HelpButton",
+      "FilePath": "./image/UI/Button/HelpButton.png"
+    },
+    {
+      "BitmapKey": "ExitButton",
+      "FilePath": "./image/UI/Button/ExitButton.png"
+    },
+    {
+      "BitmapKey": "HelpOutButton",
+      "FilePath": "./image/UI/Button/HelpOutButton.png"
+    },
+    {
+      "BitmapKey": "MenuButton",
+      "FilePath": "./image/UI/Button/MenuButton.png"
+    },
+    {
+      "BitmapKey": "MusicButton",
+      "FilePath": "./image/UI/Button/MusicButton.png"
+    },
+    {
+      "BitmapKey": "ResumeButton",
+      "FilePath": "./image/UI/Button/ResumeButton.png"
+    },
+    {
+      "BitmapKey": "SettingButton",
+      "FilePath": "./image/UI/Button/SettingButton.png"
+    },
+    {
+      "BitmapKey": "SoundButton",
+      "FilePath": "./image/UI/Button/SoundButton.png"
+    },
+    {
+      "BitmapKey": "GameOverExit",
+      "FilePath": "./image/UI/Button/GameOverExit.png"
+    },
+    {
+      "BitmapKey": "GameOverRestart",
+      "FilePath": "./image/UI/Button/GameOverRestart.png"
+    },
+    {
+      "BitmapKey": "Volume",
+      "FilePath": "./image/UI/Button/Volume.png"
+    },
+    {
+      "BitmapKey": "Tile",
+      "FilePath": "./image/Tile.png"
+    },
+    {
+      "BitmapKey": "Number",
+      "FilePath": "./image/UI/Number.png"
+    },
+    {
+      "BitmapKey": "Blade",
+      "FilePath": "./image/Object/blade.png"
+    },
+    {
+      "BitmapKey": "Knife",
+      "FilePath": "./image/Object/knife.png"
+    },
+    {
+      "BitmapKey": "Warning",
+      "FilePath": "./image/Object/Warning.png"
+    },
+    {
+      "BitmapKey": "StageName",
+      "FilePath": "./image/UI/StageName.png"
+    },
+    {
+      "BitmapKey": "Tile",
+      "FilePath": "./image/Tile.png"
+    },
+    {
+      "BitmapKey": "Tile1",
+      "FilePath": "./image/tile (1).png"
+    },
+    {
+      "BitmapKey": "Tile2",
+      "FilePath": "./image/tile (2).png"
+    },
+    {
+      "BitmapKey": "Tile3",
+      "FilePath": "./image/tile (3).png"
+    },
+    {
+      "BitmapKey": "Tile4",
+      "FilePath": "./image/tile (4).png"
+    },
+    {
+      "BitmapKey": "Tile5",
+      "FilePath": "./image/Tile.png"
     }
   ]
 }

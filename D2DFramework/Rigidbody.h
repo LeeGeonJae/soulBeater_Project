@@ -14,7 +14,7 @@ namespace d2dFramework
 		~Rigidbody() = default;
 
 		void Init() override;
-		void FixedUpdate(float deltaTime) override;
+		void fixedUpdate(float deltaTime) override;
 		void Release() override;
 		void SerializeIn(nlohmann::ordered_json& object) override;
 		void SerializeOut(nlohmann::ordered_json& object) override;

@@ -22,43 +22,41 @@ namespace d2dFramework
 		GameProcessor(UINT width, UINT height, std::wstring name);
 		virtual ~GameProcessor();
 
-		virtual void Init();
+		virtual void Init(HWND hwnd);
 		virtual void Update();
 		virtual void Release();
+
+		inline void SetIsUpdateable(bool bIsUpdateable);
 
 		inline UINT GetWidth() const;
 		inline UINT GetHeight() const;
 		inline const WCHAR* GetTitle() const;
-
-		inline void SetHwnd(HWND hwnd);
+		inline bool GetIsUpdateable();
 
 	protected:
 		inline TimeManager* getTimeManager() const;
-		inline RenderManager* getRenderManager() const;
 		inline SceneManager* getSceneManager() const;
 		inline CollisionManager* getCollisionManager() const;
 		inline CameraManager* getCameraManager() const;
-		inline SoundManager* getSoundManager() const;
 
 	private:
 		UINT mWidth;
 		UINT mHeight;
 		std::wstring mTitle;
+
 		HWND mHwnd;
 
 		TimeManager* mTimeManager;
-		RenderManager* mRenderManager;
 		SceneManager* mSceneManager;
 		CollisionManager* mCollisionManager;
 		CameraManager* mCameraManager;
-		SoundManager* mSoundManager;
 
-		GameObject* mDefaultCamera;
+		bool mbIsUpdate;
 	};
 
-	void GameProcessor::SetHwnd(HWND hwnd)
+	void GameProcessor::SetIsUpdateable(bool bIsUpdateable)
 	{
-		mHwnd = hwnd;
+		mbIsUpdate = bIsUpdateable;
 	}
 
 	UINT GameProcessor::GetWidth() const
@@ -73,15 +71,15 @@ namespace d2dFramework
 	{
 		return mTitle.c_str();
 	}
+	bool GameProcessor::GetIsUpdateable()
+	{
+		return mbIsUpdate;
+	}
+
 	TimeManager* GameProcessor::getTimeManager() const
 	{
 		assert(mTimeManager != nullptr);
 		return mTimeManager;
-	}
-	RenderManager* GameProcessor::getRenderManager() const
-	{
-		assert(mRenderManager != nullptr);
-		return mRenderManager;
 	}
 	SceneManager* GameProcessor::getSceneManager() const
 	{
@@ -97,10 +95,5 @@ namespace d2dFramework
 	{
 		assert(mCameraManager != nullptr);
 		return mCameraManager;
-	}
-	SoundManager* GameProcessor::getSoundManager() const
-	{
-		assert(mSoundManager != nullptr);
-		return mSoundManager;
 	}
 }

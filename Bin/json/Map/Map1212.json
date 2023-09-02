@@ -1,0 +1,270 @@
+{
+    "SceneID": 1212,
+    "InitButtonManagerType": -842150451,
+    "m_Gameobjects": [
+        {
+            "GameObject_ID": 40000,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40001,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -355.0,
+                        265.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40002,
+                    "GridPosition": [
+                        5,
+                        6
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 9,
+                    "CellDistance": 110
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40003,
+                    "mBitmapKey": "Tile",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        110.0,
+                        110.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        120.0,
+                        120.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40004,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40004,
+                    "Component_ID": 40005,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -355.0,
+                        155.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40004,
+                    "Component_ID": 40006,
+                    "GridPosition": [
+                        5,
+                        5
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 9,
+                    "CellDistance": 110
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40004,
+                    "Component_ID": 40007,
+                    "mBitmapKey": "Tile",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        110.0,
+                        110.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        120.0,
+                        120.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40008,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40008,
+                    "Component_ID": 40009,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -245.0,
+                        155.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40008,
+                    "Component_ID": 40010,
+                    "GridPosition": [
+                        6,
+                        5
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 9,
+                    "CellDistance": 110
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40008,
+                    "Component_ID": 40011,
+                    "mBitmapKey": "Tile",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        110.0,
+                        110.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        120.0,
+                        120.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40012,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40012,
+                    "Component_ID": 40013,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -135.0,
+                        155.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40012,
+                    "Component_ID": 40014,
+                    "GridPosition": [
+                        7,
+                        5
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 9,
+                    "CellDistance": 110
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40012,
+                    "Component_ID": 40015,
+                    "mBitmapKey": "Tile",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        110.0,
+                        110.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        120.0,
+                        120.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        }
+    ]
+}

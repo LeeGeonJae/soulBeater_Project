@@ -1,2 +1,11 @@
-﻿  SoulBeaterProcessor.cpp
-  SoulBeater.vcxproj -> D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\SoulBeater_d.exe
+﻿  main.cpp
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\SoulBeater\SoulBeaterProcessor.h(18,16): error C3668: 'soulBeater::SoulBeaterProcessor::Init': 재정의 지정자 'override'가 있는 메서드가 기본 클래스 메서드를 재정의하지 않았습니다.
+  SoulBeaterProcessor.cpp
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\SoulBeater\SoulBeaterProcessor.h(18,16): error C3668: 'soulBeater::SoulBeaterProcessor::Init': 재정의 지정자 'override'가 있는 메서드가 기본 클래스 메서드를 재정의하지 않았습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\RenderManger.h(132,32): warning C4244: '인수': 'unsigned int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\SoulBeater\SoulBeaterProcessor.cpp(24,18): error C2660: 'd2dFramework::GameProcessor::Init': 함수는 0개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\GameProcessor.h(25,16): message : 'd2dFramework::GameProcessor::Init' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\SoulBeater\SoulBeaterProcessor.cpp(24,18): message : 인수 목록 '()'을(를) 일치시키는 동안
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\SoulBeater\SoulBeaterProcessor.cpp(27,50): error C2039: 'CreateObject': 'd2dFramework::ObjectManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\ObjectManager.h(17,8): message : 'd2dFramework::ObjectManager' 선언을 참조하십시오.
+  코드를 생성하고 있습니다...

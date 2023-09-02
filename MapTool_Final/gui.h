@@ -6,7 +6,12 @@
 #include <d3d9.h>
 #include <utility>
 
-class RenderManager;
+namespace d2dFramework
+{
+	class RenderManager;
+	class SceneManager;
+}
+
 
 enum class IdSet
 {
@@ -22,46 +27,44 @@ const int PLAYER_ID_START = 10000;
 const int MONSTER_ID_START = 20000;
 const int ITEM_ID_START = 30000;
 const int TILE_ID_START = 40000;
+const int OBJECT_COMPONENT_COUNT = 10;
 
 class MapToolGui
 {
 public:
 	const float WIDTH = 600.f;
-	const float HEIGHT = 1200.f;
+	const float HEIGHT = 1000.f;
 
 	static MapToolGui* mpInstance;
 
 public:
-	MapToolGui();
+	MapToolGui(d2dFramework::SceneManager* sceneManager);
 	~MapToolGui();
 
 public:
-	void GuiRender();
-	
-	void GuiMenu();
+	void GuiRender();				// Gui 렌더
+	void GuiMenu();					// Save & Load ( 추후 수정 )
+	void GridCreate();				// 그리드 세팅 ( 수정 필요 )
 
-	void GridCreate();
+	void ObjectTileSetting();		// 오브젝트 타일 세팅
+	void ObjectSetting();			// 오브젝트 세팅
+	void ObjectSpriteSetting();		// 오브젝트 스프라이트 세팅
 
-	void ObjectTileSetting();
+	void ComponentEdit();			// 컴포넌트 세팅
+	void ColliderSetting();			// 콜라이더 컴포넌트 세팅
+	void SpriteSetting();			// 스프라이트 컴포넌트 세팅
 
-	void ObjectSetting();
-	void ObjectSpriteSetting();
+	void ObjectImfomation();		// 오브젝트 정보 출력
+	void TileObjectImfomation();	// 타일 오브젝트 정보 출력
 
-	void ComponentEdit();
-	void ColliderSetting();
-	void SpriteSetting();
-
-	void ObjectImfomation();
-	void TileObjectImfomation();
-
-	void ImGuiImageLoading();
+	void ImGuiImageLoading();		// Gui 이미지 로딩
 
 public:
-	bool GetIsCreateTileObject() {return mbIsCreateTileObjectButtonIstrue;}
-	bool GetIsCreateTileCollider() {return mbIsCreateTileColliderIstrue;}
-	bool GetIsDeleteTileObject() {return mbIsDeleteTileObjectButtonIstrue;}
-	bool GetIsCreateObject() {return mbIsCreateObjectButtonIstrue;}
-	bool GetIsDeleteObject() {return mbIsDeleteObjectButtonIstrue;}
+	bool GetIsCreateTileObject() { return mbIsCreateTileObjectButtonIstrue; }
+	bool GetIsCreateTileCollider() { return mbIsCreateTileColliderIstrue; }
+	bool GetIsDeleteTileObject() { return mbIsDeleteTileObjectButtonIstrue; }
+	bool GetIsCreateObject() { return mbIsCreateObjectButtonIstrue; }
+	bool GetIsDeleteObject() { return mbIsDeleteObjectButtonIstrue; }
 	bool GetIsCreateCollider() { return mbIsColliderCreate; }
 	bool GetIsCreateSprite() { return mbIsSpriteCreate; }
 	bool GetIsImageLoading() { return mbIsImageLoading; }
@@ -97,13 +100,16 @@ public:
 	D3DPRESENT_PARAMETERS GetPresentParameter() { return mPresentParameters; }
 
 	void SetClickPoint(LPARAM clickpoint) { mPosition = MAKEPOINTS(clickpoint); }
-	void SetBackBufferWidth(WORD lower, WORD high) 
-	{ 
-		mPresentParameters.BackBufferWidth = lower; 
+	void SetBackBufferWidth(WORD lower, WORD high)
+	{
+		mPresentParameters.BackBufferWidth = lower;
 		mPresentParameters.BackBufferWidth = high;
 	}
 
 private:
+	// 추가 홍지환
+	d2dFramework::SceneManager* mSceneManager;
+
 	// constant window size
 	bool exit;
 
@@ -124,16 +130,22 @@ private:
 public:
 	// 씬 맵 ID
 	static int SceneId;
+	static int SelectedSceneId;
 
 	// create 할 시 격자판과 격자판을 다룰 2d 배열 생성
-	static unsigned int mWidth;
-	static unsigned int mHeight;
+	static unsigned int mGridXCount;
+	static unsigned int mGridYCount;
 	static unsigned int mGridDistance;
 
 	static std::vector<std::vector<bool>>		mbIsChecked;		// 이거 루프 돌면서 클릭 처리
 	static std::vector<std::vector<bool>>		mbIsObject;			// 여기는 해당 격자칸에 오브젝트가 존재하는지
 	static std::map<std::pair<int, int>, int>	mObjectIdMap;		// 해당 칸에 오브젝트가 있는지
-	static std::queue<int>						mObjectSequence;	// 선택된 오브젝트 순서
+
+	// Tile Bitmap 세팅
+	static int BitmapU;
+	static int BitmapV;
+	static int BitmapXNumber;
+	static int BitmapYNumber;
 
 	// Tile 오브젝트
 	static std::vector<std::vector<bool>>		mbIsTileObject;		// 여기는 해당 격자칸에 타일 오브젝트가 존재하는지
@@ -150,7 +162,7 @@ public:
 	static int mMonsterId;
 	static int mItemId;
 	static int mTileId;
-	static d2dFramework::eObjectType ObjectType;
+	static d2dFramework::eObjectType ObjectType;		// 오브젝트 타입
 
 	// 오브젝트 컴포넌트 세팅 값들
 	static bool bIsColliderCheck;
@@ -165,6 +177,9 @@ public:
 	static int	SpriteWidth;
 	static int	SpriteHeight;
 	static int	ObjectItemCurrentIndex;
+
+	// 그리드 컴포넌트 세팅 값들
+	static bool mbIsGridCheck;
 
 	// 정보
 	static int ItemImfoCurrentIndex;
@@ -181,18 +196,24 @@ public:
 	static int ItemImageCurrentIndex;
 
 private:
+	// 타일 오브젝트
 	bool mbIsCreateTileObjectButtonIstrue;
 	bool mbIsCreateTileColliderIstrue;
 	bool mbIsDeleteTileObjectButtonIstrue;
+
+	// 오브젝트 생성 및 삭제
 	bool mbIsCreateObjectButtonIstrue;
 	bool mbIsDeleteObjectButtonIstrue;
 
+	// 컴포넌트 생성
 	bool mbIsColliderCreate;
 	bool mbIsSpriteCreate;
 
+	// 이미지 로딩
 	bool mbIsImageLoading;
 	bool mbIsImageSelected;
 
+	// 세이브 & 로드 버튼
 	bool mbIsCreateScene;
 	bool mbIsSaveButton;
 	bool mbIsLoadButton;

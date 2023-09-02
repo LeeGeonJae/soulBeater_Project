@@ -1,76 +1,72 @@
 {
     "MapList": [
         {
-            "Map_ID": 1000,
-            "FilePath": "../Bin/json/Map/Map1000.json"
-        },
-        {
-            "Map_ID": 1001,
-            "FilePath": "../Bin/json/Map/Map1001.json"
-        },
-        {
-            "Map_ID": 1002,
-            "FilePath": "../Bin/json/Map/Map1002.json"
-        },
-        {
-            "Map_ID": 1003,
-            "FilePath": "../Bin/json/Map/Map1003.json"
-        },
-        {
-            "Map_ID": 1004,
-            "FilePath": "../Bin/json/Map/Map1004.json"
-        },
-        {
-            "Map_ID": 1005,
-            "FilePath": "../Bin/json/Map/Map1005.json"
-        },
-        {
-            "Map_ID": 1006,
-            "FilePath": "../Bin/json/Map/Map1006.json"
-        },
-        {
-            "Map_ID": 1007,
-            "FilePath": "../Bin/json/Map/Map1007.json"
-        },
-        {
-            "Map_ID": 1008,
-            "FilePath": "../Bin/json/Map/Map1008.json"
-        },
-        {
-            "Map_ID": 100,
-            "FilePath": "../Bin/json/Map/Map100.json"
-        },
-        {
-            "Map_ID": 10001,
-            "FilePath": "../Bin/json/Map/Map10001.json"
-        },
-        {
-            "Map_ID": 10002,
-            "FilePath": "../Bin/json/Map/Map10002.json"
-        },
-        {
-            "Map_ID": 10003,
-            "FilePath": "../Bin/json/Map/Map10003.json"
-        },
-        {
-            "Map_ID": 10004,
-            "FilePath": "../Bin/json/Map/Map10004.json"
-        },
-        {
             "Map_ID": 10005,
-            "FilePath": "../Bin/json/Map/Map10005.json"
+            "FilePath": "json/Map/Map10005.json"
         },
         {
             "Map_ID": 10006,
-            "FilePath": "../Bin/json/Map/Map10006.json"
+            "FilePath": "json/Map/Map10006.json"
         },
         {
-            "Map_ID": 3000,
-            "FilePath": "../Bin/json/Map/Map3000.json"
+            "Map_ID": 50000,
+            "FilePath": "json/Map/Map50000.json"
         },
         {
-            "Map_ID": 8546365,
-            "FilePath": "../Bin/json/Map/Map8546365.json"
+            "Map_ID": 10003,
+            "FilePath": "json/Map/Map10003.json"
+        },
+        {
+            "Map_ID": 50001,
+            "FilePath": "json/Map/Map50001.json"
+        },
+        {
+            "Map_ID": 50002,
+            "FilePath": "json/Map/Map50002.json"
+        },
+        {
+            "Map_ID": 50003,
+            "FilePath": "json/Map/Map50003.json"
+        },
+        {
+            "Map_ID": 50004,
+            "FilePath": "json/Map/Map50004.json"
+        },
+        {
+            "Map_ID": 50005,
+            "FilePath": "json/Map/Map50005.json"
+        },
+        {
+            "Map_ID": 50006,
+            "FilePath": "json/Map/Map50006.json"
+        },
+        {
+            "Map_ID": 50007,
+            "FilePath": "json/Map/Map50007.json"
+        },
+        {
+            "Map_ID": 50008,
+            "FilePath": "json/Map/Map50008.json"
+        },
+        {
+            "Map_ID": 123321,
+            "FilePath": "json/Map/Map123321.json"
+        },
+        {
+            "Map_ID": 1000,
+            "FilePath": "json/Map/Map1000.json"
+        },
+        {
+            "Map_ID": 50100,
+            "FilePath": "json/Map/Map50100.json"
+        },
+        {
+            "Map_ID": 50200,
+            "FilePath": "json/Map/Map50200.json"
+        },
+        {
+            "Map_ID": 50300,
+            "FilePath": "json/Map/Map50300.json"
         }
     ]
 }

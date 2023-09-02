@@ -108,12 +108,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../D2DFramework/;../Bin/include/fmod/;../Bin/include/json/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../D2DFramework/;../include/fmod/;../include/json/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../Bin/lib/fmod/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../library/fmod/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,10 +133,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseMonsterComponent.cpp" />
+    <ClCompile Include="BealzebubFSM.cpp" />
+    <ClCompile Include="BoomFlyComponent.cpp" />
+    <ClCompile Include="FastFlyComponent.cpp" />
+    <ClCompile Include="FlyComponent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MonsterFSM.cpp" />
+    <ClCompile Include="PlayerFSM.cpp" />
     <ClCompile Include="TestProjectJH.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseMonsterComponent.h" />
+    <ClInclude Include="BealzebubFSM.h" />
+    <ClInclude Include="BoomFlyComponent.h" />
+    <ClInclude Include="FastFlyComponent.h" />
+    <ClInclude Include="FlyComponent.h" />
+    <ClInclude Include="MonsterFSM.h" />
+    <ClInclude Include="PlayerFSM.h" />
     <ClInclude Include="TestProjectJH.h" />
   </ItemGroup>
   <ItemGroup>

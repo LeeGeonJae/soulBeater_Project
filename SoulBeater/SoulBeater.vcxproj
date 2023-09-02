@@ -74,6 +74,10 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+    <TargetName>$(ProjectName)_R</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -108,12 +112,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../D2DFramework/;../Bin/include/fmod/;../Bin/include/json/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../D2DFramework/;../include/fmod/;../include/json/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../Bin/lib/fmod/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../library/fmod/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -124,12 +128,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../D2DFramework/;../Include/fmod/;../include/json/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../library/fmod/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -138,11 +144,84 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseMonsterComponent.cpp" />
+    <ClCompile Include="BealzebubComponent.cpp" />
+    <ClCompile Include="BealzebubFSM.cpp" />
+    <ClCompile Include="BoomFlyComponent.cpp" />
+    <ClCompile Include="ButtonComponent.cpp" />
+    <ClCompile Include="ConstanceTable.cpp" />
+    <ClCompile Include="CutSceneComponent.cpp" />
+    <ClCompile Include="DaggerComponent.cpp" />
+    <ClCompile Include="EveBossComponent.cpp" />
+    <ClCompile Include="EveBossFSM.cpp" />
+    <ClCompile Include="EveDaggerComponent.cpp" />
+    <ClCompile Include="FastFlyComponent.cpp" />
+    <ClCompile Include="FlyComponent.cpp" />
+    <ClCompile Include="HPComponent.cpp" />
+    <ClCompile Include="LilithBossComponent.cpp" />
+    <ClCompile Include="LilithBossFSM.cpp" />
+    <ClCompile Include="Loader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MonsterFSM.cpp" />
+    <ClCompile Include="NodeComponent.cpp" />
+    <ClCompile Include="ObjectHelper.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
+    <ClCompile Include="PlayerFSM.cpp" />
     <ClCompile Include="SoulBeaterProcessor.cpp" />
+    <ClCompile Include="SoulBeaterScene.cpp" />
+    <ClCompile Include="TimerComponent.cpp" />
+    <ClCompile Include="UIComponent.cpp" />
+    <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="YsBossComponent.cpp" />
+    <ClCompile Include="YsBossFSM.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseMonsterComponent.h" />
+    <ClInclude Include="BealzebubComponent.h" />
+    <ClInclude Include="BealzebubFSM.h" />
+    <ClInclude Include="BoomFlyComponent.h" />
+    <ClInclude Include="BossState.h" />
+    <ClInclude Include="ButtonComponent.h" />
+    <ClInclude Include="ConstantTable.h" />
+    <ClInclude Include="CutSceneComponent.h" />
+    <ClInclude Include="DaggerComponent.h" />
+    <ClInclude Include="eButtonstatus.h" />
+    <ClInclude Include="eButtonType.h" />
+    <ClInclude Include="ePlayerState.h" />
+    <ClInclude Include="eSceneType.h" />
+    <ClInclude Include="eSoulBeaterID.h" />
+    <ClInclude Include="eUIManagerType.h" />
+    <ClInclude Include="eUISpriteType.h" />
+    <ClInclude Include="EveBossComponent.h" />
+    <ClInclude Include="EveBossFSM.h" />
+    <ClInclude Include="EveDaggerComponent.h" />
+    <ClInclude Include="FastFlyComponent.h" />
+    <ClInclude Include="FlyComponent.h" />
+    <ClInclude Include="HPComponent.h" />
+    <ClInclude Include="LilithBossComponent.h" />
+    <ClInclude Include="LilithBossFSM.h" />
+    <ClInclude Include="Loader.h" />
+    <ClInclude Include="MonsterFSM.h" />
+    <ClInclude Include="NodeComponent.h" />
+    <ClInclude Include="ObjectHelper.h" />
+    <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="PlayerFSM.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
     <ClInclude Include="SoulBeaterProcessor.h" />
+    <ClInclude Include="SoulBeaterScene.h" />
+    <ClInclude Include="TimerComponent.h" />
+    <ClInclude Include="UIComponent.h" />
+    <ClInclude Include="UIManager.h" />
+    <ClInclude Include="YsBossComponent.h" />
+    <ClInclude Include="YsBossFSM.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SoulBeater.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Bin\image\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

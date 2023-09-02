@@ -107,12 +107,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../D2DFramework/;../Bin/include/fmod/;../Bin/include/json/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../D2DFramework/;../include/fmod/;../include/json/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../Bin/lib/fmod/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../library/fmod/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,11 +132,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HPComponent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="StageNameUIComponent.cpp" />
     <ClCompile Include="TestProcessor.cpp" />
+    <ClCompile Include="UIComponent.cpp" />
+    <ClCompile Include="TimerComponent.cpp" />
+    <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HPComponent.h" />
+    <ClInclude Include="StageNameUIComponent.h" />
     <ClInclude Include="TestProcessor.h" />
+    <ClInclude Include="UIComponent.h" />
+    <ClInclude Include="TimerComponent.h" />
+    <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\D2DFramework\D2DFramework.vcxproj">

@@ -7,8 +7,5 @@ namespace d2dFramework
 	{
 	public:
 		static std::wstring string_to_wstring(const std::string& _str);
-
 	};
-
-
 }

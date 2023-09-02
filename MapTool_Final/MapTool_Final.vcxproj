@@ -110,13 +110,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../include/imgui/;../D2DFramework/;../Bin/include/fmod/;../Bin/include/json/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include/imgui/;../D2DFramework/;../include/json/;../include/fmod/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../Bin/lib/fmod/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../$(PlatformTarget)/$(Configuration)/;../library/fmod/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,29 +137,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Bin\include\imgui\imgui.cpp" />
-    <ClCompile Include="..\Bin\include\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\Bin\include\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\Bin\include\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\Bin\include\imgui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="..\Bin\include\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="..\Bin\include\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\Bin\include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\Include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="gui.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapToolWinApp.cpp" />
     <ClCompile Include="SoulBeaterProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Bin\include\imgui\imconfig.h" />
-    <ClInclude Include="..\Bin\include\imgui\imgui.h" />
-    <ClInclude Include="..\Bin\include\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="..\Bin\include\imgui\imgui_impl_dx9.h" />
-    <ClInclude Include="..\Bin\include\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="..\Bin\include\imgui\imgui_internal.h" />
-    <ClInclude Include="..\Bin\include\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\Bin\include\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\Bin\include\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\Include\imgui\imconfig.h" />
+    <ClInclude Include="..\Include\imgui\imgui.h" />
+    <ClInclude Include="..\Include\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\Include\imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="..\Include\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="..\Include\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Include\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Include\imgui\imstb_truetype.h" />
     <ClInclude Include="defalut.h" />
     <ClInclude Include="gui.h" />
     <ClInclude Include="MapToolWinApp.h" />
@@ -180,7 +180,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\include\imgui\imgui.ini" />
+    <None Include="..\Include\imgui\imgui.ini" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\D2DFramework\D2DFramework.vcxproj">

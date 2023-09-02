@@ -142,7 +142,7 @@ namespace d2dFramework
 
 	hRectangle hRectangle::GetIntersection(const hRectangle& rect, const hRectangle& otherRect)
 	{
-		assert(IsCollision(rect, otherRect));
+		IsCollision(rect, otherRect);
 
 		Vector2 interSectionTopLeft(
 			rect.GetTopLeft().GetX() > otherRect.GetTopLeft().GetX() ? rect.GetTopLeft().GetX() : otherRect.GetTopLeft().GetX(),

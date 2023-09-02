@@ -1,15 +1,26 @@
 #include "CameraManager.h"
+
+#include "eFrameworkID.h"
 #include "ObjectManager.h"
 
 namespace d2dFramework
 {
 	CameraManager::CameraManager()
-		: mCurrnetCamara(nullptr)
+		: BaseEntity(static_cast<unsigned int>(eFrameworkID::CameraManager))
+		, mCurrnetCamara(nullptr)
+		, mSize()
+		, mCameraMaps()
 	{
 	}
 
 	CameraManager::~CameraManager()
 	{
-		ObjectManager::GetInstance()->DeletObject(mCurrnetCamara->GetId());
+		Release();
+	}
+
+	void CameraManager::Release()
+	{
+		mCurrnetCamara = nullptr;
+		mCameraMaps.clear();
 	}
 }

@@ -22,30 +22,18 @@ namespace d2dFramework
 		Scene(unsigned int id);
 		virtual ~Scene() = default;
 
-		virtual void Enter( );
+		virtual void Enter();
 		virtual void Exit();
 
-		GameObject* CreateObject(unsigned int id);
-
-		inline const std::set<unsigned int>& GetObjectIDs();
-		inline const std::string& GetName();
 		void SerializeIn(nlohmann::ordered_json& object) override;
 		void SerializeOut(nlohmann::ordered_json& object) override;
-		void SetGrid(int Width, int Height, int Distance) {mGridWidth = Width; mGridHeight = Height; mGridDistance = Distance;}
+
+		inline const std::string& GetName();
 
 	private:
 		std::string mName;
-		std::set<unsigned int> mObjectIDs;
-		int mGridWidth;
-		int mGridHeight;
-		int mGridDistance;
-
 	};
 
-	const std::set<unsigned int>& Scene::GetObjectIDs()
-	{
-		return mObjectIDs;
-	}
 	const std::string& Scene::GetName()
 	{
 		return mName;

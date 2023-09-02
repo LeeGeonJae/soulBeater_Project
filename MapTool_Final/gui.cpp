@@ -1,8 +1,11 @@
 #include "gui.h"
 
-#include "../Bin/include/imgui/imgui.h"
-#include "../Bin/include/imgui/imgui_impl_dx9.h"
-#include "../Bin/include/imgui/imgui_impl_win32.h"
+#include "SceneManager.h"
+#include "Scene.h"
+
+#include "imgui.h"
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.h"
 
 #pragma comment(lib, "D3d9.lib")
 
@@ -11,6 +14,8 @@
 #include "GameObject.h"
 #include "AABBCollider.h"
 #include "SpriteRenderer.h"
+#include "GridComponent.h"
+
 #include "SoulBeaterProcessor.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
@@ -32,25 +37,31 @@ MapToolGui* MapToolGui::mpInstance = nullptr;
 
 // 씬 아이디
 int  MapToolGui::SceneId = 1000;
+int  MapToolGui::SelectedSceneId = 1000;
 
 // 그리드 가로, 세로, 간격
-unsigned int MapToolGui::mWidth = 0;
-unsigned int MapToolGui::mHeight = 0;
+unsigned int MapToolGui::mGridXCount = 0;
+unsigned int MapToolGui::mGridYCount = 0;
 unsigned int MapToolGui::mGridDistance = 0;
 
 // 오브젝트 체크, 오브젝트 ID, 오브젝트 시퀀스 ( 미완성 )
 std::vector<std::vector<bool>>		MapToolGui::mbIsChecked = {};
 std::vector<std::vector<bool>>		MapToolGui::mbIsObject = {};
 std::map<std::pair<int, int>, int>	MapToolGui::mObjectIdMap = {};
-std::queue<int>						MapToolGui::mObjectSequence = {};
+
+// Tile Bitmap 세팅
+int MapToolGui::BitmapU = 120;
+int MapToolGui::BitmapV = 120;
+int MapToolGui::BitmapXNumber = 0;
+int MapToolGui::BitmapYNumber = 0;
 
 // 타일 오브젝트
 std::vector<std::vector<bool>>		MapToolGui::mbIsTileObject = {};
 std::map<std::pair<int, int>, int>	MapToolGui::mTileObjectIdMap = {};
-int				MapToolGui::TileSpriteWidth = 0;
-int				MapToolGui::TileSpriteHeight = 0;
-int				MapToolGui::TileColliderWidth = 0;
-int				MapToolGui::TileColliderHeight = 0;
+int				MapToolGui::TileSpriteWidth = 110;
+int				MapToolGui::TileSpriteHeight = 110;
+int				MapToolGui::TileColliderWidth = 110;
+int				MapToolGui::TileColliderHeight = 110;
 int				MapToolGui::TileObjectItemCurrentIndex = 0;
 
 // Id 세팅
@@ -75,12 +86,15 @@ int MapToolGui::SpriteWidth = 0;
 int MapToolGui::SpriteHeight = 0;
 int	MapToolGui::ObjectItemCurrentIndex = 0;
 
+// 그리드 세팅 값들
+bool MapToolGui::mbIsGridCheck = true;
+
 // 오브젝트 정보 출력 세팅 값들
 int MapToolGui::ItemImfoCurrentIndex = 0;
 
 // 이미지 파일
-std::vector<std::string> MapToolGui::ImageListName = { "Golem", "Charactor" };
-std::vector<std::wstring> MapToolGui::WstringImageListName = { L"Golem", L"Charactor" };
+std::vector<std::string> MapToolGui::ImageListName = { "Tile", "Tile1", "Tile2", "Tile3", "Tile4", "Tile5"  };
+std::vector<std::wstring> MapToolGui::WstringImageListName = { L"Tile", L"Tile1", L"Tile2", L"Tile3", L"Tile4", L"Tile5" };
 std::wstring MapToolGui::wstrImageName = {};
 std::wstring MapToolGui::wstrImagePath = {};
 // ImGui 텍스트 박스에 입력될 static char
@@ -88,7 +102,7 @@ char MapToolGui::ImageName[100] = "Image Name";
 char MapToolGui::ImagePath[256] = "Image Path";
 int MapToolGui::ItemImageCurrentIndex = 0;
 
-MapToolGui::MapToolGui()
+MapToolGui::MapToolGui(d2dFramework::SceneManager* sceneManager)
 	:bOnbutton(false)
 	, exit(true)
 	, mHWnd(nullptr)
@@ -106,12 +120,14 @@ MapToolGui::MapToolGui()
 	, mbIsSpriteCreate(false)
 	, mbIsSaveButton(false)
 	, mbIsCreateScene(false)
+	, mSceneManager(sceneManager)
 {
 	mpInstance = this;
 }
 
 MapToolGui::~MapToolGui()
 {
+	mSceneManager = nullptr;
 }
 
 
@@ -142,7 +158,10 @@ void MapToolGui::GuiRender()
 {
 	GuiMenu();
 
+	std::string text;
 	ImGui::InputInt("SceneId : ", &SceneId);
+	text = "Selected SceneId Number : " + std::to_string(SelectedSceneId);
+	ImGui::Text(text.c_str());
 	ImGui::Text("");
 
 	// 격자판 생성 및 세팅
@@ -155,25 +174,25 @@ void MapToolGui::GuiRender()
 		ObjectTileSetting();
 	ImGui::Text("");
 
-	// 오브젝트 세팅
-	if (ImGui::CollapsingHeader("Object Setting"))
-		ObjectSetting();
-	ImGui::Text("");
+	//// 오브젝트 세팅
+	//if (ImGui::CollapsingHeader("Object Setting"))
+	//	ObjectSetting();
+	//ImGui::Text("");
 
-	// 오브젝트의 컴폰넌트 수정
-	if (ImGui::CollapsingHeader("Component Edit"))
-		ComponentEdit();
-	ImGui::Text("");
+	//// 오브젝트의 컴폰넌트 수정
+	//if (ImGui::CollapsingHeader("Component Edit"))
+	//	ComponentEdit();
+	//ImGui::Text("");
 
 	// 이미지 세팅
 	if (ImGui::CollapsingHeader("Image Setting"))
 		ImGuiImageLoading();
 	ImGui::Text("");
 
-	// 오브젝트 정보 세팅
-	if (ImGui::CollapsingHeader("Object Impomation"))
-		ObjectImfomation();
-	ImGui::Text("");
+	//// 오브젝트 정보 세팅
+	//if (ImGui::CollapsingHeader("Object Impomation"))
+	//	ObjectImfomation();
+	//ImGui::Text("");
 
 	// 오브젝트 정보 세팅
 	if (ImGui::CollapsingHeader("Tile Object Impomation"))
@@ -196,15 +215,15 @@ void MapToolGui::GuiMenu()
 		mbIsLoadButton = false;
 }
 
-
-
 void MapToolGui::GridCreate()
 {
-	static int GridArea[2] = {};
-	static int GridInstance = 0;
+	using namespace d2dFramework;
+
+	static int GridArea[2] = { 10, 9 };
+	static int GridInstance = 110;
 
 	// 그리드 가로,세로 값세팅 및 그리드 사이 간격 길이 입력
-	ImGui::InputInt2("Grid Area Width, Height", GridArea);
+	ImGui::InputInt2("Grid Area X, Y", GridArea);
 	ImGui::InputInt("Grid Distance", &GridInstance);
 
 	// 그리드 세팅 버튼을 누르면 그리드 칸에 맞춰서 세팅
@@ -224,34 +243,37 @@ void MapToolGui::GridCreate()
 			mbIsTileObject[i].clear();
 		mbIsTileObject.clear();
 
-		mWidth = GridArea[0];
-		mHeight = GridArea[1];
+		mGridXCount = GridArea[0];
+		mGridYCount = GridArea[1];
 		mGridDistance = GridInstance;
 
 		// 그리드에 맞게 리사이즈
-		if (mHeight != 0 && mGridDistance != 0 && mWidth != 0 && mGridDistance != 0)
+		if (mGridYCount != 0 && mGridDistance != 0 && mGridXCount != 0 && mGridDistance != 0)
 		{
-			mbIsChecked.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
-			mbIsObject.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
-			mbIsTileObject.resize(mHeight / mGridDistance, std::vector<bool>(mWidth / mGridDistance, false));
+			mbIsChecked.resize(mGridXCount, std::vector<bool>(mGridYCount, false));
+			mbIsObject.resize(mGridXCount, std::vector<bool>(mGridYCount, false));
+			mbIsTileObject.resize(mGridXCount, std::vector<bool>(mGridYCount, false));
 		}
 		else
 		{
 			mbIsChecked.clear();
 			mbIsObject.clear();
 			mbIsTileObject.clear();
-
-			while (!mObjectSequence.empty())
-				mObjectSequence.pop();
 		}
 
-		// 모든 오브젝트 삭제
-		for (auto e : mObjectIdMap)
-			d2dFramework::ObjectManager::GetInstance()->DeletObject(e.second);
-		mObjectIdMap.clear();
-		for (auto e : mTileObjectIdMap)
-			d2dFramework::ObjectManager::GetInstance()->DeletObject(e.second);
-		mTileObjectIdMap.clear();
+		// 수정 홍지환, 현재 씬이 nullptr이 아니라면 등록된 모든 오브젝트 삭제
+		Scene* scene = mSceneManager->GetCurrentScene();
+		SelectedSceneId = SceneId;
+
+		if (scene != nullptr)
+		{// 모든 오브젝트 삭제
+			for (auto e : mObjectIdMap)
+				ObjectManager::GetInstance()->DeleteObject(e.second);
+			mObjectIdMap.clear();
+			for (auto e : mTileObjectIdMap)				
+				ObjectManager::GetInstance()->DeleteObject(e.second);
+			mTileObjectIdMap.clear();
+		}
 	}
 	else
 		mbIsCreateScene = false;
@@ -298,6 +320,7 @@ void MapToolGui::ObjectSetting()
 
 	ImGui::Checkbox("Collider Component", &bIsColliderCheck);
 	ImGui::Checkbox("Sprite Component", &bIsSpriteCheck);
+	ImGui::Checkbox("Grid Component", &mbIsGridCheck);
 
 	if (bIsColliderCheck)
 	{
@@ -384,6 +407,12 @@ void MapToolGui::ObjectTileSetting()
 {
 	ImGui::InputInt("Tile Sprite Width", &TileSpriteWidth);
 	ImGui::InputInt("Tile Sprite Height", &TileSpriteHeight);
+	ImGui::Text("");
+
+	ImGui::InputInt("Tile BitmapU Coordinate", &BitmapU);
+	ImGui::InputInt("Tile BitmapV Coordinate", &BitmapV);
+	ImGui::InputInt("Tile BitmapNumber \'X\'", &BitmapXNumber);
+	ImGui::InputInt("Tile BitmapNumber \'Y\'", &BitmapYNumber);
 	ImGui::Text("");
 
 	ImGui::Checkbox("TileCollider Is Valid", &mbIsCreateTileColliderIstrue);
@@ -511,8 +540,6 @@ void MapToolGui::ComponentEdit()
 		SpriteSetting();
 }
 
-
-
 void MapToolGui::ObjectImfomation()
 {
 	using namespace d2dFramework;
@@ -572,11 +599,18 @@ void MapToolGui::ObjectImfomation()
 		}
 		ImGui::EndListBox();
 	}
-	
+
 	// 선택된 오브젝트를 찾고 해당 오브젝트의 정보 출력
 	if (ListId.size() != 0)
 	{
 		GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(ListId[ItemImfoCurrentIndex]);
+
+		// 수정 : 홍지환, 지연 생성으로 인해 인포창 켜고 생성 시 터짐 
+		if (object == nullptr)
+		{
+			return;
+		}
+
 		Transform* TransformComponent = object->GetComponent<Transform>();
 		SpriteRenderer* SpriteComponent = object->GetComponent<SpriteRenderer>();
 		AABBCollider* ColliderComponent = object->GetComponent<AABBCollider>();
@@ -640,8 +674,6 @@ void MapToolGui::ObjectImfomation()
 	}
 
 }
-
-
 
 void MapToolGui::TileObjectImfomation()
 {
@@ -694,9 +726,17 @@ void MapToolGui::TileObjectImfomation()
 	if (ListId.size() != 0)
 	{
 		GameObject* object = ObjectManager::GetInstance()->FindObjectOrNull(ListId[ItemImfoCurrentIndex]);
+
+		// 수정 : 홍지환, 인포메이션 창 켠 채로 타일 오브젝트 생성 시 지연 생성으로 인해 터짐
+		if (object == nullptr)
+		{
+			return;
+		}
+
 		Transform* TransformComponent = object->GetComponent<Transform>();
 		SpriteRenderer* SpriteComponent = object->GetComponent<SpriteRenderer>();
 		AABBCollider* ColliderComponent = object->GetComponent<AABBCollider>();
+		GridComponent* Grid = object->GetComponent<GridComponent>();
 
 		std::string text = ListName[ItemImfoCurrentIndex] + ", Id : " + std::to_string(ListId[ItemImfoCurrentIndex]);
 		ImGui::Text(text.c_str());
@@ -738,7 +778,9 @@ void MapToolGui::TileObjectImfomation()
 			text.clear();
 		}
 		else
+		{
 			ImGui::Text("SpriteComponnet Is not Valid");
+		}
 
 		// 콜라이더 정보 출력 ( AABB ) 
 		if (ColliderComponent != nullptr)
@@ -753,7 +795,24 @@ void MapToolGui::TileObjectImfomation()
 			text.clear();
 		}
 		else
+		{
 			ImGui::Text("ColliderComponent Is not Valid");
+		}
+
+		if (Grid != nullptr)
+		{
+			ImGui::Text("Grid Is Valid");
+			text = "Grid X : " + std::to_string(Grid->GetPosition().X);
+			ImGui::Text(text.c_str());
+			text.clear();
+			text = "Grid Y : " + std::to_string(Grid->GetPosition().Y);
+			ImGui::Text(text.c_str());
+			text.clear();
+		}
+		else
+		{
+			ImGui::Text("Grid Is not Valid");
+		}
 	}
 }
 
@@ -793,6 +852,7 @@ void MapToolGui::ImGuiImageLoading()
 			const bool Selected = (ItemImageCurrentIndex == n);
 			if (ImGui::Selectable(ImageListName[n].c_str(), Selected))
 			{
+				ItemImageCurrentIndex = n;
 				mbIsImageSelected = true;
 			}
 			else
@@ -915,7 +975,7 @@ void MapToolGui::CreateHWindow(const char* windowName, const char* className)
 		L"Gui",
 		L"ImGui",
 		WS_POPUP,
-		2700,
+		1000,
 		200,
 		WIDTH,
 		HEIGHT,

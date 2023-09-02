@@ -2,39 +2,39 @@
   "AnimationAssetList": [
     {
       "AnimationKey": "Player",
-      "FilePath": "../Bin/json/Map1000.json"
+      "FilePath": "./json/Map1000.json"
     },
     {
       "AnimationKey": "Enemy",
-      "FilePath": "../Bin/json/Map1001.json"
+      "FilePath": "./json/Map1001.json"
     },
     {
       "AnimationKey": "Rock",
-      "FilePath": "../Bin/json/Map1002.json"
+      "FilePath": "./json/Map1002.json"
     },
     {
       "AnimationKey": "Rock2",
-      "FilePath": "../Bin/json/Map1003.json"
+      "FilePath": "./json/Map1003.json"
     },
     {
       "AnimationKey": "Rock3",
-      "FilePath": "../Bin/json/Map1004.json"
+      "FilePath": "./json/Map1004.json"
     },
     {
       "AnimationKey": "Rock4",
-      "FilePath": "../Bin/json/Map1005.json"
+      "FilePath": "./json/Map1005.json"
     },
     {
       "AnimationKey": "Rock5",
-      "FilePath": "../Bin/json/Map1006.json"
+      "FilePath": "./json/Map1006.json"
     },
     {
       "AnimationKey": "Rock6",
-      "FilePath": "../Bin/json/Map1007.json"
+      "FilePath": "./json/Map1007.json"
     },
     {
       "AnimationKey": "Rock7",
-      "FilePath": "../Bin/json/Map1008.json"
+      "FilePath": "./json/Map1008.json"
     }
   ]
 }

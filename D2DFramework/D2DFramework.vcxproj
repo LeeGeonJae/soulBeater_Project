@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../D2DFramework/;../Bin/include/fmod/;../Bin/include/json/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../D2DFramework/;../include/fmod/;../include/json/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -129,6 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../D2DFramework/;../Include/fmod/;../include/json/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -146,11 +147,19 @@
     <ClCompile Include="AsyncInputManager.cpp" />
     <ClCompile Include="BaseEntity.cpp" />
     <ClCompile Include="BeatManager.cpp" />
+    <ClCompile Include="eSceneType.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="GridComponent.cpp" />
+    <ClCompile Include="GridMoveComponent.cpp" />
     <ClCompile Include="ISerialize.h" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="Repeller.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SoundAsset.cpp" />
     <ClCompile Include="SoundManager.cpp" />
@@ -181,17 +190,33 @@
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\DemoVersion_Geon\GridInfomation.h" />
     <ClInclude Include="AABBCollider.h" />
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationRenderer.h" />
     <ClInclude Include="AsyncInputManager.h" />
     <ClInclude Include="BaseEntity.h" />
     <ClInclude Include="BeatManager.h" />
+    <ClInclude Include="eTransformLayer.h" />
+    <ClInclude Include="IncludeComponent.h" />
+    <ClInclude Include="IncludeManager.h" />
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="eObjectType.h" />
-    <ClInclude Include="FrameInformation.h" />
+    <ClInclude Include="FrameInfomation.h" />
+    <ClInclude Include="GridComponent.h" />
+    <ClInclude Include="GridVector.h" />
+    <ClInclude Include="GridMoveComponent.h" />
+    <ClInclude Include="GridPosition.h" />
+    <ClInclude Include="KeyInformation.h" />
+    <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="ParticleEmitter.h" />
+    <ClInclude Include="Repeller.h" />
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SoundAsset.h" />
     <ClInclude Include="SoundManager.h" />
@@ -222,7 +247,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="StringHelper.h" />
-    <ClInclude Include="TimeManger.h" />
+    <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="WinApp.h" />

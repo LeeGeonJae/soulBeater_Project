@@ -1,11 +1,12 @@
 #pragma once
 
-#include <d2d1.h>
-#include <d2d1_1.h>
-
 #include "Component.h"
 #include "IRenderable.h"
 #include "Vector2.h"
+#include "eTransformLayer.h"
+
+#include <d2d1.h>
+#include <d2d1_1.h>
 
 namespace d2dFramework
 {
@@ -15,33 +16,36 @@ namespace d2dFramework
 	{
 		Rectangle,
 		Circle,
-		Sprite
+		Sprite,
+		Inheritance
 	};
 
-	class SpriteRenderer final : public Component, public IRenderable
+	class SpriteRenderer : public Component, public IRenderable
 	{
 	public:
 		SpriteRenderer(unsigned int id, GameObject* owner);
-		~SpriteRenderer() override = default;
+		virtual ~SpriteRenderer() override = default;
 
-		void Init() override;
-		void Release() override;
+		virtual void Init() override;
+		virtual void Release() override;
 
 		bool IsOutsideBoundingBox(const D2D1::Matrix3x2F& cameraTransform, const AABB& boundingBox) override;
-		void Render(const D2D1::Matrix3x2F& cameraTransform) override;
-		
+		virtual void Render(const D2D1::Matrix3x2F& cameraTransform) override;
+
 		void SerializeIn(nlohmann::ordered_json& object) override;
 		void SerializeOut(nlohmann::ordered_json& object) override;
-		
+
+		inline void SetIsLeft(bool bIsLeft);
 		inline void SetOffSet(const Vector2& offset);
 		inline void SetSize(const Vector2& size);
 		inline void SetBaseColor(const D2D1_COLOR_F& baseColor);
 		inline void SetBorderColor(const D2D1_COLOR_F& borderColor);
 		inline void SetBitmap(ID2D1Bitmap* bitmap);
-		inline void SetBitmap(ID2D1Bitmap* bitmap,std::wstring bitmapKey);
-
+		inline void SetBitmap(ID2D1Bitmap* bitmap, std::wstring bitmapKey);
+		inline void SetIsActive(bool bIsActive);
 		inline void SetUVRectangle(const D2D1_RECT_F& rectangle);
 		inline void SetSpriteType(eSpriteType spriteType);
+		inline void SetTransformLayer(eTransformLayer transformLayer);
 
 		inline GameObject* GetGameObject() const override;
 		inline unsigned int GetId() const override;
@@ -52,8 +56,11 @@ namespace d2dFramework
 		inline ID2D1Bitmap* GetBitmap(void) const;
 		inline const D2D1_RECT_F& GetUVRectangle(void) const;
 		inline eSpriteType GetSpriteType(void) const;
+		inline bool GetIsActive() const;
+		inline bool GetIsLeft() const;
+		inline eTransformLayer GetTransformLayer() const;
 
-	private:
+	protected:
 		Vector2 mOffset;
 		Vector2 mSize;
 
@@ -64,6 +71,11 @@ namespace d2dFramework
 		D2D1_RECT_F mUVRectangle;
 		std::string mBitmapKey;
 		eSpriteType mSpriteType;
+
+		bool mbIsActive;
+		bool mbIsLeft;
+
+		eTransformLayer mTransformLayer;
 	};
 
 	void SpriteRenderer::SetOffSet(const Vector2& offset)
@@ -99,6 +111,18 @@ namespace d2dFramework
 	void SpriteRenderer::SetSpriteType(eSpriteType spriteType)
 	{
 		mSpriteType = spriteType;
+	}
+	void SpriteRenderer::SetIsActive(bool bIsActive)
+	{
+ 		mbIsActive = bIsActive;
+	}
+	void SpriteRenderer::SetIsLeft(bool bIsLeft)
+	{
+		mbIsLeft = bIsLeft;
+	}
+	void SpriteRenderer::SetTransformLayer(eTransformLayer transformLayer)
+	{
+		mTransformLayer = transformLayer;
 	}
 
 	GameObject* SpriteRenderer::GetGameObject() const
@@ -136,5 +160,17 @@ namespace d2dFramework
 	eSpriteType SpriteRenderer::GetSpriteType(void) const
 	{
 		return mSpriteType;
+	}
+	bool SpriteRenderer::GetIsActive() const
+	{
+		return mbIsActive;
+	}
+	bool SpriteRenderer::GetIsLeft() const
+	{
+		return mbIsLeft;
+	}
+	eTransformLayer SpriteRenderer::GetTransformLayer() const
+	{
+		return mTransformLayer;
 	}
 }

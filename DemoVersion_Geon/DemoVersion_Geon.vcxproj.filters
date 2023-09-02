@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\FSM">
+      <UniqueIdentifier>{3b6a24aa-84bb-4109-aab9-aa6f60c1275f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\FSM">
+      <UniqueIdentifier>{e069ff96-9295-4aa8-b338-fb2832658115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component">
+      <UniqueIdentifier>{e21d4e2c-5981-456d-a6e6-5e5b2f870658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component">
+      <UniqueIdentifier>{88348bde-5109-4adb-a1ba-380f25893344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Ys">
+      <UniqueIdentifier>{2eb3dcdc-5941-4245-b171-a56181ddb27d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Eve">
+      <UniqueIdentifier>{18b35187-7344-40a8-b6f3-0fc8de18a463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Ys">
+      <UniqueIdentifier>{c92d8e72-aa8a-4c03-97ca-321b6012e230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Eve">
+      <UniqueIdentifier>{67319343-e8a6-48a1-8d15-f1e4f2948fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Lilith">
+      <UniqueIdentifier>{abdc7c77-f7b7-4f67-8d1a-aa216f470f0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Lilith">
+      <UniqueIdentifier>{0c57ab49-c0a8-4428-84e3-a795440f8b0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Player">
+      <UniqueIdentifier>{0b8c12e2-9114-4371-9111-eab60e3de959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Player">
+      <UniqueIdentifier>{57849978-bb33-4bbf-b865-6da661d3df3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Bealzebub">
+      <UniqueIdentifier>{64ff6ad0-7281-4273-8f5a-02ddfff50264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Bealzebub">
+      <UniqueIdentifier>{59f0b807-a119-48be-bfc6-abbb1ec611f1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SoulBeaterProcessor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterFSM.cpp">
+      <Filter>소스 파일\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMonsterComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="DaggerComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="EveBossComponent.cpp">
+      <Filter>소스 파일\Eve</Filter>
+    </ClCompile>
+    <ClCompile Include="EveBossFSM.cpp">
+      <Filter>소스 파일\Eve</Filter>
+    </ClCompile>
+    <ClCompile Include="EveDaggerComponent.cpp">
+      <Filter>소스 파일\Eve</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="LilithBossComponent.cpp">
+      <Filter>소스 파일\Lilith</Filter>
+    </ClCompile>
+    <ClCompile Include="LilithBossFSM.cpp">
+      <Filter>소스 파일\Lilith</Filter>
+    </ClCompile>
+    <ClCompile Include="BoomFlyComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerComponent.cpp">
+      <Filter>소스 파일\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFSM.cpp">
+      <Filter>소스 파일\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="YsBossComponent.cpp">
+      <Filter>소스 파일\Eve</Filter>
+    </ClCompile>
+    <ClCompile Include="YsBossFSM.cpp">
+      <Filter>소스 파일\Eve</Filter>
+    </ClCompile>
+    <ClCompile Include="BealzebubFSM.cpp">
+      <Filter>소스 파일\Bealzebub</Filter>
+    </ClCompile>
+    <ClCompile Include="BealzebubComponent.cpp">
+      <Filter>소스 파일\Bealzebub</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyComponent.cpp">
+      <Filter>소스 파일\Bealzebub</Filter>
+    </ClCompile>
+    <ClCompile Include="FastFlyComponent.cpp">
+      <Filter>소스 파일\Bealzebub</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SoulBeaterProcessor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterFSM.h">
+      <Filter>헤더 파일\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMonsterComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DaggerComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="EveBossFSM.h">
+      <Filter>헤더 파일\Eve</Filter>
+    </ClInclude>
+    <ClInclude Include="EveBossComponent.h">
+      <Filter>헤더 파일\Eve</Filter>
+    </ClInclude>
+    <ClInclude Include="EveDaggerComponent.h">
+      <Filter>헤더 파일\Eve</Filter>
+    </ClInclude>
+    <ClInclude Include="BossState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="LilithBossComponent.h">
+      <Filter>헤더 파일\Lilith</Filter>
+    </ClInclude>
+    <ClInclude Include="LilithBossFSM.h">
+      <Filter>헤더 파일\Lilith</Filter>
+    </ClInclude>
+    <ClInclude Include="BoomFlyComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerComponent.h">
+      <Filter>헤더 파일\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerFSM.h">
+      <Filter>헤더 파일\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="YsBossFSM.h">
+      <Filter>헤더 파일\Eve</Filter>
+    </ClInclude>
+    <ClInclude Include="YsBossComponent.h">
+      <Filter>헤더 파일\Eve</Filter>
+    </ClInclude>
+    <ClInclude Include="BealzebubFSM.h">
+      <Filter>헤더 파일\Bealzebub</Filter>
+    </ClInclude>
+    <ClInclude Include="BealzebubComponent.h">
+      <Filter>헤더 파일\Bealzebub</Filter>
+    </ClInclude>
+    <ClInclude Include="FastFlyComponent.h">
+      <Filter>헤더 파일\Bealzebub</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyComponent.h">
+      <Filter>헤더 파일\Bealzebub</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

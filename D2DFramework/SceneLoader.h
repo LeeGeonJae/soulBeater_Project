@@ -14,8 +14,8 @@ namespace d2dFramework
 		static void LoadScene(Scene* outScene);
 
 		static void SaveScene(Scene* outScene);
-		static void LoadAllAnimationAssets(RenderManager* renderManager);
-		static void LoadAllBitmaps(RenderManager* renderManager);
+		static void LoadAllAnimationAssets();
+		static void LoadAllBitmaps();
 
 			//{
 			//	///AnimationJsonList에서 AnimationKey에 맞는

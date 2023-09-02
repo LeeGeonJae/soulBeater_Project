@@ -1,9 +1,6 @@
 #pragma once
 
 #include "BaseEntity.h"
-#include "GameObject.h"
-#include "IFixedUpdateable.h"
-#include "IUpdateable.h"
 
 #include <cassert>
 #include <string>
@@ -22,53 +19,49 @@ namespace d2dFramework
 		SceneManager(const SceneManager&) = delete;
 		SceneManager& operator=(const SceneManager&) = delete;
 
+		template <typename T>
+		T* CreateScene(unsigned int sceneID);
+		inline Scene* FindSceneOrNull(unsigned int sceneID) const;
+		void DeleteScene(unsigned int sceneID);
+
 		void Init();
-		void FixedUpdate(float deltaTime);
-		void Update(float deltaTime);
 		void Release();
 
-		Scene* CreateScene(unsigned int sceneID);
-		Scene* FindSceneOrNull(unsigned int sceneID);
-
-		inline void RegisterFixedUpdateable(IFixedUpdateable* fixedUpdateable);
-		inline void RegisterUpdateable(IUpdateable* updateable);
-
-		inline void UnregisterFixedUpdateable(IFixedUpdateable* fixedUpdateable);
-		inline void UnregisterUpdateable(IUpdateable* updateable);
-
 		inline void SetCurrentScene(unsigned int sceneID);
-
-		inline Scene& GetCurrentScene() const;
+		inline Scene* GetCurrentScene() const;
 
 	private:
 		Scene* mCurrentScene;
 		std::map<unsigned int, Scene*> mSceneMap;
-
-		std::unordered_map<unsigned int, IFixedUpdateable*> mFixedUpdateable[GameObject::MAX_REFERENCE_DEPTH];
-		std::unordered_map<unsigned int, IUpdateable*> mUpdateable[GameObject::MAX_REFERENCE_DEPTH];
 	};
 
-	void SceneManager::RegisterFixedUpdateable(IFixedUpdateable* fixedUpdateable)
+	template <typename T>
+	T* SceneManager::CreateScene(unsigned int sceneID)
 	{
-		GameObject* gameObject = fixedUpdateable->GetGameObject();
-		mFixedUpdateable[gameObject->GetReferenceDepth()].insert({ fixedUpdateable->GetId(), fixedUpdateable });
-	}
-	void SceneManager::RegisterUpdateable(IUpdateable* updateable)
-	{
-		GameObject* gameObject = updateable->GetGameObject();
-		mUpdateable[gameObject->GetReferenceDepth()].insert({ updateable->GetId(), updateable });
+		auto iter = mSceneMap.find(sceneID);
+		assert(iter == mSceneMap.end());
+
+		bool bIsBase = std::is_base_of<Scene, T>::value;
+		assert(bIsBase);
+
+		T* scene = new T(sceneID);
+
+		mSceneMap.insert({ sceneID, scene });
+
+		return scene;
 	}
 
-	void SceneManager::UnregisterFixedUpdateable(IFixedUpdateable* fixedUpdateable)
+	Scene* SceneManager::FindSceneOrNull(unsigned int sceneID) const
 	{
-		GameObject* gameObject = fixedUpdateable->GetGameObject();
-		mFixedUpdateable[gameObject->GetReferenceDepth()].erase(mFixedUpdateable->find(fixedUpdateable->GetId()));
+		auto iter = mSceneMap.find(sceneID);
+		if (iter == mSceneMap.end())
+		{
+			return nullptr;
+		}
+
+		return iter->second;
 	}
-	void SceneManager::UnregisterUpdateable(IUpdateable* updateable)
-	{
-		GameObject* gameObject = updateable->GetGameObject();
-		mUpdateable[gameObject->GetReferenceDepth()].erase(mUpdateable->find(updateable->GetId()));
-	}
+
 
 	void SceneManager::SetCurrentScene(unsigned int sceneID)
 	{
@@ -78,8 +71,8 @@ namespace d2dFramework
 		mCurrentScene = finded->second;
 	}
 
-	Scene& SceneManager::GetCurrentScene() const
+	Scene* SceneManager::GetCurrentScene() const
 	{
-		return *mCurrentScene;
+		return mCurrentScene;
 	}
 }

@@ -6,19 +6,36 @@ namespace d2dFramework
 {
 	EventManager* EventManager::mInstance = nullptr;
 
-	EventManager::EventManager()
-		: BaseEntity(static_cast<unsigned int>(eFrameworkID::EventManager))
-	{
-		mDefaultEventNameMap.insert({ eDefaultEvent::ChangeScene, "ChangeScene" });
-	}
-
 	EventManager* EventManager::GetInstance()
 	{
-		assert(mInstance != nullptr); // GameProcessor에서 개체 생성을 보장해줘야함
+		assert(mInstance != nullptr);
 		return mInstance;
 	}
 
-	void EventManager::BroadcastEvent(const std::string& event, const std::string& data)
+	EventManager::EventManager()
+		: BaseEntity(static_cast<unsigned int>(eFrameworkID::EventManager))
+		, mEventCallbackMap(RESERVE_SIZE)
+		, mBroadcastEventQueue()
+	{
+	}
+
+	EventManager::~EventManager()
+	{
+		release();
+	}
+
+	void EventManager::release()
+	{
+		while (!mBroadcastEventQueue.empty())
+		{
+			mBroadcastEventQueue.pop();
+		}
+
+		mEventCallbackMap.clear();
+	}
+
+
+	void EventManager::ExcuteBroadcastEvent(const std::string& event, const std::string& data)
 	{
 		auto keyCallback = mEventCallbackMap.find(event);
 
@@ -42,17 +59,8 @@ namespace d2dFramework
 			auto keyData = mBroadcastEventQueue.front();
 			mBroadcastEventQueue.pop();
 
-			BroadcastEvent(keyData.first, keyData.second);
+			ExcuteBroadcastEvent(keyData.first, keyData.second);
 		}
 	}
 
-	void EventManager::release()
-	{
-		while (!mBroadcastEventQueue.empty())
-		{
-			mBroadcastEventQueue.pop();
-		}
-
-		mEventCallbackMap.clear();
-	}
 }

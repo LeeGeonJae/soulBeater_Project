@@ -2,15 +2,15 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\01_DX11InitAndImGui_d.exe</FullPath>
+      <FullPath>E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\01_DX11InitAndImGui_d.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\PS.cso</FullPath>
+      <FullPath>E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\PS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\VS.cso</FullPath>
+      <FullPath>E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\VS.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

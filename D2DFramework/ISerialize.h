@@ -10,8 +10,5 @@ namespace d2dFramework
 		virtual ~ISerialize() = default;
 		virtual void SerializeOut(nlohmann::ordered_json& object) = 0;
 		virtual void SerializeIn(nlohmann::ordered_json& object) = 0;
-
 	};
-
-
 }

@@ -7,6 +7,7 @@
 #include "EventManager.h"
 #include "Collision.h"
 #include "OBB.h"
+#include "GridComponent.h"
 
 #include <cassert>
 
@@ -21,6 +22,9 @@ namespace d2dFramework
 		, mFrameIndex(0)
 		, mAnimationIndex(0)
 		, mAnimationAsset(nullptr)
+		, mbIsActive(false)
+		, mbIsLeft(false)
+		, mTransformLayer()
 	{
 	}
 
@@ -28,6 +32,8 @@ namespace d2dFramework
 	{
 		IRenderable::Init();
 		IUpdateable::Init();
+
+		mbIsActive = true;
 	}
 
 	void AnimationRenderer::Update(float deltaTime)
@@ -71,9 +77,30 @@ namespace d2dFramework
 	{
 		assert(mAnimationAsset != nullptr);
 
+		if (!mbIsActive)
+		{
+			return;
+		}
+
 		Transform* transform = GetGameObject()->GetComponent<Transform>();
-		D2D1::Matrix3x2F matrix = transform->GetTransform();
-		GetRenderManager()->SetTransform(matrix * cameraTransform);
+		D2D1::Matrix3x2F matrix = D2D1::Matrix3x2F::Scale (
+			mbIsLeft ? static_cast<float>(-1) : static_cast < float>(1), static_cast<float>(-1)) * transform->GetTransform();
+
+		switch (mTransformLayer)
+		{
+		case eTransformLayer::None:
+			GetRenderManager()->SetTransform(matrix * cameraTransform);
+			break;
+		case eTransformLayer::Grid:
+			GetRenderManager()->SetTransform(matrix * GetRenderManager()->GetGridObjectTransform());
+			break;
+		case eTransformLayer::UI:
+			GetRenderManager()->SetTransform(GetRenderManager()->GetUITransform() * matrix);
+			break;
+		default:
+			break;
+		}
+
 		{
 			const FrameInformation& frameInfo = mAnimationAsset->GetFrameInformation(mAnimationIndex, mFrameIndex);
 			GetRenderManager()->DrawBitMap(mOffset, mSize, frameInfo.UVRectangle, mAnimationAsset->GetBitmap());
@@ -85,6 +112,7 @@ namespace d2dFramework
 	{
 		IRenderable::Release();
 		IUpdateable::Release();
+		mbIsActive = false;
 	}
 
 	void AnimationRenderer::SerializeIn(nlohmann::ordered_json& object)
@@ -92,8 +120,9 @@ namespace d2dFramework
 		mOffset.SetXY(object["mOffset"][0], object["mOffset"][1]);
 		mSize.SetXY(object["mSize"][0], object["mSize"][1]);
 		mAnimationKey = object["mAnimationKey"];
-		///TODO 지환이형 도와주세여 여기에 키값으로 애니메이션 에셋 연결하는 거 만들어주세요.
-		//AnimationAsset* mAnimationAsset;
+		const WCHAR* WCHARAnimationKey = reinterpret_cast<const WCHAR*>(mAnimationKey.c_str());
+		mAnimationAsset = IRenderable::GetRenderManager()->GetAnimationAssetOrNull(WCHARAnimationKey);
+
 	}
 
 	void AnimationRenderer::SerializeOut(nlohmann::ordered_json& object)

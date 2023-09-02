@@ -28,10 +28,4 @@ namespace d2dFramework
 	{
 		return mOwner;
 	}
-
-
-
-
-
-
 }

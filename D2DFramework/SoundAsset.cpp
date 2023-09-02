@@ -1,42 +1,37 @@
 #include "SoundAsset.h"
 
+#include "fmod.h"
+#include "fmod.hpp"
+#include "fmod_errors.h"
+
 #include <cassert>
+
 
 namespace d2dFramework
 {
-	SoundAsset::SoundAsset(unsigned int id, FMOD::Sound* sound, bool bIsLoop)
+	SoundAsset::SoundAsset(unsigned int id, FMOD::Sound* sound)
 		: BaseEntity(id)
 		, mSound(sound)
-		, mbIsLoop(false)
-		, mChannel(nullptr)
-		, mVolume(0.5f)
-		, mFrequency(1.f)
-		, mPitch(1.f)
-		, mDefaultFrequency(0.f)
 	{
 		assert(sound != nullptr);
+		mSound->getLength(&mSoundLength, FMOD_TIMEUNIT_MS);
+		mSoundLength = mSoundLength / 100;
+		mMin = mSoundLength / 60;
+		mSecond = mSoundLength % 60;
 	}
 
 	SoundAsset::~SoundAsset()
 	{
+		// mSound->release(); 해당 부분 터짐
 	}
 
-	void SoundAsset::Play(FMOD::System* system)
+	FMOD::Channel* SoundAsset::Play(FMOD::System* system)
 	{
-		//mChannel->stop();
-		system->playSound(mSound, nullptr, false, &mChannel);
-		if (mDefaultFrequency == 0.f)
-		{
-			mChannel->getFrequency(&mDefaultFrequency);
-		}
+		unsigned int asd;
+		auto a = mSound->getLength(&asd,FMOD_TIMEUNIT_MS);
 
-		SetVolume(mVolume);
-		SetFrequency(mFrequency);
-		SetPitch(mPitch);
-	}
-
-	void SoundAsset::Stop()
-	{
-		mChannel->stop();
+		FMOD::Channel* channel;
+		system->playSound(mSound, nullptr, false, &channel);
+		return channel;
 	}
 }

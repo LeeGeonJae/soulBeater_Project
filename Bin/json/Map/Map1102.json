@@ -1,0 +1,645 @@
+{
+    "SceneID": 1102,
+    "m_Gameobjects": [
+        {
+            "GameObject_ID": 20000,
+            "mObjectType": 3,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20001,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -150.0,
+                        50.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20002,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        50.0,
+                        50.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20003,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -135.0,
+                            35.0
+                        ],
+                        [
+                            -165.0,
+                            65.0
+                        ]
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 20000,
+                    "Component_ID": 20004,
+                    "GridPosition": [
+                        4,
+                        2
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20005,
+            "mObjectType": 3,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20005,
+                    "Component_ID": 20006,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        50.0,
+                        50.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20005,
+                    "Component_ID": 20007,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        50.0,
+                        50.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20005,
+                    "Component_ID": 20008,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            65.0,
+                            35.0
+                        ],
+                        [
+                            35.0,
+                            65.0
+                        ]
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 20005,
+                    "Component_ID": 20009,
+                    "GridPosition": [
+                        6,
+                        2
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20010,
+            "mObjectType": 3,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20010,
+                    "Component_ID": 20011,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -50.0,
+                        150.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20010,
+                    "Component_ID": 20012,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        50.0,
+                        50.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20010,
+                    "Component_ID": 20013,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            -35.0,
+                            135.0
+                        ],
+                        [
+                            -65.0,
+                            165.0
+                        ]
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 20010,
+                    "Component_ID": 20014,
+                    "GridPosition": [
+                        5,
+                        1
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 20015,
+            "mObjectType": 3,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 20015,
+                    "Component_ID": 20016,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        50.0,
+                        150.0
+                    ]
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 20015,
+                    "Component_ID": 20017,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        50.0,
+                        50.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 1
+                },
+                {
+                    "ComponentName": "AABBCollider",
+                    "OwnerObject_ID": 20015,
+                    "Component_ID": 20018,
+                    "Collider_bIsTrigger": false,
+                    "Collider_Offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "Collider_Size": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        30.0,
+                        30.0
+                    ],
+                    "mWorldAABB": [
+                        [
+                            65.0,
+                            135.0
+                        ],
+                        [
+                            35.0,
+                            165.0
+                        ]
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 20015,
+                    "Component_ID": 20019,
+                    "GridPosition": [
+                        6,
+                        1
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40000,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40001,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -150.0,
+                        50.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40002,
+                    "GridPosition": [
+                        4,
+                        2
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40000,
+                    "Component_ID": 40003,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40004,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40004,
+                    "Component_ID": 40005,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        50.0,
+                        50.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40004,
+                    "Component_ID": 40006,
+                    "GridPosition": [
+                        6,
+                        2
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40004,
+                    "Component_ID": 40007,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40009,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40009,
+                    "Component_ID": 40010,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        -50.0,
+                        150.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40009,
+                    "Component_ID": 40011,
+                    "GridPosition": [
+                        5,
+                        1
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40009,
+                    "Component_ID": 40012,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        },
+        {
+            "GameObject_ID": 40013,
+            "mObjectType": 1,
+            "mReferenceDepth": 0,
+            "mComponents": [
+                {
+                    "ComponentName": "Transform",
+                    "OwnerObject_ID": 40013,
+                    "Component_ID": 40014,
+                    "mScale": [
+                        1.0,
+                        1.0
+                    ],
+                    "mRotateInDegree": 0.0,
+                    "mTranslate": [
+                        50.0,
+                        150.0
+                    ]
+                },
+                {
+                    "ComponentName": "GridComponent",
+                    "OwnerObject_ID": 40013,
+                    "Component_ID": 40015,
+                    "GridPosition": [
+                        6,
+                        1
+                    ],
+                    "MaxX": 10,
+                    "MaxY": 10,
+                    "CellDistance": 100
+                },
+                {
+                    "ComponentName": "SpriteRenderer",
+                    "OwnerObject_ID": 40013,
+                    "Component_ID": 40016,
+                    "mBitmapKey": "Golem",
+                    "mOffset": [
+                        0.0,
+                        0.0
+                    ],
+                    "mSize": [
+                        100.0,
+                        100.0
+                    ],
+                    "mBaseColor": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mBorderColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "mUVRectangle": [
+                        0.0,
+                        0.0,
+                        500.0,
+                        500.0
+                    ],
+                    "mSpriteType": 2
+                }
+            ]
+        }
+    ]
+}

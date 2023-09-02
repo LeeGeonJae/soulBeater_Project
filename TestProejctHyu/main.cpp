@@ -6,6 +6,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	soulBeater::SoulBeaterProcessor soulBeaterProcessor(1920, 1080, L"demo");
+	TestProjectLDH::TestProjectLDH soulBeaterProcessor(1920, 1080, L"demo");
 	return d2dFramework::WinApp::Run(&soulBeaterProcessor, hInstance, nCmdShow);
 }

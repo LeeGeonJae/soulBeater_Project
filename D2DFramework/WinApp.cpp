@@ -17,12 +17,12 @@ namespace d2dFramework
 		RegisterClassEx(&windowClass);
 
 		RECT windowRect = { 0, 0, static_cast<LONG>(gameProcessor->GetWidth()), static_cast<LONG>(gameProcessor->GetHeight()) };
-		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+		//AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 		mHwnd = CreateWindow(
 			windowClass.lpszClassName,
 			gameProcessor->GetTitle(),
-			WS_OVERLAPPEDWINDOW,
+			WS_POPUP | WS_EX_TOPMOST,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
 			windowRect.right - windowRect.left,
@@ -32,8 +32,7 @@ namespace d2dFramework
 			hInstance,
 			gameProcessor);
 
-		gameProcessor->SetHwnd(mHwnd);
-		gameProcessor->Init();
+		gameProcessor->Init(mHwnd);
 		ShowWindow(mHwnd, nCmdShow);
 
 		MSG msg = { 0, };

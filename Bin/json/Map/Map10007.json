@@ -1,0 +1,281 @@
+{
+    "SceneID": 10007,
+  "m_Gameobjects": [
+
+    {
+      "GameObject_ID": 302,
+      "mObjectType": 0,
+      "mReferenceDepth": 0,
+      "mComponents": [
+        {
+          "ComponentName": "SpriteRenderer",
+          "OwnerObject_ID": 302,
+          "Component_ID": 30202,
+          "mBitmapKey": "Button",
+          "mOffset": [
+            0.0,
+            0.0
+          ],
+          "mSize": [
+            150.0,
+            50.0
+          ],
+          "mBaseColor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mBorderColor": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "mUVRectangle": [
+            0.0,
+            0.0,
+            150.0,
+            50.0
+          ],
+          "mSpriteType": 2
+        },
+        {
+          "ComponentName": "ButtonComponent",
+          "OwnerObject_ID": 302,
+          "Component_ID": 30201,
+          "mButtonType": 0,
+          "ButtonUVRectSizes": [
+            {
+              "eButtonStatus": 0,
+              "UVRectSize_left": 0,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 150,
+              "UVRectSize_bottom": 50
+            },
+            {
+              "eButtonStatus": 1,
+              "UVRectSize_left": 150,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 300,
+              "UVRectSize_bottom": 50
+            },
+            {
+              "eButtonStatus": 2,
+              "UVRectSize_left": 300,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 450,
+              "UVRectSize_bottom": 50
+            }
+          ]
+        },
+        {
+          "ComponentName": "Transform",
+          "OwnerObject_ID": 302,
+          "Component_ID": 30203,
+          "mScale": [
+            1.0,
+            1.0
+          ],
+          "mRotateInDegree": 0.0,
+          "mTranslate": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "GameObject_ID": 303,
+      "mObjectType": 0,
+      "mReferenceDepth": 0,
+      "mComponents": [
+        {
+          "ComponentName": "SpriteRenderer",
+          "OwnerObject_ID": 303,
+          "Component_ID": 30302,
+          "mBitmapKey": "Button",
+          "mOffset": [
+            0.0,
+            0.0
+          ],
+          "mSize": [
+            150.0,
+            50.0
+          ],
+          "mBaseColor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mBorderColor": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "mUVRectangle": [
+            0.0,
+            0.0,
+            150.0,
+            50.0
+          ],
+          "mSpriteType": 2
+        },
+        {
+          "ComponentName": "ButtonComponent",
+          "OwnerObject_ID": 303,
+          "Component_ID": 30301,
+          "mButtonType": 2,
+          "ButtonUVRectSizes": [
+            {
+              "eButtonStatus": 0,
+              "UVRectSize_left": 0,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 150,
+              "UVRectSize_bottom": 50
+            },
+            {
+              "eButtonStatus": 1,
+              "UVRectSize_left": 150,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 300,
+              "UVRectSize_bottom": 50
+            },
+            {
+              "eButtonStatus": 2,
+              "UVRectSize_left": 300,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 450,
+              "UVRectSize_bottom": 50
+            }
+          ]
+        },
+        {
+          "ComponentName": "Transform",
+          "OwnerObject_ID": 303,
+          "Component_ID": 30304,
+          "mScale": [
+            1.0,
+            1.0
+          ],
+          "mRotateInDegree": 0.0,
+          "mTranslate": [
+            0.0,
+            -100.0
+          ]
+        }
+      ]
+    },
+    {
+      "GameObject_ID": 304,
+      "mObjectType": 0,
+      "mReferenceDepth": 0,
+      "mComponents": [
+        {
+          "ComponentName": "SpriteRenderer",
+          "OwnerObject_ID": 304,
+          "Component_ID": 30402,
+          "mBitmapKey": "Button",
+          "mOffset": [
+            0.0,
+            0.0
+          ],
+          "mSize": [
+            150.0,
+            50.0
+          ],
+          "mBaseColor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mBorderColor": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "mUVRectangle": [
+            0.0,
+            0.0,
+            150.0,
+            50.0
+          ],
+          "mSpriteType": 2
+        },
+        {
+          "ComponentName": "ButtonComponent",
+          "OwnerObject_ID": 304,
+          "Component_ID": 30401,
+          "mButtonType": 1,
+          "ButtonUVRectSizes": [
+            {
+              "eButtonStatus": 0,
+              "UVRectSize_left": 0,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 150,
+              "UVRectSize_bottom":50
+            },
+            {
+              "eButtonStatus": 1,
+              "UVRectSize_left": 150,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 300,
+              "UVRectSize_bottom": 50
+            },
+            {
+              "eButtonStatus": 2,
+              "UVRectSize_left": 300,
+              "UVRectSize_top": 0,
+              "UVRectSize_right": 450,
+              "UVRectSize_bottom": 50
+            }
+          ]
+        },
+        {
+          "ComponentName": "Transform",
+          "OwnerObject_ID": 304,
+          "Component_ID": 30403,
+          "mScale": [
+            1.0,
+            1.0
+          ],
+          "mRotateInDegree": 0.0,
+          "mTranslate": [
+            0.0,
+            -200.0
+          ]
+        }
+      ]
+    },
+    {
+      "GameObject_ID": 301,
+      "mObjectType": 0,
+      "mReferenceDepth": 0,
+      "mComponents": [
+        {
+          "ComponentName": "ButtonManagerComponent",
+          "OwnerObject_ID": 301,
+          "Component_ID": 30101,
+          "ButtonManagerType": 0,
+          "ButtonUsable": true,
+          "OwnedButtonIDs": [
+
+            {
+              "ButtonID": 302
+            },
+            {
+              "ButtonID": 303
+            },
+            {
+              "ButtonID": 304
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

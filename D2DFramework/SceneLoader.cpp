@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "RenderManger.h"
 #include "Scene.h"
+#include "FrameInformation.h"
 
 #include <fstream>
 #include <codecvt>
@@ -11,17 +12,19 @@
 namespace d2dFramework
 {
 
-	void SceneLoader::LoadScene( Scene* outScene)
+	void SceneLoader::LoadScene(Scene* outScene)
 	{
 
 		const unsigned int outSceneID = outScene->GetId();
-		
+
 		///파일 패스 찾기!
 		std::string mapFilePath;
-		std::ifstream ifs(L"../Bin/json/MapList.json", std::ios::in);
+		std::ifstream ifs(L"./json/MapList.json", std::ios::in);
 		if (!ifs.is_open())
+		{
+			assert(false);
 			throw std::runtime_error("Object not found."); // 에러를 발생시킴
-
+		}
 		std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 		ifs.close();
 		nlohmann::ordered_json MapListobj = nlohmann::ordered_json::parse(str);
@@ -44,31 +47,12 @@ namespace d2dFramework
 				nlohmann::ordered_json jsonGameObjectContainer = nlohmann::ordered_json::parse(mainstr);
 				outScene->SerializeIn(jsonGameObjectContainer);
 			}
-
 		}
 
 		///찾은 파일Path로 Json 열기 
-		
 
 
-		/*for (auto& jsonGameObject : jsonGameObjectContainer["m_Gameobjects"])
-		{
-			unsigned int GameObject_ID = jsonGameObject["GameObject_ID"];
-			GameObject* pGameObject = outScene->CreateObject(GameObject_ID);
-			pGameObject->SerializeIn(jsonGameObject);
 
-			///chil설정... 까다로워서 일단 대기
-			if (jsonGameObject.contains("mChildren"))
-			{
-				for (auto& test_Gameobjects : jsonGameObject["mChildren"])
-				{
-					unsigned int ChildGameObject_ID = test_Gameobjects["GameObject_ID"];
-					GameObject* pChildGameObject = outScene->CreateObject(ChildGameObject_ID);
-					pChildGameObject->SerializeIn(test_Gameobjects);
-					pChildGameObject->SetParent(pGameObject);
-				}
-			}
-		}*/
 	}
 
 
@@ -76,13 +60,15 @@ namespace d2dFramework
 	{
 		///지역변수 생성.
 		unsigned int outSceneID = outScene->GetId();
-		std::set<unsigned int> sceneGameObjectIDs = outScene->GetObjectIDs();
 		std::string mapFilePath;
 
 		///맵리스트json열어 파일명 가져오기.
-		std::ifstream ifs(L"../Bin/json/MapList.json", std::ios::in);
+		std::ifstream ifs(L"./json/MapList.json", std::ios::in);
 		if (!ifs.is_open())
+		{
+			assert(false);
 			throw std::runtime_error("Object not found."); // 에러를 발생시킴
+		}
 		std::string strJsonMapList((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 		ifs.close();
 		nlohmann::ordered_json jsonMaplist = nlohmann::ordered_json::parse(strJsonMapList);
@@ -110,14 +96,14 @@ namespace d2dFramework
 		else
 		{
 			nlohmann::ordered_json jsonNewMapInfo;
-			std::string tempA="../Bin/json/Map/Map";
+			std::string tempA = "json/Map/Map";
 			int tempB = outSceneID;
-			std::string tempC=".json";
+			std::string tempC = ".json";
 			mapFilePath = tempA + std::to_string(tempB) + tempC;
 			jsonNewMapInfo["Map_ID"] = outSceneID;
 			jsonNewMapInfo["FilePath"] = mapFilePath;
 			jsonMaplist["MapList"].push_back(jsonNewMapInfo);
-			std::ofstream ofsMapList(L"../Bin/json/MapList.json");
+			std::ofstream ofsMapList(L"json/MapList.json");
 			ofsMapList << jsonMaplist.dump(4);
 			ofsMapList.close();
 
@@ -129,13 +115,16 @@ namespace d2dFramework
 		}
 	}
 
-	void SceneLoader::LoadAllAnimationAssets(RenderManager* renderManager)
+	void SceneLoader::LoadAllAnimationAssets()
 	{
 
 		// 애니메이션 리스트 열어서 리스트를 제이슨형태로 저장.
-		std::ifstream ifsAnimationAssetList(L"../Bin/json/AnimationAssetList.json", std::ios::in);
+		std::ifstream ifsAnimationAssetList(L"./json/AnimationAssetList.json", std::ios::in);
 		if (!ifsAnimationAssetList.is_open())
+		{
+			assert(false);
 			throw std::runtime_error("Object not found."); // 에러를 발생시킴
+		}
 		std::string strAnimationList((std::istreambuf_iterator<char>(ifsAnimationAssetList)), std::istreambuf_iterator<char>());
 		ifsAnimationAssetList.close();
 		nlohmann::ordered_json jsonAnimationAssetList = nlohmann::ordered_json::parse(strAnimationList);
@@ -179,17 +168,21 @@ namespace d2dFramework
 			// 저장된 애니메이션 키값, 파일경로, frameInformations를 사용하여 Asset 생성.
 			const WCHAR* WCHARAnimationKey = reinterpret_cast<const WCHAR*>(strAnimationKey.c_str());
 			const WCHAR* WCHARAnimePath = reinterpret_cast<const WCHAR*>(strAnimationAssetPath.c_str());
-			renderManager->CreateAnimationAsset(WCHARAnimationKey, WCHARAnimePath, vecFrameInformation);
+			RenderManager::GetInstance()->CreateAnimationAsset(WCHARAnimationKey, WCHARAnimePath, vecFrameInformation);
 		}
 
 	}
 
-	void SceneLoader::LoadAllBitmaps(RenderManager* renderManager)
+	void SceneLoader::LoadAllBitmaps()
 	{
 		// 애니메이션 리스트 열어서 리스트를 제이슨형태로 저장.
-		std::ifstream ifsBitmapList(L"../Bin/json/BitmapList.json", std::ios::in);
+		std::ifstream ifsBitmapList(L"./json/BitmapList.json", std::ios::in);
 		if (!ifsBitmapList.is_open())
+		{
+			assert(false);
 			throw std::runtime_error("Object not found."); // 에러를 발생시킴
+		}
+
 		std::string strBitmapList((std::istreambuf_iterator<char>(ifsBitmapList)), std::istreambuf_iterator<char>());
 		ifsBitmapList.close();
 		nlohmann::ordered_json jsonBitmapList = nlohmann::ordered_json::parse(strBitmapList);
@@ -207,26 +200,26 @@ namespace d2dFramework
 
 			const WCHAR* WCHARAnimationKey = reinterpret_cast<const WCHAR*>(wstrBitmapKey.c_str());
 			const WCHAR* WCHARAnimePath = reinterpret_cast<const WCHAR*>(wstrBitmapPath.c_str());
-
+			bool a = !jsonBitmapInfomations.contains("FramesPath");
 			if (!jsonBitmapInfomations.contains("FramesPath"))
 			{
-
-				renderManager->CreateD2DBitmapFromFile(WCHARAnimationKey, WCHARAnimePath);
+				HRESULT hr = RenderManager::GetInstance()->CreateD2DBitmapFromFile(WCHARAnimationKey, WCHARAnimePath);
+				assert(SUCCEEDED(hr));
 			}
 			else
 			{
 				const std::string strFramesPath = jsonBitmapInfomations["FramesPath"].get<std::string>();
-				std::ifstream ifsBitmapFramesPath(L"../Bin/json/Bit.json", std::ios::in);
+				std::ifstream ifsBitmapFramesPath(L"json/Bit.json", std::ios::in);
 				if (!ifsBitmapFramesPath.is_open())
 					throw std::runtime_error("Object not found."); // 에러를 발생시킴
 				std::string strBitmapInfo((std::istreambuf_iterator<char>(ifsBitmapFramesPath)), std::istreambuf_iterator<char>());
 				ifsBitmapFramesPath.close();
 				nlohmann::ordered_json jsonBitmapFrameInfo = nlohmann::ordered_json::parse(strBitmapInfo);
-				int a=0;
-				for (auto jsonBitmapFrame:jsonBitmapFrameInfo["Frames"])
+				int a = 0;
+				for (auto jsonBitmapFrame : jsonBitmapFrameInfo["Frames"])
 				{
 					D2D1_RECT_F rectSize;
-					rectSize.left= jsonBitmapFrame["Rect_left"];
+					rectSize.left = jsonBitmapFrame["Rect_left"];
 					rectSize.top = jsonBitmapFrame["Rect_top"];
 					rectSize.right = jsonBitmapFrame["Rect_right"];
 					rectSize.bottom = jsonBitmapFrame["Rect_bottom"];

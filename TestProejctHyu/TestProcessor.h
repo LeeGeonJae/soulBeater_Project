@@ -1,27 +1,37 @@
 #pragma once
-
 #include "GameProcessor.h"
+#include "KeyInformation.h"
+
+#include <queue>
+#include <future>
+#include <d2d1_1.h>
+#include "../TestProejctHyu/UIManager.h"
+
 
 namespace d2dFramework
 {
 	class GameObject;
+	class AsyncInputManager;
+	class BeatManager;
+	class GameObject;
 }
 
-namespace soulBeater
+
+namespace TestProjectLDH
 {
-	class SoulBeaterProcessor : public d2dFramework::GameProcessor
+	class TestProjectLDH : public d2dFramework::GameProcessor
 	{
 	public:
-		SoulBeaterProcessor(UINT width, UINT height, std::wstring name);
-		virtual ~SoulBeaterProcessor() = default;
+		TestProjectLDH(UINT width, UINT height, std::wstring name);
+		virtual ~TestProjectLDH();
 
-		virtual void Init() override;
-		virtual void Update();
-		virtual void Release() override;
+		void Init(HWND hwnd) override;
+		void Update() override;
+		void Release() override;
 
 	private:
 		void initAnimationAsset();
-
+		d2dFramework::UIManager* mUIManager;
 	private:
 	};
 }

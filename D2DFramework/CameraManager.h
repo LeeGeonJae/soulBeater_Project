@@ -1,12 +1,10 @@
 #pragma once
 
-// 항상 디폴트 카메라가 있어야 게임을 볼 수 있다.
-// 클리핑, 데카르트 좌표 -> 스크린 변환, 카메라 변환 기능을 제공한다.\
-// 렌더링 영역에서의 검출만을 요구하므로 렌더링 로직에서 활용하도록 처리해야 된다.
-
 #include "GameObject.h"
+#include "CameraComponent.h" // 강한 규칙 마련
 #include "Transform.h"
 #include "Vector2.h"
+#include "BaseEntity.h"
 
 #include <cassert>
 #include <d2d1.h>
@@ -15,14 +13,20 @@ namespace d2dFramework
 {
 	class Camera;
 
-	class CameraManager
+	class CameraManager final : public BaseEntity
 	{
 	public:
 		CameraManager();
 		~CameraManager();
+		CameraManager(const CameraManager&) = delete;
+		CameraManager& operator=(const CameraManager&) = delete;
+
+		void Release();
 
 		inline void RegisterCamera(GameObject* camera);
+		inline void UnregisterCamera(unsigned int id);
 
+		inline void SetCurrentCamera(unsigned int cameraId);
 		inline void SetScreenSize(const Vector2& size);
 
 		inline const Vector2& GetScrennSize() const;
@@ -31,14 +35,27 @@ namespace d2dFramework
 	private:
 		GameObject* mCurrnetCamara;
 		Vector2 mSize;
+
+		std::map<unsigned int, GameObject*> mCameraMaps;
 	};
 
 	void CameraManager::RegisterCamera(GameObject* camera)
 	{
-		assert(camera->GetComponent<Transform>() != nullptr);
-		mCurrnetCamara = camera;
+		mCameraMaps.insert({ camera->GetId(), camera });
 	}
 
+	void CameraManager::UnregisterCamera(unsigned int id)
+	{
+		mCameraMaps.erase(id);
+	}
+
+	void CameraManager::SetCurrentCamera(unsigned int cameraID)
+	{
+		auto find = mCameraMaps.find(cameraID);
+		assert(find != mCameraMaps.end());
+
+		mCurrnetCamara = find->second;
+	}
 	void CameraManager::SetScreenSize(const Vector2& size)
 	{
 		mSize = size;

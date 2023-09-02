@@ -1,151 +1,53 @@
-﻿  MapToolWinApp.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2859,53): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,1): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,37): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92,18): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-  SoulBeaterProcessor.cpp
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(129,13): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(130,13): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(137,55): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(137,113): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2859,53): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,1): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,37): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92,18): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-  gui.cpp
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\gui.cpp(914,10): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2859,53): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,1): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,37): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92,18): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
+﻿  gui.cpp
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\RenderManger.h(132,32): warning C4244: '인수': 'unsigned int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.h(27,16): error C3668: 'mapTool::SoulBeaterProcessor::Init': 재정의 지정자 'override'가 있는 메서드가 기본 클래스 메서드를 재정의하지 않았습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\gui.cpp(906,10): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   main.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2859,53): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,1): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xstring(2718,37): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SpriteRenderer.h(92,18): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\RenderManger.h(132,32): warning C4244: '인수': 'unsigned int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.h(27,16): error C3668: 'mapTool::SoulBeaterProcessor::Init': 재정의 지정자 'override'가 있는 메서드가 기본 클래스 메서드를 재정의하지 않았습니다.
+  MapToolWinApp.cpp
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\MapToolWinApp.cpp(43,18): error C2039: 'SetHwnd': 'd2dFramework::GameProcessor'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\GameProcessor.h(19,8): message : 'd2dFramework::GameProcessor' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\MapToolWinApp.cpp(44,16): error C2660: 'd2dFramework::GameProcessor::Init': 함수는 0개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\GameProcessor.h(25,16): message : 'd2dFramework::GameProcessor::Init' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\MapToolWinApp.cpp(44,16): message : 인수 목록 '()'을(를) 일치시키는 동안
+  SoulBeaterProcessor.cpp
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\RenderManger.h(132,32): warning C4244: '인수': 'unsigned int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.h(27,16): error C3668: 'mapTool::SoulBeaterProcessor::Init': 재정의 지정자 'override'가 있는 메서드가 기본 클래스 메서드를 재정의하지 않았습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(37,23): error C2039: 'SetHwnd': 'd2dFramework::RenderManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SceneLoader.h(7,8): message : 'd2dFramework::RenderManager' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(38,18): error C2660: 'd2dFramework::GameProcessor::Init': 함수는 0개의 인수를 사용하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\GameProcessor.h(25,16): message : 'd2dFramework::GameProcessor::Init' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(38,18): message : 인수 목록 '()'을(를) 일치시키는 동안
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(129,13): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(130,13): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(137,32): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(137,66): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(302,51): error C2039: 'DeletObject': 'd2dFramework::ObjectManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\ObjectManager.h(17,8): message : 'd2dFramework::ObjectManager' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(460,51): error C2039: 'DeletObject': 'd2dFramework::ObjectManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\ObjectManager.h(17,8): message : 'd2dFramework::ObjectManager' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(607,50): error C2039: 'DeletObject': 'd2dFramework::ObjectManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\ObjectManager.h(17,8): message : 'd2dFramework::ObjectManager' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(610,50): error C2039: 'DeletObject': 'd2dFramework::ObjectManager'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\ObjectManager.h(17,8): message : 'd2dFramework::ObjectManager' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(619,31): error C2039: 'GetObjectIDs': 'd2dFramework::Scene'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SceneManager.h(12,8): message : 'd2dFramework::Scene' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(620,78): error C3536: 'iter': 초기화되기 전에 사용할 수 없습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(620,73): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(627,34): error C2039: 'GetObjectIDs': 'd2dFramework::Scene'의 멤버가 아닙니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\D2DFramework\SceneManager.h(12,8): message : 'd2dFramework::Scene' 선언을 참조하십시오.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(629,74): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(638,11): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(640,121): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(642,30): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(644,16): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(646,117): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(648,32): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(650,16): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(652,117): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(654,33): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(656,16): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(658,117): error C2100: 간접 참조가 잘못되었습니다.
+E:\게임인재원 폴더\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\MapTool_Final\SoulBeaterProcessor.cpp(660,32): error C2100: 간접 참조가 잘못되었습니다.
   코드를 생성하고 있습니다...
-  MapTool_Final.vcxproj -> D:\GA5th2Q_Project\Snoopy\5_Project\SoulBeater\Bin\01_DX11InitAndImGui_d.exe

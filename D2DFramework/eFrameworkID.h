@@ -4,15 +4,21 @@ namespace d2dFramework
 {
 	enum class eFrameworkID
 	{
+		AsyncInputManager,
+		BeatManager,
+		CameraManager,
+		ComponentManager,
 		CollisionManager,
+		EffectManager,
+		EventManager,
 		InputManager,
 		ObjectManager,
+		ParticleManager,
 		RenderManager,
-		TimeManager,
 		SceneManager,
-		EventManager,
 		SoundManager,
-		DefaultCamera,
-		DefaultCameraTransform
+		TimeManager,
+		UIManager,
+		Size
 	};
 }

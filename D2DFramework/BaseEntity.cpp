@@ -16,6 +16,6 @@ namespace d2dFramework
 	BaseEntity::~BaseEntity()
 	{
 		assert(mIDSet.find(mId) != mIDSet.end());
-		mIDSet.erase(mIDSet.find(mId));
+		mIDSet.erase(mId);
 	}
 }

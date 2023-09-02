@@ -16,7 +16,6 @@ namespace d2dFramework
 
 		inline eKeyState GetKeyState(WORD keyCode) const;
 		inline const POINT& GetMousePos() const;
-		inline void SetHwnd(HWND Hwnd);
 
 	private:
 		InputManager();
@@ -24,8 +23,9 @@ namespace d2dFramework
 		InputManager(const InputManager& other) = delete;
 		InputManager operator=(const InputManager& other) = delete;
 
-		void Init();
-		void Update();
+		void init(HWND hwnd);
+		void release();
+		void update();
 
 	private:
 		enum { KEY_STATES_SIZE = 256 };
@@ -46,10 +46,5 @@ namespace d2dFramework
 	const POINT& InputManager::GetMousePos() const
 	{
 		return mMousePos;
-	}
-
-	void InputManager::SetHwnd(HWND Hwnd)
-	{
-		mHwnd = Hwnd;
 	}
 }
